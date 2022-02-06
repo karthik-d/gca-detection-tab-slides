@@ -14,46 +14,52 @@ FILES = [
 ]
 
 def make_temp_arrfile(slide, mode='w+'):
-    """
-    Create or truncate an existing file
-    with required shape buffer
-    Return its file pointer object
-    """
-    tempdir = tempfile.TemporaryDirectory()
-	dtype = slide.read_region((0,0), level=0, size=(0,1)).dtype
+	"""
+	Create or truncate an existing file
+	with required shape buffer
+	Return its file pointer object
+	"""
+	# Extract configuration
+	test_part = np.asarray(slide.read_region((0,0), level=0, size=(1,1)))
+	dtype = test_part.dtype
 	shape=(*slide.dimensions, *test_part.shape[2:])
-    # Prepare file
-    file_destn = os.path.join(tempdir.name, 'temp_')
-    return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
+	# Prepare file
+	tempdir = tempfile.TemporaryDirectory()
+	file_destn = os.path.join(tempdir.name, 'temp_')
+	return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
 
 
 def get_in_parts(slide, filename, part_size):
+	print("DIM", slide.dimensions)
 	range_x, range_y = part_size
 	start_x = 0
 	start_y = 0
 	# Extract till image ends
 	while (start_x+range_x)<slide.dimensions[0]:
 		while (start_y+range_y)<slide.dimensions[1]:
+			part_data = np.asarray(slide.read_region(
+				(start_x, start_y), 
+				level=0,
+				size=(range_x, range_y)
+			))
+			print(part_data.shape)
 			yield (
-				slide.read_region(
-					(start_x, start_y), 
-					level=0,
-					size=(range_x, range_y)
-				),
+				part_data,
 				start_x,
-				start_y,
-				range_x,
-				range_y 
+				start_y
 			)
-			start_x += range_x 
-			start_y += range_y
+			start_x += range_x
+		# Next x-level
+		start_y += range_y
+	
 
 
-def extract_representation(slide, filename, part_size=(4096, 4096)):    
+def extract_representation(slide, filename, part_size=(500, 500)):    
 	# Open accumulator file
 	img_acc = make_temp_arrfile(slide)
-	for part_data, x, y, _x, _y in get_in_parts(slide, filename, part_size):
-		img_acc[x:x+_x, y:y+_y, :] = part_data
+	for part, x, y in get_in_parts(slide, filename, part_size):
+		print(x, part.shape)
+		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Save to disk
 	Image.fromarray(img_acc).save(os.path.join(BASE_PATH, 'check.tiff'))
 
