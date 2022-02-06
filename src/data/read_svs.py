@@ -34,23 +34,35 @@ def get_in_parts(slide, filename, part_size):
 	range_x, range_y = part_size
 	# Extract till image ends
 	start_x = 0
-	while (start_x+range_x)<slide.dimensions[0]:
+	extent_x = range_x
+	last_x = False
+	while (start_x+extent_x)<=slide.dimensions[0]:
 		start_y = 0
-		while (start_y+range_y)<slide.dimensions[1]:
+		extent_y = range_y
+		last_y = False
+		while (start_y+extent_y)<=slide.dimensions[1]:
+			print(start_x, start_y, extent_x, extent_y)
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=0,
-				size=(range_x, range_y)
+				size=(extent_x, extent_y)
 			))
-			print(start_x, start_y, range_x, range_y)
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
 				start_x,
 				start_y
 			)
-			start_y += range_y
+			start_y += extent_y
+			# Include remainder patch
+			if not last_y and (start_y+extent_y)>slide.dimensions[1]:
+				extent_y = slide.dimensions[1] - start_y
+				last_y = True
 		# Next x-level
-		start_x += range_x
+		start_x += extent_x
+		# Include remainder patch
+		if not last_x and (start_x+extent_x)>slide.dimensions[0]:
+			extent_x = slide.dimensions[0] - start_x
+			last_x = True
 	# Remainder of xy-corner
 	
 
@@ -59,7 +71,6 @@ def extract_representation(slide, filename, part_size=(500, 500)):
 	# Open accumulator file
 	img_acc = make_temp_arrfile(slide)
 	for part, x, y in get_in_parts(slide, filename, part_size):
-		print("X", x, x+part.shape[0], "Y", y, y+part.shape[1])
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
