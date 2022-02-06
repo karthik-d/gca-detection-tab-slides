@@ -13,33 +13,34 @@ FILES = [
 ]
 
 # TODO: Move temp directory to data dir
-def open_temp_arrfile(filename, shape, dtype, mode='wb+'):
+def make_temp_arrfile(filename, shape, dtype, mode='w+'):
     """
     Create or truncate an existing file
     with required shape buffer
+    Return its file pointer object
     """
     tempdir = tempfile.TemporaryDirectory()
-    print(tempdir)
-    buff_shape = tuple([0 for _ in shape])
-    #destn = os.path.join(tempdir'temp_'+filename
-    #return np.mmap(filename, shape=buff_shape, dtype=dtype, mode='w+')
+    # Prepare file
+    buff_shape = tuple([1 for _ in shape])
+    file_destn = os.path.join(tempdir.name, 'temp_'+filename)
+    return np.memmap(file_destn, shape=buff_shape, dtype=dtype, mode=mode)
 
 
-def get_in_parts(slide, part_size=(4096, 4096)):
+def get_in_parts(slide, part_size=(4096, 4096), filename='unkown'):
     part_range_x, part_range_y = part_size
     test_part = np.asarray(slide.read_region((0,0), level=0, size=(1,1)))
-    # img_acc = np.empty((*slide.dimensions, *test_part.shape[2:]), dtype=test_part.dtype)
-    img_acc_arrfile = make_dummy_arrfile()
     # Open accumulator file
-    img_acc = np.memmap(img_acc_arrfile, dtype=test_part.dtype)
-    img_acc
+    img_acc = make_temp_arrfile(
+        filename, 
+        shape=(*slide.dimensions, *test_part.shape[2:]), 
+        dtype=test_part.dtype
+    )
+    
 
-
-for file in FILES:
-    slide = openslide.OpenSlide(os.path.join(BASE_PATH, file))
-    get_in_parts(slide)
+for filename in FILES:
+    slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
+    get_in_parts(slide, filename=filename)
     #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
-
 
 # TODO: Generate a .csv of all metadata (slide.properties)
 # TODO: Infer 'FILES' from another .csv/.txt instead ?
