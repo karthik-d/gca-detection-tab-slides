@@ -10,8 +10,9 @@ BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardi
 # filenames to be converted
 FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    # "sample.svs"
+    "sample.svs"
 ]
+
 
 def make_temp_arrfile(slide, mode='w+'):
 	"""
@@ -77,9 +78,10 @@ def extract_representation(slide, filename, part_size=(2048, 2048)):
 
 
 for filename in FILES:
-    print(os.path.join(BASE_PATH, filename))
-    slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
-    extract_representation(slide, filename)
+	print(os.path.join(BASE_PATH, filename))
+	slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
+	#extract_representation(slide, filename)
+	compress()
     #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
 
 # TODO: Generate a .csv of all metadata (slide.properties)
