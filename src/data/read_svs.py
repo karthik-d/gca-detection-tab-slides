@@ -1,5 +1,6 @@
 import os
 import numpy as np
+import tempfile
 import openslide
 from PIL import Image
 #from config import config
@@ -11,10 +12,27 @@ FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
 ]
 
+# TODO: Move temp directory to data dir
+def open_temp_arrfile(filename, shape, dtype, mode='wb+'):
+    """
+    Create or truncate an existing file
+    with required shape buffer
+    """
+    tempdir = tempfile.TemporaryDirectory()
+    print(tempdir)
+    buff_shape = tuple([0 for _ in shape])
+    #destn = os.path.join(tempdir'temp_'+filename
+    #return np.mmap(filename, shape=buff_shape, dtype=dtype, mode='w+')
+
+
 def get_in_parts(slide, part_size=(4096, 4096)):
     part_range_x, part_range_y = part_size
     test_part = np.asarray(slide.read_region((0,0), level=0, size=(1,1)))
-    img_acc = np.empty((*slide.dimensions, *test_part.shape[2:]), dtype=test_part.dtype)
+    # img_acc = np.empty((*slide.dimensions, *test_part.shape[2:]), dtype=test_part.dtype)
+    img_acc_arrfile = make_dummy_arrfile()
+    # Open accumulator file
+    img_acc = np.memmap(img_acc_arrfile, dtype=test_part.dtype)
+    img_acc
 
 
 for file in FILES:
