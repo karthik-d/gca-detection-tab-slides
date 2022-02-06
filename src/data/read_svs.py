@@ -35,9 +35,11 @@ def get_in_parts(slide, part_size=(4096, 4096), filename='unkown'):
         shape=(*slide.dimensions, *test_part.shape[2:]), 
         dtype=test_part.dtype
     )
-    
+    img_acc = np.concatenate((img_acc, test_part), axis=-1)
 
 for filename in FILES:
+    if 'test' not in filename:
+        continue
     slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
     get_in_parts(slide, filename=filename)
     #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
