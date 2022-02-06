@@ -1,5 +1,9 @@
 import os
 
+"""
+Dictionary of configuration parameters
+"""
+
 config = {
     'DATA_PATH': os.path.abspath(os.path.join(__file__,
         os.path.pardir, 
