@@ -13,38 +13,55 @@ FILES = [
     "sample.svs"
 ]
 
-# TODO: Move temp directory to data dir
-def make_temp_arrfile(filename, shape, dtype, mode='w+'):
+def make_temp_arrfile(slide, mode='w+'):
     """
     Create or truncate an existing file
     with required shape buffer
     Return its file pointer object
     """
     tempdir = tempfile.TemporaryDirectory()
+	dtype = slide.read_region((0,0), level=0, size=(0,1)).dtype
+	shape=(*slide.dimensions, *test_part.shape[2:])
     # Prepare file
-    file_destn = os.path.join(tempdir.name, 'temp_'+filename)
+    file_destn = os.path.join(tempdir.name, 'temp_')
     return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
 
 
-def get_in_parts(slide, part_size=(4096, 4096), filename='unkown'):
-    part_range_x, part_range_y = part_size
-    print(slide.dimensions)
-    test_part = np.asarray(slide.read_region((800, 800), level=0, size=(200,200)))
-    print(test_part.shape)
-    # Open accumulator file
-    img_acc = make_temp_arrfile(
-        filename, 
-        shape=(*slide.dimensions, *test_part.shape[2:]), 
-        dtype=test_part.dtype
-    )
-    img_acc[0:200, 0:200, :] = test_part
-    Image.fromarray(img_acc).save(os.path.join(BASE_PATH, 'check.tiff'))
-    print("HERE")
+def get_in_parts(slide, filename, part_size):
+	range_x, range_y = part_size
+	start_x = 0
+	start_y = 0
+	# Extract till image ends
+	while (start_x+range_x)<slide.dimensions[0]:
+		while (start_y+range_y)<slide.dimensions[1]:
+			yield (
+				slide.read_region(
+					(start_x, start_y), 
+					level=0,
+					size=(range_x, range_y)
+				),
+				start_x,
+				start_y,
+				range_x,
+				range_y 
+			)
+			start_x += range_x 
+			start_y += range_y
+
+
+def extract_representation(slide, filename, part_size=(4096, 4096)):    
+	# Open accumulator file
+	img_acc = make_temp_arrfile(slide)
+	for part_data, x, y, _x, _y in get_in_parts(slide, filename, part_size):
+		img_acc[x:x+_x, y:y+_y, :] = part_data
+	# Save to disk
+	Image.fromarray(img_acc).save(os.path.join(BASE_PATH, 'check.tiff'))
+
 
 for filename in FILES:
     print(os.path.join(BASE_PATH, filename))
     slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
-    get_in_parts(slide, filename=filename)
+    extract_representation(slide, filename)
     #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
 
 # TODO: Generate a .csv of all metadata (slide.properties)
