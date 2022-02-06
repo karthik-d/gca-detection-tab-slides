@@ -9,8 +9,8 @@ from PIL import Image
 BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
 # filenames to be converted
 FILES = [
-    #"mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    "sample.svs"
+    "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+    # "sample.svs"
 ]
 
 def make_temp_arrfile(slide, mode='w+'):
@@ -36,12 +36,11 @@ def get_in_parts(slide, filename, part_size):
 	start_x = 0
 	extent_x = range_x
 	last_x = False
-	while (start_x+extent_x)<=slide.dimensions[0]:
+	while extent_x!=0 and (start_x+extent_x)<=slide.dimensions[0]:
 		start_y = 0
 		extent_y = range_y
 		last_y = False
-		while (start_y+extent_y)<=slide.dimensions[1]:
-			print(start_x, start_y, extent_x, extent_y)
+		while extent_y!=0 and (start_y+extent_y)<=slide.dimensions[1]:
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=0,
@@ -63,11 +62,9 @@ def get_in_parts(slide, filename, part_size):
 		if not last_x and (start_x+extent_x)>slide.dimensions[0]:
 			extent_x = slide.dimensions[0] - start_x
 			last_x = True
-	# Remainder of xy-corner
 	
 
-
-def extract_representation(slide, filename, part_size=(500, 500)):    
+def extract_representation(slide, filename, part_size=(2048, 2048)):    
 	# Open accumulator file
 	img_acc = make_temp_arrfile(slide)
 	for part, x, y in get_in_parts(slide, filename, part_size):
@@ -76,6 +73,7 @@ def extract_representation(slide, filename, part_size=(500, 500)):
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	# Save to disk
 	Image.fromarray(img_acc).save(os.path.join(BASE_PATH, 'check.tiff'))
+
 
 
 for filename in FILES:
