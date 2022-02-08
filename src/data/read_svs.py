@@ -7,7 +7,8 @@ from PIL import Image
 
 # Store path-to directory containing .svs files to be converted 
 BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
-# filenames to be converted
+
+# Filenames to be converted - located in data-path
 FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
     "sample.svs"
