@@ -106,9 +106,9 @@ if __name__=='__main__':
 	- Named as [CONVERSION_DIR]-extracts
 	- Contains 1 subdirectory per file, each with:
 		- main.tiff: Level-0 slide (Highest Resolution)
-		- thumbnail.tiff: Thumbnail image
-		- macro.tiff: Macro of the slide
-		- label.tiff: Label of the slide
+		- thumbnail.[REL_IMG_FORMAT]: Thumbnail image
+		- macro.[REL_IMG_FORMAT]: Macro of the slide
+		- label.[REL_IMG_FORMAT]: Label of the slide
 	"""
 
 	# Create extraction target directory
@@ -124,19 +124,25 @@ if __name__=='__main__':
 		if filename in EXCLUDE_FILES:
 			continue
 
-		filepath = os.path.join(CONVERSION_PATH, filename)
-		if not os.path.isfile(filepath):
-			print(f"Not a valid file: {filepath}\nSkipped")
-			skipped_files.append(filepath)
+		src_path = os.path.join(CONVERSION_PATH, filename)
+		if not os.path.isfile(src_path):
+			print(f"Not a valid file: {src_path}\nSkipped")
+			skipped_files.append(src_path)
 			continue
 
-		slide = openslide.OpenSlide(filepath)
+		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
+		Path(destn_path).mkdir(
+			parents=False,
+			exist_ok=False
+		)
+
+		slide = openslide.OpenSlide(src_path)
 
 		# Extract related images
 		for map_key in slide.associated_images:
 			if map_key in REQD_REL_IMGS and isinstance(slide.associated_images.get(map_key), Image.Image):
 				save_path = ".".join([
-					os.path.join(EXTRACTS_PATH, map_key),
+					os.path.join(destn_path, map_key),
 					REL_IMG_FORMAT
 				])
 				slide.associated_images.get(map_key).save(
@@ -151,4 +157,3 @@ if __name__=='__main__':
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
 
 # TODO: Generate a .csv of all metadata (slide.properties)
-# TODO: Infer 'FILES' from another .csv/.txt instead ?
