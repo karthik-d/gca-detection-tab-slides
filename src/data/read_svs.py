@@ -3,6 +3,7 @@ import numpy as np
 import tempfile
 import openslide
 from PIL import Image
+from matplotlib import pyplot as plt
 #from config import config
 
 # Store path-to directory containing .svs files to be converted 
@@ -11,7 +12,7 @@ BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardi
 # Filenames to be converted - located in data-path
 FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    "sample.svs"
+    "sample.tiff"
 ]
 
 
@@ -81,8 +82,17 @@ def extract_representation(slide, filename, part_size=(2048, 2048)):
 for filename in FILES:
 	print(os.path.join(BASE_PATH, filename))
 	slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
+	print("META")
+	for prop,val in slide.properties.items():
+		print(prop, val)
+	print("IMAGES")
+	for img in slide.associated_images:
+		print(img)
+		slide.associated_images[img].show()
+		plt.imshow(slide.associated_images[img])
+		plt.show()
 	#extract_representation(slide, filename)
-	compress()
+	# compress()
     #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
 
 # TODO: Generate a .csv of all metadata (slide.properties)
