@@ -6,14 +6,27 @@ from PIL import Image
 from matplotlib import pyplot as plt
 #from config import config
 
-# Store path-to directory containing .svs files to be converted 
-BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
+"""
+PARAMETERES TO BE SET
+"""
+# 1. Name of the directory containing the .svs files to be converted
+CONVERSION_DIR = 'check'
 
-# Filenames to be converted - located in data-path
-FILES = [
+# 2. Names of files to be excluded from the data-path (if any)
+EXCLUDE_FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    "sample.tiff"
+    # "sample.tiff"
 ]
+"""
+--------------------------------------------------------------------
+"""
+
+
+BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
+CONVERSION_PATH = os.path.join(BASE_PATH, CONVERSION_DIR)
+
+if not os.path.isdir(CONVERSION_PATH):
+	raise ValueError(f"Could not find {CONVERSION_PATH}")
 
 
 def make_temp_arrfile(slide, mode='w+'):
@@ -33,7 +46,6 @@ def make_temp_arrfile(slide, mode='w+'):
 
 
 def get_in_parts(slide, filename, part_size):
-	print("DIM", slide.dimensions)
 	range_x, range_y = part_size
 	# Extract till image ends
 	start_x = 0
@@ -67,33 +79,58 @@ def get_in_parts(slide, filename, part_size):
 			last_x = True
 	
 
-def extract_representation(slide, filename, part_size=(2048, 2048)):    
+def extract_slide0(slide, filename, part_size=(2048, 2048)):    
 	# Open accumulator file
 	img_acc = make_temp_arrfile(slide)
 	for part, x, y in get_in_parts(slide, filename, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
-	# Save to disk
-	Image.fromarray(img_acc).save(os.path.join(BASE_PATH, 'check.tiff'))
+	return img_acc
 
 
+if __name__=='__main__':
 
-for filename in FILES:
-	print(os.path.join(BASE_PATH, filename))
-	slide = openslide.OpenSlide(os.path.join(BASE_PATH, filename))
-	print("META")
-	for prop,val in slide.properties.items():
-		print(prop, val)
-	print("IMAGES")
-	for img in slide.associated_images:
-		print(img)
-		slide.associated_images[img].show()
-		plt.imshow(slide.associated_images[img])
-		plt.show()
-	#extract_representation(slide, filename)
-	# compress()
-    #level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
+	"""
+	- Creates a directory at same level as the conversion files directory (CONVERSION_DIR)
+	- Named as [CONVERSION_DIR]-extracts
+	- Contains 1 subdirectory per file, each with:
+		- main.tiff: Level-0 slide (Highest Resolution)
+		- thumbnail.tiff: Thumbnail image
+		- macro.tiff: Macro of the slide
+		- label.tiff: Label of the slide
+	"""
+
+	skipped_files = []
+	cnt_extracted = 0
+	for filename in os.listdir(CONVERSION_PATH):
+
+		if filename in EXCLUDE_FILES:
+			continue
+
+		filepath = os.path.join(CONVERSION_PATH, filename)
+		if not os.path.isfile(filepath):
+			print(f"Not a valid file: {filepath}\nSkipped")
+			skipped_files.append(filepath)
+			continue
+
+		slide = openslide.OpenSlide(filepath)
+		print("META")
+		for prop,val in slide.properties.items():
+			print(prop, val)
+		print("IMAGES")
+		for img in slide.associated_images:
+			print(img)
+			print(slide.associated_images[img].format)
+			plt.imshow(slide.associated_images[img])
+			plt.show()
+		cnt_extracted += 1
+		#extract_representation(slide, filename)
+		# compress()
+		#level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
+
+	print(f"Extracted {cnt_extracted} file(s)")
+	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
 
 # TODO: Generate a .csv of all metadata (slide.properties)
 # TODO: Infer 'FILES' from another .csv/.txt instead ?
