@@ -1,20 +1,21 @@
 import os
 import numpy as np
 import tempfile
+from pathlib import Path
+
 import openslide
 from PIL import Image
-from matplotlib import pyplot as plt
 #from config import config
 
 """
-PARAMETERES TO BE SET
+PARAMETERES TO BE SET ---------------------------------------------
 """
 # 1. Name of the directory containing the .svs files to be converted
 CONVERSION_DIR = 'check'
 
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
-    "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+    # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
     # "sample.tiff"
 ]
 """
@@ -24,6 +25,15 @@ EXCLUDE_FILES = [
 
 BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
 CONVERSION_PATH = os.path.join(BASE_PATH, CONVERSION_DIR)
+EXTRACTS_PATH = os.path.join(BASE_PATH, CONVERSION_PATH+'-extracts')
+
+REQD_REL_IMGS = [
+	'thumbnail',
+	'macro',
+	'label'
+]
+REL_IMG_FORMAT = 'png'
+
 
 if not os.path.isdir(CONVERSION_PATH):
 	raise ValueError(f"Could not find {CONVERSION_PATH}")
@@ -101,6 +111,12 @@ if __name__=='__main__':
 		- label.tiff: Label of the slide
 	"""
 
+	# Create extraction target directory
+	Path(EXTRACTS_PATH).mkdir(
+		parents=False,
+		exist_ok=True
+	)
+
 	skipped_files = []
 	cnt_extracted = 0
 	for filename in os.listdir(CONVERSION_PATH):
@@ -115,19 +131,21 @@ if __name__=='__main__':
 			continue
 
 		slide = openslide.OpenSlide(filepath)
-		print("META")
-		for prop,val in slide.properties.items():
-			print(prop, val)
-		print("IMAGES")
-		for img in slide.associated_images:
-			print(img)
-			print(slide.associated_images[img].format)
-			plt.imshow(slide.associated_images[img])
-			plt.show()
+
+		# Extract related images
+		for map_key in slide.associated_images:
+			if map_key in REQD_REL_IMGS and isinstance(slide.associated_images.get(map_key), Image.Image):
+				save_path = ".".join([
+					os.path.join(EXTRACTS_PATH, map_key),
+					REL_IMG_FORMAT
+				])
+				slide.associated_images.get(map_key).save(
+					fp=save_path,
+					format=REL_IMG_FORMAT
+				)
+
 		cnt_extracted += 1
 		#extract_representation(slide, filename)
-		# compress()
-		#level_0_img = slide.read_region((0,0), level=0, size=slide.level_dimensions[0])
 
 	print(f"Extracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
