@@ -2,6 +2,7 @@ import os
 import numpy as np
 import tempfile
 from pathlib import Path
+import time
 
 import openslide
 from PIL import Image
@@ -16,7 +17,7 @@ CONVERSION_DIR = 'check'
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
     # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    # "sample.tiff"
+    "sample.tiff"
 ]
 """
 --------------------------------------------------------------------
@@ -55,7 +56,7 @@ def make_temp_arrfile(slide, mode='w+'):
 	return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
 
 
-def get_in_parts(slide, filename, part_size):
+def get_in_parts(slide, part_size):
 	range_x, range_y = part_size
 	# Extract till image ends
 	start_x = 0
@@ -83,17 +84,20 @@ def get_in_parts(slide, filename, part_size):
 				last_y = True
 		# Next x-level
 		start_x += extent_x
+		print(start_x)
 		# Include remainder patch
 		if not last_x and (start_x+extent_x)>slide.dimensions[0]:
 			extent_x = slide.dimensions[0] - start_x
 			last_x = True
+	print("DONE")
 	
 
-def extract_slide0(slide, filename, part_size=(2048, 2048)):    
+def extract_level0(slide, part_size=(2048, 2048)):    
 	# Open accumulator file
 	img_acc = make_temp_arrfile(slide)
-	for part, x, y in get_in_parts(slide, filename, part_size):
+	for part, x, y in get_in_parts(slide, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
+		print("Done with", x, y)
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
@@ -137,6 +141,12 @@ if __name__=='__main__':
 		)
 
 		slide = openslide.OpenSlide(src_path)
+
+		start_ = time.time()
+		img = extract_level0(slide, ((2048, 2048)))
+		print(type(img))
+		print(time.time()-start_)
+		Image.fromarray(img).save('test.tiff', compression='tiff_lzw')
 
 		# Extract related images
 		for map_key in slide.associated_images:
