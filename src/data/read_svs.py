@@ -146,13 +146,19 @@ if __name__=='__main__':
 		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
 		Path(destn_path).mkdir(
 			parents=False,
-			exist_ok=False
+			exist_ok=True
 		)
 
 		slide = openslide.OpenSlide(src_path)
+
+		"""
+		# TEST to check if using the 'get_best_level_for_downsample' is suitable
+		print(slide.get_best_level_for_downsample(32))
 		print("Level-wise scaling")
 		for level, scale in enumerate(infer_scaling_levels(slide)):
 			print(f"Level {level} - Width: {scale[0]}, Height: {scale[1]}")
+		print(slide.level_downsamples)
+		"""
 
 		"""
 		start_ = time.time()
