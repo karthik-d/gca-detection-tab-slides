@@ -103,6 +103,15 @@ def extract_level0(slide, part_size=(2048, 2048)):
 	return img_acc
 
 
+def infer_scaling_levels(slide):
+	zero_w, zero_h = slide.dimensions
+	scales = [(1, 1)]
+	for resolution in slide.level_dimensions[1:]:
+		w, h = resolution 
+		scales.append((zero_w/w, zero_h/h))
+	return scales
+
+
 if __name__=='__main__':
 
 	"""
@@ -141,7 +150,11 @@ if __name__=='__main__':
 		)
 
 		slide = openslide.OpenSlide(src_path)
+		print("Level-wise scaling")
+		for level, scale in enumerate(infer_scaling_levels(slide)):
+			print(f"Level {level} - Width: {scale[0]}, Height: {scale[1]}")
 
+		"""
 		start_ = time.time()
 		img = extract_level0(slide, ((2048, 2048)))
 		print(type(img))
@@ -165,5 +178,6 @@ if __name__=='__main__':
 
 	print(f"Extracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
+	"""
 
 # TODO: Generate a .csv of all metadata (slide.properties)
