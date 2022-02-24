@@ -17,8 +17,8 @@ CONVERSION_DIR = 'check'
 
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
-    # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    "sample.tiff"
+    "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+    # "sample.tiff"
 ]
 """
 --------------------------------------------------------------------
@@ -162,9 +162,7 @@ if __name__=='__main__':
 		print(slide.level_dimensions)
 
 		start_ = time.time()
-		img = extract_level(slide, 3, ((128, 128)))
-		print(plot.imshow(img))
-		plot.show()
+		img = extract_level(slide, 0, ((128, 128)))
 		Image.fromarray(img).save('test.tiff')
 		print(time.time()-start_)
 
@@ -181,6 +179,7 @@ if __name__=='__main__':
 				)
 
 		cnt_extracted += 1
+		break
 		#extract_representation(slide, filename)
 
 	print(f"Extracted {cnt_extracted} file(s)")
