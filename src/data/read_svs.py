@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 import time
 
+import matplotlib.pyplot as plot
 import openslide
 from PIL import Image
 #from config import config
@@ -40,36 +41,36 @@ if not os.path.isdir(CONVERSION_PATH):
 	raise ValueError(f"Could not find {CONVERSION_PATH}")
 
 
-def make_temp_arrfile(slide, mode='w+'):
+def make_temp_arrfile(slide, level=0, mode='w+'):
 	"""
 	Create or truncate an existing file
 	with required shape buffer
 	Return its file pointer object
 	"""
 	# Extract configuration
-	test_part = np.asarray(slide.read_region((0,0), level=0, size=(1,1)))
+	test_part = np.asarray(slide.read_region((0,0), level, size=(1,1)))
 	dtype = test_part.dtype
-	shape=(*slide.dimensions, *test_part.shape[2:])
+	shape=(*slide.level_dimensions[level], *test_part.shape[2:])
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
 	return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
 
 
-def get_in_parts(slide, part_size):
+def get_in_parts(slide, level, part_size):
 	range_x, range_y = part_size
 	# Extract till image ends
 	start_x = 0
 	extent_x = range_x
 	last_x = False
-	while extent_x!=0 and (start_x+extent_x)<=slide.dimensions[0]:
+	while extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[level][0]:
 		start_y = 0
 		extent_y = range_y
 		last_y = False
-		while extent_y!=0 and (start_y+extent_y)<=slide.dimensions[1]:
+		while extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[level][1]:
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
-				level=0,
+				level=level,
 				size=(extent_x, extent_y)
 			))
 			yield (
@@ -79,23 +80,22 @@ def get_in_parts(slide, part_size):
 			)
 			start_y += extent_y
 			# Include remainder patch
-			if not last_y and (start_y+extent_y)>slide.dimensions[1]:
-				extent_y = slide.dimensions[1] - start_y
+			if not last_y and (start_y+extent_y)>slide.level_dimensions[level][1]:
+				extent_y = slide.level_dimensions[level][1] - start_y
 				last_y = True
 		# Next x-level
 		start_x += extent_x
 		print(start_x)
 		# Include remainder patch
-		if not last_x and (start_x+extent_x)>slide.dimensions[0]:
-			extent_x = slide.dimensions[0] - start_x
+		if not last_x and (start_x+extent_x)>slide.level_dimensions[level][0]:
+			extent_x = slide.level_dimensions[level][0] - start_x
 			last_x = True
-	print("DONE")
 	
 
-def extract_level0(slide, part_size=(2048, 2048)):    
+def extract_level(slide, level=0, part_size=(2048, 2048)):    
 	# Open accumulator file
-	img_acc = make_temp_arrfile(slide)
-	for part, x, y in get_in_parts(slide, part_size):
+	img_acc = make_temp_arrfile(slide, level)
+	for part, x, y in get_in_parts(slide, level, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 		print("Done with", x, y)
 	# Retranspose the array
@@ -158,14 +158,15 @@ if __name__=='__main__':
 		for level, scale in enumerate(infer_scaling_levels(slide)):
 			print(f"Level {level} - Width: {scale[0]}, Height: {scale[1]}")
 		print(slide.level_downsamples)
-		"""
+		"""		
+		print(slide.level_dimensions)
 
-		"""
 		start_ = time.time()
-		img = extract_level0(slide, ((2048, 2048)))
-		print(type(img))
+		img = extract_level(slide, 3, ((128, 128)))
+		print(plot.imshow(img))
+		plot.show()
+		Image.fromarray(img).save('test.tiff')
 		print(time.time()-start_)
-		Image.fromarray(img).save('test.tiff', compression='tiff_lzw')
 
 		# Extract related images
 		for map_key in slide.associated_images:
@@ -184,6 +185,5 @@ if __name__=='__main__':
 
 	print(f"Extracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
-	"""
 
 # TODO: Generate a .csv of all metadata (slide.properties)
