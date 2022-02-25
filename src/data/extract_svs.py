@@ -4,6 +4,7 @@ import tempfile
 from pathlib import Path
 import time
 
+import random
 import openslide
 from PIL import Image
 #from config import config
@@ -126,7 +127,6 @@ def extract_level(slide, level=0, part_size=(2048, 2048)):
 	img_acc = make_temp_arrfile(slide, level)
 	for part, x, y in get_in_parts(slide, level, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
-		print(x, y)
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
@@ -178,6 +178,7 @@ if __name__=='__main__':
 			continue
 
 		print(f"\nProcessing {src_path}...")
+		print(f"Downscale Factor: {DOWNSCALE_FACTOR}")
 		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
 		Path(destn_path).mkdir(
 			parents=False,
@@ -185,7 +186,6 @@ if __name__=='__main__':
 		)
 
 		slide = openslide.OpenSlide(src_path)
-		print(slide.level_dimensions)
 
 		"""
 		# TEST to check if using the 'get_best_level_for_downsample' is suitable
@@ -196,15 +196,16 @@ if __name__=='__main__':
 		print(slide.level_downsamples)
 		"""		
 
+		part_size = (random.randint(100, 4000),)*2
+		print(part_size)
 		start_ = time.time()
 		img = extract_level(
 			slide, 
 			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
-			part_size=((1024, 1024))
+			part_size=part_size
 		)
 		save_path = os.path.join(destn_path, 'main.tiff')
 		Image.fromarray(img).save(save_path, compression='tiff_lzw')
-		print(save_path)
 		print(f"Converted and stored in {time.time()-start_} s")
 
 		# Extract related images
