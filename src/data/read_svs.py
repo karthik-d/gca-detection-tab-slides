@@ -18,7 +18,9 @@ CONVERSION_DIR = 'check'
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
     "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
-    # "sample.tiff"
+	"test.tiff",
+	# "14276.svs"
+    "sample.tiff"
 ]
 """
 --------------------------------------------------------------------
@@ -57,17 +59,26 @@ def make_temp_arrfile(slide, level=0, mode='w+'):
 	return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
 
 
+def get_prescale_value(slide, level):
+	return int(slide.level_downsamples[level]) if level!=0 else 1
+
+
 def get_in_parts(slide, level, part_size):
 	range_x, range_y = part_size
+	prescale = get_prescale_value(slide, level)
 	# Extract till image ends
 	start_x = 0
-	extent_x = range_x
+	extent_x = prescale*range_x
+	start_x_downscaled = 0
+	extent_x_downscaled = range_x
 	last_x = False
-	while extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[level][0]:
+	while extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[0][0]:
 		start_y = 0
-		extent_y = range_y
+		extent_y = prescale*range_y
+		start_y_downscaled = 0
+		extent_y_downscaled = range_y
 		last_y = False
-		while extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[level][1]:
+		while extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[0][1]:
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -75,20 +86,24 @@ def get_in_parts(slide, level, part_size):
 			))
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
-				start_x,
-				start_y
+				start_x_downscaled,
+				start_y_downscaled
 			)
 			start_y += extent_y
+			start_y_downscaled += extent_y_downscaled
 			# Include remainder patch
-			if not last_y and (start_y+extent_y)>slide.level_dimensions[level][1]:
-				extent_y = slide.level_dimensions[level][1] - start_y
+			if not last_y and (start_y+extent_y)>slide.level_dimensions[0][1]:
+				extent_y = slide.level_dimensions[0][1] - start_y
+				extent_y_downscaled = slide.level_dimensions[level][1] - start_y_downscaled
 				last_y = True
-		# Next x-level
+		# Next x-row
 		start_x += extent_x
+		start_x_downscaled += extend_x_downscaled
 		print(start_x)
 		# Include remainder patch
-		if not last_x and (start_x+extent_x)>slide.level_dimensions[level][0]:
-			extent_x = slide.level_dimensions[level][0] - start_x
+		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
+			extent_x = slide.level_dimensions[0][0] - start_x
+			extent_x_downscaled = slide.level_dimensions[level][0] - start_x_downscaled
 			last_x = True
 	
 
@@ -163,8 +178,8 @@ if __name__=='__main__':
 		print(slide.level_dimensions)
 
 		start_ = time.time()
-		img = extract_level(slide, 0, ((128, 128)))
-		Image.fromarray(img).save('test.tiff')
+		img = extract_level(slide, 1, ((1024, 1024)))
+		Image.fromarray(img).save('test.tiff', compression='tiff_lzw')
 		print(time.time()-start_)
 
 		# Extract related images

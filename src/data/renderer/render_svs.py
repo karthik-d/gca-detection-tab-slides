@@ -76,6 +76,7 @@ class _Directory:
         for name in sorted(os.listdir(os.path.join(basedir, relpath))):
             cur_relpath = os.path.join(relpath, name)
             cur_path = os.path.join(basedir, cur_relpath)
+            print(name, OpenSlide.detect_format(cur_path))
             if os.path.isdir(cur_path):
                 cur_dir = _Directory(basedir, cur_relpath)
                 if cur_dir.children:

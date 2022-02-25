@@ -15,6 +15,7 @@
 <h1>Available Slides</h1>
 
 <ul>
+    {{root_dir}}
     {% for entry in root_dir.children recursive %}
     <li>
         {% if entry.url_path %}
