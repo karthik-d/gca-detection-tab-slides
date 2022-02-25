@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 import time
 
-import matplotlib.pyplot as plot
 import openslide
 from PIL import Image
 #from config import config
@@ -16,7 +15,7 @@ FACTOR_LEVEL_MAP = dict(zip(DOWNSCALE_FACTORS, range(len(DOWNSCALE_FACTORS))))
 PARAMETERES TO BE SET ---------------------------------------------
 """
 # 1. Name of the directory containing the .svs files to be converted
-CONVERSION_DIR = 'check'
+CONVERSION_DIR = 'final'
 
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
@@ -27,7 +26,7 @@ EXCLUDE_FILES = [
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 32
+DOWNSCALE_FACTOR = 16
 
 """
 --------------------------------------------------------------------
@@ -168,7 +167,7 @@ if __name__=='__main__':
 			skipped_files.append(src_path)
 			continue
 
-		print(f"Processing {src_path}...")
+		print(f"\nExtacting '{src_path}' ...\nDownscale Factor: {DOWNSCALE_FACTOR}")
 		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
 		Path(destn_path).mkdir(
 			parents=False,
@@ -186,14 +185,16 @@ if __name__=='__main__':
 		print(slide.level_downsamples)
 		"""		
 
+		# Time, Extract and Store downscaled level as per DOWNSCALE_FACTOR
 		start_ = time.time()
 		img = extract_level(
 			slide, 
 			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
-			part_size=((1024, 1024))
+			part_size=((2048, 2048))
 		)
-		Image.fromarray(img).save('test.tiff', compression='tiff_lzw')
-		print(f"Converted in {time.time()-start_}s")
+		save_path = os.path.join(destn_path, 'main.tiff')
+		Image.fromarray(img).save(save_path)
+		print(f"Converted and stored in {time.time()-start_} s")
 
 		# Extract related images
 		for map_key in slide.associated_images:
@@ -208,10 +209,9 @@ if __name__=='__main__':
 				)
 
 		cnt_extracted += 1
-		break
 		#extract_representation(slide, filename)
 
-	print(f"Extracted {cnt_extracted} file(s)")
+	print(f"\nExtracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
 
 # TODO: Generate a .csv of all metadata (slide.properties)
