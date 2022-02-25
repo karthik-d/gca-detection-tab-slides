@@ -143,6 +143,7 @@ if __name__=='__main__':
 			skipped_files.append(src_path)
 			continue
 
+		print(f"Processing {src_path}...")
 		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
 		Path(destn_path).mkdir(
 			parents=False,
