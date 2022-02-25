@@ -82,7 +82,7 @@ def get_in_parts(slide, level, part_size):
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
-				size=(extent_x, extent_y)
+				size=(extent_x_downscaled, extent_y_downscaled)
 			))
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
@@ -98,8 +98,7 @@ def get_in_parts(slide, level, part_size):
 				last_y = True
 		# Next x-row
 		start_x += extent_x
-		start_x_downscaled += extend_x_downscaled
-		print(start_x)
+		start_x_downscaled += extent_x_downscaled
 		# Include remainder patch
 		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
 			extent_x = slide.level_dimensions[0][0] - start_x
@@ -112,7 +111,6 @@ def extract_level(slide, level=0, part_size=(2048, 2048)):
 	img_acc = make_temp_arrfile(slide, level)
 	for part, x, y in get_in_parts(slide, level, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
-		print("Done with", x, y)
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
@@ -175,7 +173,6 @@ if __name__=='__main__':
 			print(f"Level {level} - Width: {scale[0]}, Height: {scale[1]}")
 		print(slide.level_downsamples)
 		"""		
-		print(slide.level_dimensions)
 
 		start_ = time.time()
 		img = extract_level(slide, 1, ((1024, 1024)))
