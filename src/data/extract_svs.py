@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 import time
 
-import random
 import openslide
 from PIL import Image
 #from config import config
@@ -145,9 +144,9 @@ if __name__=='__main__':
 
 	"""
 	- Creates a directory at same level as the conversion files directory (CONVERSION_DIR)
-	- Named as [CONVERSION_DIR]-extracts
-	- Contains 1 subdirectory per file, each with:
-		- main.tiff: Level-0 slide (Highest Resolution)
+	-- Named as [CONVERSION_DIR]-extracts
+	-- Contains 1 subdirectory per file, each with:
+		- main.tiff: Extracted downscaled level (i.e. x4, x16 or x32)
 		- thumbnail.[REL_IMG_FORMAT]: Thumbnail image
 		- macro.[REL_IMG_FORMAT]: Macro of the slide
 		- label.[REL_IMG_FORMAT]: Label of the slide
