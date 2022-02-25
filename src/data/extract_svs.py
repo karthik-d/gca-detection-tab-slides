@@ -28,7 +28,7 @@ EXCLUDE_FILES = [
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 32
+DOWNSCALE_FACTOR = 16
 
 """
 --------------------------------------------------------------------
