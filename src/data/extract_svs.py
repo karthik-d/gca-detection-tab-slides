@@ -4,7 +4,6 @@ import tempfile
 from pathlib import Path
 import time
 
-import matplotlib.pyplot as plot
 import openslide
 from PIL import Image
 #from config import config
@@ -21,8 +20,10 @@ CONVERSION_DIR = 'final'
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
     # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+	# "negative.tiff",
+	# "Postivie_13829$2000-005-5$US$SCAN$OR$001 -003.tiff",
 	"test.tiff",
-	"14276.svs"
+	"14276.svs",
     "sample.tiff"
 ]
 
@@ -73,19 +74,35 @@ def get_prescale_value(slide, level):
 def get_in_parts(slide, level, part_size):
 	range_x, range_y = part_size
 	prescale = get_prescale_value(slide, level)
+
 	# Extract till image ends
 	start_x = 0
 	extent_x = prescale*range_x
 	start_x_downscaled = 0
 	extent_x_downscaled = range_x
 	last_x = False
-	while extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[0][0]:
+	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[0][0]):
+		
+		# Include remainder patch
+		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
+			extent_x = slide.level_dimensions[0][0] - start_x
+			extent_x_downscaled = slide.level_dimensions[level][0] - start_x_downscaled
+			last_x = True
+
+		# Iterate vertically
 		start_y = 0
 		extent_y = prescale*range_y
 		start_y_downscaled = 0
 		extent_y_downscaled = range_y
 		last_y = False
-		while extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[0][1]:
+
+		while (not last_y) or (extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[0][1]):
+			# Include remainder patch
+			if not last_y and (start_y+extent_y)>slide.level_dimensions[0][1]:
+				extent_y = slide.level_dimensions[0][1] - start_y
+				extent_y_downscaled = slide.level_dimensions[level][1] - start_y_downscaled
+				last_y = True
+			# Extract part
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -98,19 +115,10 @@ def get_in_parts(slide, level, part_size):
 			)
 			start_y += extent_y
 			start_y_downscaled += extent_y_downscaled
-			# Include remainder patch
-			if not last_y and (start_y+extent_y)>slide.level_dimensions[0][1]:
-				extent_y = slide.level_dimensions[0][1] - start_y
-				extent_y_downscaled = slide.level_dimensions[level][1] - start_y_downscaled
-				last_y = True
+			
 		# Next x-row
 		start_x += extent_x
 		start_x_downscaled += extent_x_downscaled
-		# Include remainder patch
-		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
-			extent_x = slide.level_dimensions[0][0] - start_x
-			extent_x_downscaled = slide.level_dimensions[level][0] - start_x_downscaled
-			last_x = True
 	
 
 def extract_level(slide, level=0, part_size=(2048, 2048)):    
@@ -118,6 +126,7 @@ def extract_level(slide, level=0, part_size=(2048, 2048)):
 	img_acc = make_temp_arrfile(slide, level)
 	for part, x, y in get_in_parts(slide, level, part_size):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
+		print(x, y)
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
@@ -168,7 +177,7 @@ if __name__=='__main__':
 			skipped_files.append(src_path)
 			continue
 
-		print(f"Processing {src_path}...")
+		print(f"\nProcessing {src_path}...")
 		destn_path = os.path.join(EXTRACTS_PATH, filename.split('.')[0])
 		Path(destn_path).mkdir(
 			parents=False,
@@ -176,6 +185,7 @@ if __name__=='__main__':
 		)
 
 		slide = openslide.OpenSlide(src_path)
+		print(slide.level_dimensions)
 
 		"""
 		# TEST to check if using the 'get_best_level_for_downsample' is suitable
@@ -195,7 +205,7 @@ if __name__=='__main__':
 		save_path = os.path.join(destn_path, 'main.tiff')
 		Image.fromarray(img).save(save_path, compression='tiff_lzw')
 		print(save_path)
-		print(f"Converted in {time.time()-start_}s")
+		print(f"Converted and stored in {time.time()-start_} s")
 
 		# Extract related images
 		for map_key in slide.associated_images:
@@ -210,10 +220,9 @@ if __name__=='__main__':
 				)
 
 		cnt_extracted += 1
-		break
 		#extract_representation(slide, filename)
 
-	print(f"Extracted {cnt_extracted} file(s)")
+	print(f"\nExtracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
 
 # TODO: Generate a .csv of all metadata (slide.properties)
