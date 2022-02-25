@@ -19,14 +19,14 @@ CONVERSION_DIR = 'final'
 
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
-    "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+    # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
 	"test.tiff",
 	"14276.svs"
     "sample.tiff"
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 32
+DOWNSCALE_FACTOR = 16
 
 """
 --------------------------------------------------------------------
@@ -137,7 +137,7 @@ if __name__=='__main__':
 	- Creates a directory at same level as the conversion files directory (CONVERSION_DIR)
 	- Named as [CONVERSION_DIR]-extracts
 	- Contains 1 subdirectory per file, each with:
-		- main.tiff: Downscaled WSI (from most relevant level)
+		- main.tiff: Level-0 slide (Highest Resolution)
 		- thumbnail.[REL_IMG_FORMAT]: Thumbnail image
 		- macro.[REL_IMG_FORMAT]: Macro of the slide
 		- label.[REL_IMG_FORMAT]: Label of the slide
