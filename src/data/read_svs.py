@@ -9,6 +9,9 @@ import openslide
 from PIL import Image
 #from config import config
 
+DOWNSCALE_FACTORS = [1, 4, 16, 32]
+FACTOR_LEVEL_MAP = dict(zip(DOWNSCALE_FACTORS, range(len(DOWNSCALE_FACTORS))))
+
 """
 PARAMETERES TO BE SET ---------------------------------------------
 """
@@ -17,11 +20,15 @@ CONVERSION_DIR = 'check'
 
 # 2. Names of files to be excluded from the data-path (if any)
 EXCLUDE_FILES = [
-    "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
+    # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
 	"test.tiff",
-	# "14276.svs"
+	"14276.svs"
     "sample.tiff"
 ]
+
+# 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
+DOWNSCALE_FACTOR = 32
+
 """
 --------------------------------------------------------------------
 """
@@ -137,6 +144,11 @@ if __name__=='__main__':
 		- label.[REL_IMG_FORMAT]: Label of the slide
 	"""
 
+	if DOWNSCALE_FACTOR is None or DOWNSCALE_FACTOR not in DOWNSCALE_FACTORS:
+		print("\nSet DOWNSCALE_FACTOR")
+		print(f"Available Downscale Factors: {DOWNSCALE_FACTORS}")
+		exit()
+
 	# Create extraction target directory
 	Path(EXTRACTS_PATH).mkdir(
 		parents=False,
@@ -175,9 +187,13 @@ if __name__=='__main__':
 		"""		
 
 		start_ = time.time()
-		img = extract_level(slide, 1, ((1024, 1024)))
+		img = extract_level(
+			slide, 
+			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
+			part_size=((1024, 1024))
+		)
 		Image.fromarray(img).save('test.tiff', compression='tiff_lzw')
-		print(time.time()-start_)
+		print(f"Converted in {time.time()-start_}s")
 
 		# Extract related images
 		for map_key in slide.associated_images:
