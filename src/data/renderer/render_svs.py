@@ -5,6 +5,7 @@ import os
 from threading import Lock
 
 from flask import Flask, abort, make_response, render_template, url_for
+from render_config import SVS_Render_Config
 
 if os.name == 'nt':
     _dll_path = os.getenv('OPENSLIDE_PATH')
@@ -26,11 +27,10 @@ else:
 from openslide import OpenSlide, OpenSlideError
 from openslide.deepzoom import DeepZoomGenerator
 
-SLIDE_CACHE_SIZE = 10
-
 SLIDES_DIR = 'check'
-BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
+BASE_PATH = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
 SLIDES_PATH = os.path.join(BASE_PATH, SLIDES_DIR)
+print(SLIDES_PATH)
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -165,7 +165,7 @@ def tile(path, level, col, row, format):
 if __name__ == '__main__':
 
     render_config = dict(
-        SLIDE_DIR = SLIDES_PATH
+        SLIDE_DIR = SLIDES_PATH,
         DEEPZOOM_OVERLAP = 1,
         DEEPZOOM_LIMIT_BOUNDS = True,
         DEEPZOOM_FORMAT = 'jpeg',
@@ -175,5 +175,11 @@ if __name__ == '__main__':
         port = 5000
     )
 
-    app.config.from_object(render_config)
-    app.run(host=opts.host, port=opts.port, threaded=True)
+    app.config.from_object(SVS_Render_Config)
+    app.config['SLIDE_DIR'] = SLIDES_PATH
+    print(app.config)
+    app.run(
+        host=render_config.get('ADDRESS', '127.0.0.1'),
+        port=render_config.get('port', 5000), 
+        threaded=True
+    )
