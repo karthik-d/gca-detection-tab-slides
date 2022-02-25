@@ -29,7 +29,7 @@ EXCLUDE_FILES = [
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 16
+DOWNSCALE_FACTOR = 32
 
 """
 --------------------------------------------------------------------
@@ -196,17 +196,16 @@ if __name__=='__main__':
 		print(slide.level_downsamples)
 		"""		
 
-		part_size = (random.randint(100, 4000),)*2
-		print(part_size)
+		# part_size = (random.randint(100, 4000),)*2
 		start_ = time.time()
 		img = extract_level(
 			slide, 
 			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
-			part_size=part_size
+			part_size=(2048, 2048)
 		)
 		save_path = os.path.join(destn_path, 'main.tiff')
 		Image.fromarray(img).save(save_path, compression='tiff_lzw')
-		print(f"Converted and stored in {time.time()-start_} s")
+		print(f"Converted and stored in {time.time()-start_} second(s)")
 
 		# Extract related images
 		for map_key in slide.associated_images:
