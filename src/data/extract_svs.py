@@ -1,3 +1,15 @@
+"""
+Filename: extract_svs.py
+Usage: python src/data/extract_svs.py
+Purpose: To convert the .svs WSI TAB images to tiff and extract the thumbnail, macro, label
+Improvements:
+- TODO: argument parser to set src dir, dest dir, scale factor, help
+- TODO: Generate a .csv of all metadata (slide.properties)
+- TODO: summary of generated files and sizes
+- TODO: code documentation
+- TODO: references documentation
+"""
+
 import os
 import numpy as np
 import tempfile
@@ -14,7 +26,7 @@ FACTOR_LEVEL_MAP = dict(zip(DOWNSCALE_FACTORS, range(len(DOWNSCALE_FACTORS))))
 """
 PARAMETERES TO BE SET ---------------------------------------------
 """
-# 1. Name of the directory containing the .svs files to be converted
+# 1. Name of the directory containing the .svs files to be converted - ../../dataset/data/final/
 CONVERSION_DIR = 'final'
 
 # 2. Names of files to be excluded from the data-path (if any)
@@ -227,5 +239,3 @@ if __name__=='__main__':
 
 	print(f"\nExtracted {cnt_extracted} file(s)")
 	print("\nThe following file(s) could not be processed:" + "\n".join(skipped_files)) if skipped_files else None
-
-# TODO: Generate a .csv of all metadata (slide.properties)
