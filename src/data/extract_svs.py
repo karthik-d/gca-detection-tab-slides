@@ -30,6 +30,9 @@ EXCLUDE_FILES = [
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
 DOWNSCALE_FACTOR = 32
 
+# 4. Perform LZW Compression ? (True/False)
+COMPRESS_LZW = False
+
 """
 --------------------------------------------------------------------
 """
@@ -202,8 +205,9 @@ if __name__=='__main__':
 			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
 			part_size=(2048, 2048)
 		)
+		op_compression = 'tiff_lzw' if COMPRESS_LZW else None
 		save_path = os.path.join(destn_path, 'main.tiff')
-		Image.fromarray(img).save(save_path, compression='tiff_lzw')
+		Image.fromarray(img).save(save_path, compression=op_compression)
 		print(f"Converted and stored in {time.time()-start_} second(s)")
 
 		# Extract related images
