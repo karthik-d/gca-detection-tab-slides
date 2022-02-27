@@ -33,17 +33,18 @@ CONVERSION_DIR = 'final'
 EXCLUDE_FILES = [
     # "mixed_13829$2000-050-10$US$SCAN$OR$001 -001.tiff",
 	# "negative.tiff",
-	# "Postivie_13829$2000-005-5$US$SCAN$OR$001 -003.tiff",
+	"Neg_13829$2020-025-5$US$SCAN$OR$001 -003.svs",
+	"Postivie_13829$2000-005-5$US$SCAN$OR$001 -003.svs",
 	"test.tiff",
 	"14276.svs",
     "sample.tiff"
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 32
+DOWNSCALE_FACTOR = 1
 
 # 4. Perform LZW Compression ? (True/False)
-COMPRESS_LZW = False
+COMPRESS_LZW = True
 
 """
 --------------------------------------------------------------------
