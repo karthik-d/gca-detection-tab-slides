@@ -154,6 +154,17 @@ def get_tile_image_path_by_slide_row_col(slide_number, row, col):
   return img_path
 
 
+# Added - Replaces 'get_training_image_path' to generate filename for downscaled training image
+def make_downscaled_training_image_path(slide_filepath, large_w, large_h, small_w, small_h):
+  img_path = os.path.join(
+    DEST_TRAIN_DIR, 
+    slide_filepath + "-" + str(SCALE_FACTOR) + "x-" + DEST_TRAIN_SUFFIX + str(
+      large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(small_h) + "." + DEST_TRAIN_EXT
+  )
+  return img_path
+
+
+# Expunged - Using filenames based on the TAB Dataset's naming convention
 def get_training_image_path(slide_number, large_w=None, large_h=None, small_w=None, small_h=None):
   """
   Convert slide number and optional dimensions to a training image path. If no dimensions are supplied,
@@ -180,6 +191,16 @@ def get_training_image_path(slide_number, large_w=None, large_h=None, small_w=No
   return img_path
 
 
+# Added - Replaces 'get_training_thumbnail_path' to generate filename for downscaled training image
+def make_downscaled_training_thumbnail_path(slide_filepath, large_w, large_h, small_w, small_h):
+  img_path = os.path.join(
+    DEST_TRAIN_THUMBNAIL_DIR, 
+    slide_filepath + "-" + str(SCALE_FACTOR) + "x-" + DEST_TRAIN_SUFFIX + str(
+      large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(small_h) + "." + THUMBNAIL_EXT)
+  return img_path
+
+
+# Expunged - Using filenames based on the TAB Dataset's naming convention
 def get_training_thumbnail_path(slide_number, large_w=None, large_h=None, small_w=None, small_h=None):
   """
   Convert slide number and optional dimensions to a training thumbnail path. If no dimensions are
@@ -348,26 +369,28 @@ def small_to_large_mapping(small_pixel, large_dimensions):
   return large_x, large_y
 
 
-def training_slide_to_image(slide_number):
+# Modified (using slide_path in place of slide_num)
+def training_slide_to_image(slide_filepath):
   """
   Convert a WSI training slide to a saved scaled-down image in a format such as jpg or png.
   Args:
     slide_number: The slide number.
   """
 
-  img, large_w, large_h, new_w, new_h = slide_to_scaled_pil_image(slide_number)
+  # Scale down the WSI by SCALE_FACTOR
+  img, large_w, large_h, new_w, new_h = slide_to_scaled_pil_image(slide_filepath)
 
-  img_path = get_training_image_path(slide_number, large_w, large_h, new_w, new_h)
+  img_path = make_downscaled_training_image_path(slide_filepath, large_w, large_h, new_w, new_h)
   print("Saving image to: " + img_path)
   if not os.path.exists(DEST_TRAIN_DIR):
     os.makedirs(DEST_TRAIN_DIR)
   img.save(img_path)
 
-  thumbnail_path = get_training_thumbnail_path(slide_number, large_w, large_h, new_w, new_h)
+  thumbnail_path = make_downscaled_training_thumbnail_path(slide_filepath, large_w, large_h, new_w, new_h)
   save_thumbnail(img, THUMBNAIL_SIZE, thumbnail_path)
 
 
-def slide_to_scaled_pil_image(slide_number):
+def slide_to_scaled_pil_image(slide_filepath):
   """
   Convert a WSI training slide to a scaled-down PIL image.
   Args:
@@ -375,8 +398,7 @@ def slide_to_scaled_pil_image(slide_number):
   Returns:
     Tuple consisting of scaled-down PIL image, original width, original height, new width, and new height.
   """
-  slide_filepath = get_training_slide_path(slide_number)
-  print(slide_filepath)
+
   print("Opening Slide #%d: %s" % (slide_number, slide_filepath))
   slide = open_slide(slide_filepath)
 
@@ -409,15 +431,19 @@ def save_thumbnail(pil_img, size, path, display_path=False):
   img.save(path)
 
 
+# Modified
 def get_num_training_slides():
   """
   Obtain the total number of WSI training slide images.
   Returns:
     The total number of WSI training slide images.
   """
-  num_training_slides = len(glob.glob1(SRC_TRAIN_DIR, "*." + SRC_TRAIN_EXT))
-  print(num_training_slides)
-  return num_training_slides
+  return len(get_training_slide_paths())
+
+
+# Addition
+def get_training_slide_paths():
+  return glob.glob(os.path.join(SRC_TRAIN_DIR, "*."+SRC_TRAIN_EXT))
 
 
 def training_slide_range_to_images(start_ind, end_ind):
@@ -434,6 +460,14 @@ def training_slide_range_to_images(start_ind, end_ind):
   return (start_ind, end_ind)
 
 
+# Addition
+def training_slide_paths_to_images(paths_l):
+  for path in paths_l:
+    training_slide_to_image(path)
+
+
+# TODO: Adapt to new method - refer to multiprocess variant
+'''
 def singleprocess_training_slides_to_images():
   """
   Convert all WSI training slides to smaller images using a single process.
@@ -444,8 +478,9 @@ def singleprocess_training_slides_to_images():
   training_slide_range_to_images(1, num_train_images)
 
   t.elapsed_display()
+'''
 
-
+# Modified
 def multiprocess_training_slides_to_images():
   """
   Convert all WSI training slides to smaller images using multiple processes (one process per core).
@@ -460,12 +495,19 @@ def multiprocess_training_slides_to_images():
   num_train_images = get_num_training_slides()
   if num_processes > num_train_images:
     num_processes = num_train_images
-  images_per_process = num_train_images / num_processes
+  images_per_process = (num_train_images // num_processes)+1
 
   print("Number of processes: " + str(num_processes))
   print("Number of training images: " + str(num_train_images))
 
+  training_paths = get_training_slide_paths()
+  tasks = []
+  for num_process in range(num_processes):
+    start_idx = num_process*images_per_process
+    end_idx = (num_process+1)*images_per_process
+    tasks.append((training_paths[start_idx:end_idx],))
   # each task specifies a range of slides
+  """
   tasks = []
   for num_process in range(1, num_processes + 1):
     start_index = (num_process - 1) * images_per_process + 1
@@ -477,18 +519,20 @@ def multiprocess_training_slides_to_images():
       print("Task #" + str(num_process) + ": Process slide " + str(start_index))
     else:
       print("Task #" + str(num_process) + ": Process slides " + str(start_index) + " to " + str(end_index))
-
+  """
   # start tasks
   results = []
   for t in tasks:
-    results.append(pool.apply_async(training_slide_range_to_images, t))
+    results.append(pool.apply_async(training_slide_paths_to_images, t))
 
+  """
   for result in results:
     (start_ind, end_ind) = result.get()
     if start_ind == end_ind:
       print("Done converting slide %d" % start_ind)
     else:
       print("Done converting slides %d through %d" % (start_ind, end_ind))
+  """
 
   timer.elapsed_display()
 
