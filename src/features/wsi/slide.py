@@ -379,7 +379,7 @@ def training_slide_to_image(slide_filepath):
 
   # Scale down the WSI by SCALE_FACTOR
   img, large_w, large_h, new_w, new_h = slide_to_scaled_pil_image(slide_filepath)
-
+  print(img.shape)
   img_path = make_downscaled_training_image_path(slide_filepath, large_w, large_h, new_w, new_h)
   print("Saving image to: " + img_path)
   if not os.path.exists(DEST_TRAIN_DIR):
@@ -399,8 +399,9 @@ def slide_to_scaled_pil_image(slide_filepath):
     Tuple consisting of scaled-down PIL image, original width, original height, new width, and new height.
   """
 
-  print("Opening Slide #%d: %s" % (slide_number, slide_filepath))
+  print(f"Opening Slide: {slide_filepath}")
   slide = open_slide(slide_filepath)
+  print(type(slide))
 
   large_w, large_h = slide.dimensions
   new_w = math.floor(large_w / SCALE_FACTOR)
@@ -446,6 +447,7 @@ def get_training_slide_paths():
   return glob.glob(os.path.join(SRC_TRAIN_DIR, "*."+SRC_TRAIN_EXT))
 
 
+# Expunged
 def training_slide_range_to_images(start_ind, end_ind):
   """
   Convert a range of WSI training slides to smaller images (in a format such as jpg or png).
@@ -460,7 +462,7 @@ def training_slide_range_to_images(start_ind, end_ind):
   return (start_ind, end_ind)
 
 
-# Addition
+# Addition - To replace `training_slide_range_to_images`
 def training_slide_paths_to_images(paths_l):
   for path in paths_l:
     training_slide_to_image(path)
