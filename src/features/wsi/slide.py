@@ -550,7 +550,7 @@ def get_filter_thumbnail_result(slide_filepath):
     Path to the filter thumbnail file.
   """
   slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-  training_img_path = get_training_image_path(slide_number)
+  training_img_path = get_downscaled_training_image_path(slide_filepath)
   large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
   img_path = os.path.join(FILTER_THUMBNAIL_DIR + slide_filename + "-" + str(
     SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
