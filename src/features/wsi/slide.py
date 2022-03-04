@@ -18,7 +18,7 @@ from wsi.utils import Time
 # Used constants: SRC_TRAIN_DIR, SRC_TRAIN_EXT
 
 BASE_DIR = os.path.abspath(os.path.join(__file__, os.path.pardir, os.path.pardir, os.path.pardir, os.path.pardir, 'dataset', 'data'))
-TRAIN_PREFIX = "TUPAC-TR-"
+TRAIN_PREFIX = "TUPAC-TR-"   # Not in use
 SRC_TRAIN_DIR = os.path.join(BASE_DIR, "final")
 SRC_TRAIN_EXT = "svs"
 DEST_TRAIN_SUFFIX = ""  # Example: "train-"
@@ -540,22 +540,26 @@ def get_filter_image_result(slide_filepath):
 
 # Modified
 def get_filter_thumbnail_result(slide_filepath):
-  """
-  Convert slide number to the path to the file that is the final thumbnail result of filtering.
-  Example:
-    5 -> ../data/filter_thumbnail_jpg/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.jpg
-  Args:
-    slide_number: The slide number.
-  Returns:
-    Path to the filter thumbnail file.
-  """
-  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-  training_img_path = get_downscaled_training_image_path(slide_filepath)
-  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
-  img_path = os.path.join(FILTER_THUMBNAIL_DIR + slide_filename + "-" + str(
-    SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
-    small_h) + "-" + FILTER_RESULT_TEXT + "." + THUMBNAIL_EXT)
-  return img_path
+	"""
+	Convert slide filepath to the path to the file that is the final thumbnail result of filtering.
+	Example:
+	5 -> ../data/filter_thumbnail_jpg/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.jpg
+	Args:
+	slide_number: The slide number.
+	Returns:
+	Path to the filter thumbnail file.
+	"""
+	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+	training_img_path = get_downscaled_training_image_path(slide_filepath)
+	large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+	img_path = os.path.join(
+		FILTER_THUMBNAIL_DIR, 
+		slide_filename + "-" + str(
+			SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+			small_h) + "-" + FILTER_RESULT_TEXT + "." + THUMBNAIL_EXT
+	)
+	print("Debug ", img_path)
+	return img_path
 
 
 def parse_dimensions_from_image_filename(filename):
