@@ -155,15 +155,20 @@ def get_tile_image_path_by_slide_row_col(slide_number, row, col):
   return img_path
 
 
-# Added - Replaces 'get_training_image_path' to generate filename for downscaled training image
-def make_downscaled_training_image_path(slide_filepath, large_w, large_h, small_w, small_h):
-  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-  img_path = os.path.join(
-    DEST_TRAIN_DIR, 
-    slide_filename + "-" + str(SCALE_FACTOR) + "x-" + DEST_TRAIN_SUFFIX + str(
-      large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(small_h) + "." + DEST_TRAIN_EXT
-  )
-  return img_path
+# Added - Replaces 'get_training_image_path' to generate/retrieve filename for downscaled training image
+def get_downscaled_training_image_path(slide_filepath, large_w, large_h, small_w, small_h):
+	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+	if large_w is None and large_h is None and small_w is None and small_h is None:
+		wildcard_path = os.path.join(DEST_TRAIN_DIR, slide_filename + "*." + DEST_TRAIN_EXT)
+		print(wildcard_path)
+		img_path = glob.glob(wildcard_path)[0]
+	else:
+		img_path = os.path.join(
+			DEST_TRAIN_DIR, 
+			slide_filename + "-" + str(SCALE_FACTOR) + "x-" + DEST_TRAIN_SUFFIX + str(
+			large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(small_h) + "." + DEST_TRAIN_EXT
+		)
+	return img_path
 
 
 # Expunged - Using filenames based on the TAB Dataset's naming convention
@@ -383,7 +388,7 @@ def training_slide_to_image(slide_filepath):
   # Scale down the WSI by SCALE_FACTOR
   img, large_w, large_h, new_w, new_h = slide_to_scaled_pil_image(slide_filepath)
 
-  img_path = make_downscaled_training_image_path(slide_filepath, large_w, large_h, new_w, new_h)
+  img_path = get_downscaled_training_image_path(slide_filepath, large_w, large_h, new_w, new_h)
   print("Saving image to: " + img_path)
   if not os.path.exists(DEST_TRAIN_DIR):
     os.makedirs(DEST_TRAIN_DIR)
