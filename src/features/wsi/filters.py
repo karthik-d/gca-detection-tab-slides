@@ -973,7 +973,8 @@ def apply_image_filters(np_img, slide_num=None, info=None, save=False, display=F
   return img
 
 
-def apply_filters_to_image(slide_num, save=True, display=False):
+# Modified: changed from slide_num based to slide_path based
+def apply_filters_to_image(slide_filepath, save=True, display=False):
   """
   Apply a set of filters to an image and optionally save and/or display filtered images.
   Args:
@@ -985,13 +986,13 @@ def apply_filters_to_image(slide_num, save=True, display=False):
     (used for HTML page generation).
   """
   t = Time()
-  print("Processing slide #%d" % slide_num)
 
   info = dict()
 
   if save and not os.path.exists(slide.FILTER_DIR):
     os.makedirs(slide.FILTER_DIR)
-  img_path = slide.get_training_image_path(slide_num)
+  img_path = slide.get_downscaled_training_image_path(slide_filepath)
+  print("FOUND!")
   np_orig = slide.open_image_np(img_path)
   filtered_np_img = apply_image_filters(np_orig, slide_num, info, save=save, display=display)
 
@@ -1228,6 +1229,15 @@ def apply_filters_to_image_list(image_num_list, save, display):
   return image_num_list, html_page_info
 
 
+# Added
+def apply_filters_to_image_path_list(path_l, save, display):
+  html_page_info = dict()
+  for slide_path in path_l:
+    _, info = apply_filters_to_image(slide_path, save=save, display=display)
+    html_page_info.update(info)
+  return path_l, html_page_info
+
+
 def apply_filters_to_image_range(start_ind, end_ind, save, display):
   """
   Apply filters to a range of images.
@@ -1297,12 +1307,12 @@ def multiprocess_apply_filters_to_images(save=True, display=False, html=True, im
     num_train_images = slide.get_num_training_slides()
   if num_processes > num_train_images:
     num_processes = num_train_images
-  images_per_process = num_train_images / num_processes
+  images_per_process = (num_train_images // num_processes)+1
 
   print("Number of processes: " + str(num_processes))
   print("Number of training images: " + str(num_train_images))
 
-  training_paths = get_training_slide_paths()
+  training_paths = slide.get_training_slide_paths()
   tasks = []
   for num_process in range(num_processes):
     start_idx = num_process*images_per_process
