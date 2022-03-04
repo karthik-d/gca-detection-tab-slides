@@ -1285,14 +1285,13 @@ def singleprocess_apply_filters_to_images(save=True, display=False, html=True, i
 
 
 # Modified
-def multiprocess_apply_filters_to_images(save=True, display=False, html=True, image_num_list=None):
+def multiprocess_apply_filters_to_images(save=True, display=False, html=True):
   """
   Apply a set of filters to all training images using multiple processes (one process per core).
   Args:
     save: If True, save filtered images.
     display: If True, display filtered images to screen (multiprocessed display not recommended).
     html: If True, generate HTML page to display filtered images.
-    image_num_list: Optionally specify a list of image slide numbers.
   """
   timer = Time()
   print("Applying filters to images (multiprocess)\n")
@@ -1304,10 +1303,7 @@ def multiprocess_apply_filters_to_images(save=True, display=False, html=True, im
   num_processes = multiprocessing.cpu_count()
   pool = multiprocessing.Pool(num_processes)
 
-  if image_num_list is not None:
-    num_train_images = len(image_num_list)
-  else:
-    num_train_images = slide.get_num_training_slides()
+  num_train_images = slide.get_num_training_slides()
   if num_processes > num_train_images:
     num_processes = num_train_images
   images_per_process = (num_train_images // num_processes)+1
@@ -1329,17 +1325,9 @@ def multiprocess_apply_filters_to_images(save=True, display=False, html=True, im
 
   html_page_info = dict()
   for result in results:
-    if image_num_list is not None:
-      (image_nums, html_page_info_res) = result.get()
-      html_page_info.update(html_page_info_res)
-      print("Done filtering slides: %s" % image_nums)
-    else:
-      (start_ind, end_ind, html_page_info_res) = result.get()
-      html_page_info.update(html_page_info_res)
-      if (start_ind == end_ind):
-        print("Done filtering slide %d" % start_ind)
-      else:
-        print("Done filtering slides %d through %d" % (start_ind, end_ind))
+    (path_l, html_page_info_res) = result.get()
+    html_page_info.update(html_page_info_res)
+    print(f"Done filtering {len(path_l)} slide(s)")
 
   if html:
     generate_filter_html_result(html_page_info)
