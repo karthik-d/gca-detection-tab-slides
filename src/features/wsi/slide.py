@@ -197,7 +197,7 @@ def get_filter_image_filename(slide_filepath, filter_number, filter_name_info, t
 
 
 # Modified
-def get_filter_image_result(slide_filepath):
+def get_filter_image_result_path(slide_filepath):
 	"""
 	Convert slide number to the path to the file that is the final result of filtering.
 	Example:
@@ -214,12 +214,11 @@ def get_filter_image_result(slide_filepath):
 	img_path = os.path.join(FILTER_DIR, slide_filename + "-" + str(
 	SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
 	small_h) + "-" + FILTER_RESULT_TEXT + "." + DEST_TRAIN_EXT)
-	print(img_path)
 	return img_path
 
 
 # Modified
-def get_filter_thumbnail_result(slide_filepath):
+def get_filter_thumbnail_result_path(slide_filepath):
 	"""
 	Convert slide filepath to the path to the file that is the final thumbnail result of filtering.
 	Example:
@@ -238,7 +237,6 @@ def get_filter_thumbnail_result(slide_filepath):
 			SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
 			small_h) + "-" + FILTER_RESULT_TEXT + "." + THUMBNAIL_EXT
 	)
-	print("Debug ", img_path)
 	return img_path
 
 
