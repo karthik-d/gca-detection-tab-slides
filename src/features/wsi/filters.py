@@ -1062,58 +1062,6 @@ def mask_percentage_text(mask_percentage):
   return "%3.2f%%" % mask_percentage
 
 
-def image_cell(slide_num, filter_num, display_text, file_text):
-  """
-  Generate HTML for viewing a processed image.
-  Args:
-    slide_num: The slide number.
-    filter_num: The filter number.
-    display_text: Filter display name.
-    file_text: Filter name for file.
-  Returns:
-    HTML for a table cell for viewing a filtered image.
-  """
-  filt_img = slide.get_filter_image_path(slide_num, filter_num, file_text)
-  filt_thumb = slide.get_filter_thumbnail_path(slide_num, filter_num, file_text)
-  img_name = slide.get_filter_image_filename(slide_num, filter_num, file_text)
-  return "      <td>\n" + \
-         "        <a target=\"_blank\" href=\"%s\">%s<br/>\n" % (filt_img, display_text) + \
-         "          <img src=\"%s\" />\n" % (filt_thumb) + \
-         "        </a>\n" + \
-         "      </td>\n"
-
-
-def html_header(page_title):
-  """
-  Generate an HTML header for previewing images.
-  Returns:
-    HTML header for viewing images.
-  """
-  html = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" " + \
-         "\"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n" + \
-         "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n" + \
-         "  <head>\n" + \
-         "    <title>%s</title>\n" % page_title + \
-         "    <style type=\"text/css\">\n" + \
-         "     img { border: 2px solid black; }\n" + \
-         "     td { border: 2px solid black; }\n" + \
-         "    </style>\n" + \
-         "  </head>\n" + \
-         "  <body>\n"
-  return html
-
-
-def html_footer():
-  """
-  Generate an HTML footer for previewing images.
-  Returns:
-    HTML footer for viewing images.
-  """
-  html = "</body>\n" + \
-         "</html>\n"
-  return html
-
-
 def save_filtered_image(np_img, slide_filename, filter_num, filter_text):
   """
   Save a filtered image to the file system.
@@ -1180,6 +1128,7 @@ def apply_filters_to_image_range(start_ind, end_ind, save, display):
   return start_ind, end_ind, html_page_info
 
 
+# Modified
 def singleprocess_apply_filters_to_images(save=True, display=False):
   """
   Apply a set of filters to training images and optionally save and/or display the filtered images.
