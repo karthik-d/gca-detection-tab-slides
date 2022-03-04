@@ -924,6 +924,7 @@ def uint8_to_bool(np_img):
   return result
 
 
+# Modified
 def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, display=False):
   """
   Apply filters to image as NumPy array and optionally save and/or display filtered images.
@@ -1083,23 +1084,6 @@ def save_filtered_image(np_img, slide_filename, filter_num, filter_text):
   print("%-20s | Time: %-14s  Name: %s" % ("Save Thumbnail", str(t1.elapsed()), thumbnail_filepath))
 
 
-def apply_filters_to_image_list(image_num_list, save, display):
-  """
-  Apply filters to a list of images.
-  Args:
-    image_num_list: List of image numbers.
-    save: If True, save filtered images.
-    display: If True, display filtered images to screen.
-  Returns:
-    Tuple consisting of 1) a list of image numbers, and 2) a dictionary of image filter information.
-  """
-  html_page_info = dict()
-  for slide_num in image_num_list:
-    _, info = apply_filters_to_image(slide_num, save=save, display=display)
-    html_page_info.update(info)
-  return image_num_list, html_page_info
-
-
 # Added
 def apply_filters_to_image_path_list(path_l, save, display):
   html_page_info = dict()
@@ -1107,25 +1091,6 @@ def apply_filters_to_image_path_list(path_l, save, display):
     _, info = apply_filters_to_image(slide_path, save=save, display=display)
     html_page_info.update(info)
   return path_l, html_page_info
-
-
-def apply_filters_to_image_range(start_ind, end_ind, save, display):
-  """
-  Apply filters to a range of images.
-  Args:
-    start_ind: Starting index (inclusive).
-    end_ind: Ending index (inclusive).
-    save: If True, save filtered images.
-    display: If True, display filtered images to screen.
-  Returns:
-    Tuple consisting of 1) staring index of slides converted to images, 2) ending index of slides converted to images,
-    and 3) a dictionary of image filter information.
-  """
-  html_page_info = dict()
-  for slide_num in range(start_ind, end_ind + 1):
-    _, info = apply_filters_to_image(slide_num, save=save, display=display)
-    html_page_info.update(info)
-  return start_ind, end_ind, html_page_info
 
 
 # Modified
