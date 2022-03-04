@@ -101,7 +101,7 @@ def open_image_np(filename):
     A NumPy representing an RGB image.
   """
   pil_img = open_image(filename)
-  np_img = util.pil_to_np_rgb(pil_img)
+  np_img = utils.pil_to_np_rgb(pil_img)
   return np_img
 
 
@@ -156,7 +156,7 @@ def get_tile_image_path_by_slide_row_col(slide_number, row, col):
 
 
 # Added - Replaces 'get_training_image_path' to generate/retrieve filename for downscaled training image
-def get_downscaled_training_image_path(slide_filepath, large_w, large_h, small_w, small_h):
+def get_downscaled_training_image_path(slide_filepath, large_w=None, large_h=None, small_w=None, small_h=None):
 	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
 	if large_w is None and large_h is None and small_w is None and small_h is None:
 		wildcard_path = os.path.join(DEST_TRAIN_DIR, slide_filename + "*." + DEST_TRAIN_EXT)
