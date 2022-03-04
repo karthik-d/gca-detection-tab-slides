@@ -10,6 +10,7 @@ import skimage.filters as sk_filters
 import skimage.future as sk_future
 import skimage.morphology as sk_morphology
 import skimage.segmentation as sk_segmentation
+import ntpath
 
 from wsi import slide, utils
 from wsi.utils import Time
@@ -923,7 +924,7 @@ def uint8_to_bool(np_img):
   return result
 
 
-def apply_image_filters(np_img, slide_num=None, info=None, save=False, display=False):
+def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, display=False):
   """
   Apply filters to image as NumPy array and optionally save and/or display filtered images.
   Args:
@@ -935,37 +936,39 @@ def apply_image_filters(np_img, slide_num=None, info=None, save=False, display=F
   Returns:
     Resulting filtered image as a NumPy array.
   """
+  
+  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
   rgb = np_img
-  save_display(save, display, info, rgb, slide_num, 1, "Original", "rgb")
+  save_display(save, display, info, rgb, slide_filename, 1, "Original", "rgb")
 
   mask_not_green = filter_green_channel(rgb)
   rgb_not_green = util.mask_rgb(rgb, mask_not_green)
-  save_display(save, display, info, rgb_not_green, slide_num, 2, "Not Green", "rgb-not-green")
+  save_display(save, display, info, rgb_not_green, slide_filename, 2, "Not Green", "rgb-not-green")
 
   mask_not_gray = filter_grays(rgb)
   rgb_not_gray = util.mask_rgb(rgb, mask_not_gray)
-  save_display(save, display, info, rgb_not_gray, slide_num, 3, "Not Gray", "rgb-not-gray")
+  save_display(save, display, info, rgb_not_gray, slide_filename, 3, "Not Gray", "rgb-not-gray")
 
   mask_no_red_pen = filter_red_pen(rgb)
   rgb_no_red_pen = util.mask_rgb(rgb, mask_no_red_pen)
-  save_display(save, display, info, rgb_no_red_pen, slide_num, 4, "No Red Pen", "rgb-no-red-pen")
+  save_display(save, display, info, rgb_no_red_pen, slide_filename, 4, "No Red Pen", "rgb-no-red-pen")
 
   mask_no_green_pen = filter_green_pen(rgb)
   rgb_no_green_pen = util.mask_rgb(rgb, mask_no_green_pen)
-  save_display(save, display, info, rgb_no_green_pen, slide_num, 5, "No Green Pen", "rgb-no-green-pen")
+  save_display(save, display, info, rgb_no_green_pen, slide_filename, 5, "No Green Pen", "rgb-no-green-pen")
 
   mask_no_blue_pen = filter_blue_pen(rgb)
   rgb_no_blue_pen = util.mask_rgb(rgb, mask_no_blue_pen)
-  save_display(save, display, info, rgb_no_blue_pen, slide_num, 6, "No Blue Pen", "rgb-no-blue-pen")
+  save_display(save, display, info, rgb_no_blue_pen, slide_filename, 6, "No Blue Pen", "rgb-no-blue-pen")
 
   mask_gray_green_pens = mask_not_gray & mask_not_green & mask_no_red_pen & mask_no_green_pen & mask_no_blue_pen
   rgb_gray_green_pens = util.mask_rgb(rgb, mask_gray_green_pens)
-  save_display(save, display, info, rgb_gray_green_pens, slide_num, 7, "Not Gray, Not Green, No Pens",
+  save_display(save, display, info, rgb_gray_green_pens, slide_filename, 7, "Not Gray, Not Green, No Pens",
                "rgb-no-gray-no-green-no-pens")
 
   mask_remove_small = filter_remove_small_objects(mask_gray_green_pens, min_size=500, output_type="bool")
   rgb_remove_small = util.mask_rgb(rgb, mask_remove_small)
-  save_display(save, display, info, rgb_remove_small, slide_num, 8,
+  save_display(save, display, info, rgb_remove_small, slide_filename, 8,
                "Not Gray, Not Green, No Pens,\nRemove Small Objects",
                "rgb-not-green-not-gray-no-pens-remove-small")
 
@@ -992,9 +995,8 @@ def apply_filters_to_image(slide_filepath, save=True, display=False):
   if save and not os.path.exists(slide.FILTER_DIR):
     os.makedirs(slide.FILTER_DIR)
   img_path = slide.get_downscaled_training_image_path(slide_filepath)
-  print("FOUND!")
   np_orig = slide.open_image_np(img_path)
-  filtered_np_img = apply_image_filters(np_orig, slide_num, info, save=save, display=display)
+  filtered_np_img = apply_image_filters(np_orig, slide_filepath, info, save=save, display=display)
 
   if save:
     t1 = Time()
@@ -1013,7 +1015,7 @@ def apply_filters_to_image(slide_filepath, save=True, display=False):
   return filtered_np_img, info
 
 
-def save_display(save, display, info, np_img, slide_num, filter_num, display_text, file_text,
+def save_display(save, display, info, np_img, slide_name, filter_num, display_text, file_text,
                  display_mask_percentage=True):
   """
   Optionally save an image and/or display the image.
@@ -1022,7 +1024,7 @@ def save_display(save, display, info, np_img, slide_num, filter_num, display_tex
     display: If True, display filtered images to screen.
     info: Dictionary to store filter information.
     np_img: Image as a NumPy array.
-    slide_num: The slide number.
+    slide_name: The slide name.
     filter_num: The filter number.
     display_text: Filter display name.
     file_text: Filter name for file.
@@ -1032,20 +1034,20 @@ def save_display(save, display, info, np_img, slide_num, filter_num, display_tex
   if display_mask_percentage:
     mask_percentage = mask_percent(np_img)
     display_text = display_text + "\n(" + mask_percentage_text(mask_percentage) + " masked)"
-  if slide_num is None and filter_num is None:
+  if slide_name is None and filter_num is None:
     pass
   elif filter_num is None:
-    display_text = "S%03d " % slide_num + display_text
-  elif slide_num is None:
+    display_text = "S%03d " % slide_name + display_text
+  elif slide_name is None:
     display_text = "F%03d " % filter_num + display_text
   else:
-    display_text = "S%03d-F%03d " % (slide_num, filter_num) + display_text
+    display_text = "S%03d-F%03d " % (slide_name, filter_num) + display_text
   if display:
     util.display_img(np_img, display_text)
   if save:
-    save_filtered_image(np_img, slide_num, filter_num, file_text)
+    save_filtered_image(np_img, slide_name, filter_num, file_text)
   if info is not None:
-    info[slide_num * 1000 + filter_num] = (slide_num, filter_num, display_text, file_text, mask_percentage)
+    info[slide_name * 1000 + filter_num] = (slide_name, filter_num, display_text, file_text, mask_percentage)
 
 
 def mask_percentage_text(mask_percentage):
