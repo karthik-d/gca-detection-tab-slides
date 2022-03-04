@@ -3,11 +3,17 @@ import numpy as np
 import os 
 import ntpath
 
+import matplotlib.pyplot as plot
+
 from wsi import slide, utils
 from wsi.utils import Time
 
 
 def extract_roi_from_image(slide_filepath):
+	img_path = slide.get_filter_image_result_path(slide_filepath)
+	np_orig = slide.open_image_np(img_path)
+	plot.imshow(np_orig)
+	plot.show()
 	return slide_filepath
 
 

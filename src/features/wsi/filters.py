@@ -925,6 +925,7 @@ def uint8_to_bool(np_img):
 
 
 # Modified
+# Not applying RED-PEN FILTER - It removes some of the tissue region"
 def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, display=False):
   """
   Apply filters to image as NumPy array and optionally save and/or display filtered images.
@@ -950,9 +951,11 @@ def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, disp
   rgb_not_gray = utils.mask_rgb(rgb, mask_not_gray)
   # save_display(save, display, info, rgb_not_gray, slide_filename, 3, "Not Gray", "rgb-not-gray")
 
+  """
   mask_no_red_pen = filter_red_pen(rgb)
   rgb_no_red_pen = utils.mask_rgb(rgb, mask_no_red_pen)
   # save_display(save, display, info, rgb_no_red_pen, slide_filename, 4, "No Red Pen", "rgb-no-red-pen")
+  """
 
   mask_no_green_pen = filter_green_pen(rgb)
   rgb_no_green_pen = utils.mask_rgb(rgb, mask_no_green_pen)
@@ -962,7 +965,7 @@ def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, disp
   rgb_no_blue_pen = utils.mask_rgb(rgb, mask_no_blue_pen)
   # save_display(save, display, info, rgb_no_blue_pen, slide_filename, 6, "No Blue Pen", "rgb-no-blue-pen")
 
-  mask_gray_green_pens = mask_not_gray & mask_not_green & mask_no_red_pen & mask_no_green_pen & mask_no_blue_pen
+  mask_gray_green_pens = mask_not_gray & mask_not_green & mask_no_green_pen & mask_no_blue_pen
   rgb_gray_green_pens = utils.mask_rgb(rgb, mask_gray_green_pens)
   # save_display(save, display, info, rgb_gray_green_pens, slide_filename, 7, "Not Gray, Not Green, No Pens",
               #  "rgb-no-gray-no-green-no-pens")
@@ -1002,13 +1005,13 @@ def apply_filters_to_image(slide_filepath, save=True, display=False):
 
   if save:
     t1 = Time()
-    result_path = slide.get_filter_image_result(slide_filepath)
+    result_path = slide.get_filter_image_result_path(slide_filepath)
     pil_img = utils.np_to_pil(filtered_np_img)
     pil_img.save(result_path)
     print("%-20s | Time: %-14s  Name: %s" % ("Save Image", str(t1.elapsed()), result_path))
 
     t1 = Time()
-    thumbnail_path = slide.get_filter_thumbnail_result(slide_filepath)
+    thumbnail_path = slide.get_filter_thumbnail_result_path(slide_filepath)
     slide.save_thumbnail(pil_img, slide.THUMBNAIL_SIZE, thumbnail_path)
     print("%-20s | Time: %-14s  Name: %s" % ("Save Thumbnail", str(t1.elapsed()), thumbnail_path))
 
