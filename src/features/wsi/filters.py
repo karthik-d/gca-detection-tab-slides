@@ -1135,86 +1135,6 @@ def save_filtered_image(np_img, slide_filename, filter_num, filter_text):
   print("%-20s | Time: %-14s  Name: %s" % ("Save Thumbnail", str(t1.elapsed()), thumbnail_filepath))
 
 
-def generate_filter_html_result(html_page_info):
-  """
-  Generate HTML to view the filtered images. If slide.FILTER_PAGINATE is True, the results will be paginated.
-  Args:
-    html_page_info: Dictionary of image information.
-  """
-  if not slide.FILTER_PAGINATE:
-    html = ""
-    html += html_header("Filtered Images")
-    html += "  <table>\n"
-
-    row = 0
-    for key in sorted(html_page_info):
-      value = html_page_info[key]
-      current_row = value[0]
-      if current_row > row:
-        html += "    <tr>\n"
-        row = current_row
-      html += image_cell(value[0], value[1], value[2], value[3])
-      next_key = key + 1
-      if next_key not in html_page_info:
-        html += "    </tr>\n"
-
-    html += "  </table>\n"
-    html += html_footer()
-    text_file = open(os.path.join(slide.FILTER_HTML_DIR, "filters.html"), "w")
-    text_file.write(html)
-    text_file.close()
-  else:
-    slide_nums = set()
-    for key in html_page_info:
-      slide_num = math.floor(key / 1000)
-      slide_nums.add(slide_num)
-    slide_nums = sorted(list(slide_nums))
-    total_len = len(slide_nums)
-    page_size = slide.FILTER_PAGINATION_SIZE
-    num_pages = math.ceil(total_len / page_size)
-
-    for page_num in range(1, num_pages + 1):
-      start_index = (page_num - 1) * page_size
-      end_index = (page_num * page_size) if (page_num < num_pages) else total_len
-      page_slide_nums = slide_nums[start_index:end_index]
-
-      html = ""
-      html += html_header("Filtered Images, Page %d" % page_num)
-
-      html += "  <div style=\"font-size: 20px\">"
-      if page_num > 1:
-        if page_num == 2:
-          html += "<a href=\"filters.html\">&lt;</a> "
-        else:
-          html += "<a href=\"filters-%d.html\">&lt;</a> " % (page_num - 1)
-      html += "Page %d" % page_num
-      if page_num < num_pages:
-        html += " <a href=\"filters-%d.html\">&gt;</a> " % (page_num + 1)
-      html += "</div>\n"
-
-      html += "  <table>\n"
-      for slide_num in page_slide_nums:
-        html += "  <tr>\n"
-        filter_num = 1
-
-        lookup_key = slide_num * 1000 + filter_num
-        while lookup_key in html_page_info:
-          value = html_page_info[lookup_key]
-          html += image_cell(value[0], value[1], value[2], value[3])
-          lookup_key += 1
-        html += "  </tr>\n"
-
-      html += "  </table>\n"
-
-      html += html_footer()
-      if page_num == 1:
-        text_file = open(os.path.join(slide.FILTER_HTML_DIR, "filters.html"), "w")
-      else:
-        text_file = open(os.path.join(slide.FILTER_HTML_DIR, "filters-%d.html" % page_num), "w")
-      text_file.write(html)
-      text_file.close()
-
-
 def apply_filters_to_image_list(image_num_list, save, display):
   """
   Apply filters to a list of images.
@@ -1280,18 +1200,14 @@ def singleprocess_apply_filters_to_images(save=True, display=False, html=True, i
 
   print("Time to apply filters to all images: %s\n" % str(t.elapsed()))
 
-  if html:
-    generate_filter_html_result(info)
-
 
 # Modified
-def multiprocess_apply_filters_to_images(save=True, display=False, html=True):
+def multiprocess_apply_filters_to_images(save=True, display=False):
   """
   Apply a set of filters to all training images using multiple processes (one process per core).
   Args:
     save: If True, save filtered images.
     display: If True, display filtered images to screen (multiprocessed display not recommended).
-    html: If True, generate HTML page to display filtered images.
   """
   timer = Time()
   print("Applying filters to images (multiprocess)\n")
@@ -1328,8 +1244,5 @@ def multiprocess_apply_filters_to_images(save=True, display=False, html=True):
     (path_l, html_page_info_res) = result.get()
     html_page_info.update(html_page_info_res)
     print(f"Done filtering {len(path_l)} slide(s)")
-
-  if html:
-    generate_filter_html_result(html_page_info)
 
   print("Time to apply filters to all images (multiprocess): %s\n" % str(timer.elapsed()))
