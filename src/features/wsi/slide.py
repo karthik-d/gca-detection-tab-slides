@@ -234,8 +234,8 @@ def get_training_thumbnail_path(slide_number, large_w=None, large_h=None, small_
       large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(small_h) + "." + THUMBNAIL_EXT)
   return img_path
 
-
-def get_filter_image_path(slide_number, filter_number, filter_name_info):
+# Modified: Made slide_path based instead of slide_num
+def get_filter_image_path(slide_filename, filter_number, filter_name_info):
   """
   Convert slide number, filter number, and text to a path to a filter image file.
   Example:
@@ -250,11 +250,11 @@ def get_filter_image_path(slide_number, filter_number, filter_name_info):
   dir = FILTER_DIR
   if not os.path.exists(dir):
     os.makedirs(dir)
-  img_path = os.path.join(dir, get_filter_image_filename(slide_number, filter_number, filter_name_info))
+  img_path = os.path.join(dir, get_filter_image_filename(slide_filename, filter_number, filter_name_info))
   return img_path
 
 
-def get_filter_thumbnail_path(slide_number, filter_number, filter_name_info):
+def get_filter_thumbnail_path(slide_filename, filter_number, filter_name_info):
   """
   Convert slide number, filter number, and text to a path to a filter thumbnail file.
   Example:
@@ -269,11 +269,12 @@ def get_filter_thumbnail_path(slide_number, filter_number, filter_name_info):
   dir = FILTER_THUMBNAIL_DIR
   if not os.path.exists(dir):
     os.makedirs(dir)
-  img_path = os.path.join(dir, get_filter_image_filename(slide_number, filter_number, filter_name_info, thumbnail=True))
+  img_path = os.path.join(dir, get_filter_image_filename(slide_filename, filter_number, filter_name_info, thumbnail=True))
   return img_path
 
 
-def get_filter_image_filename(slide_number, filter_number, filter_name_info, thumbnail=False):
+# Modified
+def get_filter_image_filename(slide_filepath, filter_number, filter_name_info, thumbnail=False):
   """
   Convert slide number, filter number, and text to a filter file name.
   Example:
@@ -287,13 +288,13 @@ def get_filter_image_filename(slide_number, filter_number, filter_name_info, thu
   Returns:
     The filter image or thumbnail file name.
   """
+  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
   if thumbnail:
     ext = THUMBNAIL_EXT
   else:
     ext = DEST_TRAIN_EXT
-  padded_sl_num = str(slide_number).zfill(3)
   padded_fi_num = str(filter_number).zfill(3)
-  img_filename = TRAIN_PREFIX + padded_sl_num + "-" + padded_fi_num + "-" + FILTER_SUFFIX + filter_name_info + "." + ext
+  img_filename = slide_filename + "-" + padded_fi_num + "-" + FILTER_SUFFIX + filter_name_info + "." + ext
   return img_filename
 
 
@@ -360,6 +361,220 @@ def get_tile_summary_on_original_thumbnail_path(slide_number):
   img_path = os.path.join(TILE_SUMMARY_ON_ORIGINAL_THUMBNAIL_DIR,
                           get_tile_summary_image_filename(slide_number, thumbnail=True))
   return img_path
+
+
+def get_top_tiles_on_original_image_path(slide_number):
+  """
+  Convert slide number to a path to a top tiles on original image file.
+  Example:
+    5 -> ../data/top_tiles_on_original_png/TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.png
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the top tiles on original image file.
+  """
+  if not os.path.exists(TOP_TILES_ON_ORIGINAL_DIR):
+    os.makedirs(TOP_TILES_ON_ORIGINAL_DIR)
+  img_path = os.path.join(TOP_TILES_ON_ORIGINAL_DIR, get_top_tiles_image_filename(slide_number))
+  return img_path
+
+
+def get_top_tiles_on_original_thumbnail_path(slide_number):
+  """
+  Convert slide number to a path to a top tiles on original thumbnail file.
+  Example:
+    5 -> ../data/top_tiles_on_original_thumbnail_jpg/TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.jpg
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the top tiles on original thumbnail file.
+  """
+  if not os.path.exists(TOP_TILES_ON_ORIGINAL_THUMBNAIL_DIR):
+    os.makedirs(TOP_TILES_ON_ORIGINAL_THUMBNAIL_DIR)
+  img_path = os.path.join(TOP_TILES_ON_ORIGINAL_THUMBNAIL_DIR,
+                          get_top_tiles_image_filename(slide_number, thumbnail=True))
+  return img_path
+
+
+def get_tile_summary_image_filename(slide_number, thumbnail=False):
+  """
+  Convert slide number to a tile summary image file name.
+  Example:
+    5, False -> TUPAC-TR-005-tile_summary.png
+    5, True -> TUPAC-TR-005-tile_summary.jpg
+  Args:
+    slide_number: The slide number.
+    thumbnail: If True, produce thumbnail filename.
+  Returns:
+    The tile summary image file name.
+  """
+  if thumbnail:
+    ext = THUMBNAIL_EXT
+  else:
+    ext = DEST_TRAIN_EXT
+  padded_sl_num = str(slide_number).zfill(3)
+
+  training_img_path = get_training_image_path(slide_number)
+  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+  img_filename = TRAIN_PREFIX + padded_sl_num + "-" + str(SCALE_FACTOR) + "x-" + str(large_w) + "x" + str(
+    large_h) + "-" + str(small_w) + "x" + str(small_h) + "-" + TILE_SUMMARY_SUFFIX + "." + ext
+
+  return img_filename
+
+
+def get_top_tiles_image_filename(slide_number, thumbnail=False):
+  """
+  Convert slide number to a top tiles image file name.
+  Example:
+    5, False -> TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.png
+    5, True -> TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.jpg
+  Args:
+    slide_number: The slide number.
+    thumbnail: If True, produce thumbnail filename.
+  Returns:
+    The top tiles image file name.
+  """
+  if thumbnail:
+    ext = THUMBNAIL_EXT
+  else:
+    ext = DEST_TRAIN_EXT
+  padded_sl_num = str(slide_number).zfill(3)
+
+  training_img_path = get_training_image_path(slide_number)
+  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+  img_filename = TRAIN_PREFIX + padded_sl_num + "-" + str(SCALE_FACTOR) + "x-" + str(large_w) + "x" + str(
+    large_h) + "-" + str(small_w) + "x" + str(small_h) + "-" + TOP_TILES_SUFFIX + "." + ext
+
+  return img_filename
+
+
+def get_top_tiles_image_path(slide_number):
+  """
+  Convert slide number to a path to a top tiles image file.
+  Example:
+    5 -> ../data/top_tiles_png/TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.png
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the top tiles image file.
+  """
+  if not os.path.exists(TOP_TILES_DIR):
+    os.makedirs(TOP_TILES_DIR)
+  img_path = os.path.join(TOP_TILES_DIR, get_top_tiles_image_filename(slide_number))
+  return img_path
+
+
+def get_top_tiles_thumbnail_path(slide_number):
+  """
+  Convert slide number to a path to a tile summary thumbnail file.
+  Example:
+    5 -> ../data/top_tiles_thumbnail_jpg/TUPAC-TR-005-32x-49920x108288-1560x3384-top_tiles.jpg
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the top tiles thumbnail file.
+  """
+  if not os.path.exists(TOP_TILES_THUMBNAIL_DIR):
+    os.makedirs(TOP_TILES_THUMBNAIL_DIR)
+  img_path = os.path.join(TOP_TILES_THUMBNAIL_DIR, get_top_tiles_image_filename(slide_number, thumbnail=True))
+  return img_path
+
+
+def get_tile_data_filename(slide_number):
+  """
+  Convert slide number to a tile data file name.
+  Example:
+    5 -> TUPAC-TR-005-32x-49920x108288-1560x3384-tile_data.csv
+  Args:
+    slide_number: The slide number.
+  Returns:
+    The tile data file name.
+  """
+  padded_sl_num = str(slide_number).zfill(3)
+
+  training_img_path = get_training_image_path(slide_number)
+  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+  data_filename = TRAIN_PREFIX + padded_sl_num + "-" + str(SCALE_FACTOR) + "x-" + str(large_w) + "x" + str(
+    large_h) + "-" + str(small_w) + "x" + str(small_h) + "-" + TILE_DATA_SUFFIX + ".csv"
+
+  return data_filename
+
+
+def get_tile_data_path(slide_number):
+  """
+  Convert slide number to a path to a tile data file.
+  Example:
+    5 -> ../data/tile_data/TUPAC-TR-005-32x-49920x108288-1560x3384-tile_data.csv
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the tile data file.
+  """
+  if not os.path.exists(TILE_DATA_DIR):
+    os.makedirs(TILE_DATA_DIR)
+  file_path = os.path.join(TILE_DATA_DIR, get_tile_data_filename(slide_number))
+  return file_path
+
+
+# Modified
+def get_filter_image_result(slide_filepath):
+	"""
+	Convert slide number to the path to the file that is the final result of filtering.
+	Example:
+	5 -> ../data/filter_png/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.png
+	Args:
+	slide_number: The slide number.
+	Returns:
+	Path to the filter image file.
+	"""
+	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+	training_img_path = get_downscaled_training_image_path(slide_filepath)
+	large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+
+	img_path = os.path.join(FILTER_DIR, slide_filename + "-" + str(
+	SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+	small_h) + "-" + FILTER_RESULT_TEXT + "." + DEST_TRAIN_EXT)
+	print(img_path)
+	return img_path
+
+
+# Modified
+def get_filter_thumbnail_result(slide_filepath):
+  """
+  Convert slide number to the path to the file that is the final thumbnail result of filtering.
+  Example:
+    5 -> ../data/filter_thumbnail_jpg/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.jpg
+  Args:
+    slide_number: The slide number.
+  Returns:
+    Path to the filter thumbnail file.
+  """
+  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+  training_img_path = get_training_image_path(slide_number)
+  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+  img_path = os.path.join(FILTER_THUMBNAIL_DIR + slide_filename + "-" + str(
+    SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+    small_h) + "-" + FILTER_RESULT_TEXT + "." + THUMBNAIL_EXT)
+  return img_path
+
+
+def parse_dimensions_from_image_filename(filename):
+  """
+  Parse an image filename to extract the original width and height and the converted width and height.
+  Example:
+    "TUPAC-TR-011-32x-97103x79079-3034x2471-tile_summary.png" -> (97103, 79079, 3034, 2471)
+  Args:
+    filename: The image filename.
+  Returns:
+    Tuple consisting of the original width, original height, the converted width, and the converted height.
+  """
+  m = re.match(".*-([\d]*)x([\d]*)-([\d]*)x([\d]*).*\..*", filename)
+  large_w = int(m.group(1))
+  large_h = int(m.group(2))
+  small_w = int(m.group(3))
+  small_h = int(m.group(4))
+  return large_w, large_h, small_w, small_h
+
 
 def small_to_large_mapping(small_pixel, large_dimensions):
   """
