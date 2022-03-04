@@ -1,11 +1,11 @@
-from wsi import slide, tiles, utils, filters
+from wsi import slide, utils, filters
 
 slide.multiprocess_training_slides_to_images()
 # slide.singleprocess_training_slides_to_images()
 # filters.singleprocess_apply_filters_to_images()
-filters.multiprocess_apply_filters_to_images()
-# tiles.multiprocess_filtered_images_to_tiles()
+filters.multiprocess_apply_filters_to_images(display=False)
 
 # TODO: Use .tiff+lzw in place of .png
 # TODO: Move global constants and config variables to config.py
 # TODO: Change directory prefix and suffix
+# TODO: Split boolean arg `save` into save_intermediate and save_final

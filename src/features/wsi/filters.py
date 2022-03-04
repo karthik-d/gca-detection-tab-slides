@@ -939,38 +939,38 @@ def apply_image_filters(np_img, slide_filepath=None, info=None, save=False, disp
   
   slide_filename = ntpath.basename(slide_filepath).split('.')[0]
   rgb = np_img
-  save_display(save, display, info, rgb, slide_filename, 1, "Original", "rgb")
+  # save_display(save, display, info, rgb, slide_filename, 1, "Original", "rgb")
 
   mask_not_green = filter_green_channel(rgb)
   rgb_not_green = utils.mask_rgb(rgb, mask_not_green)
-  save_display(save, display, info, rgb_not_green, slide_filename, 2, "Not Green", "rgb-not-green")
+  # save_display(save, display, info, rgb_not_green, slide_filename, 2, "Not Green", "rgb-not-green")
 
   mask_not_gray = filter_grays(rgb)
   rgb_not_gray = utils.mask_rgb(rgb, mask_not_gray)
-  save_display(save, display, info, rgb_not_gray, slide_filename, 3, "Not Gray", "rgb-not-gray")
+  # save_display(save, display, info, rgb_not_gray, slide_filename, 3, "Not Gray", "rgb-not-gray")
 
   mask_no_red_pen = filter_red_pen(rgb)
   rgb_no_red_pen = utils.mask_rgb(rgb, mask_no_red_pen)
-  save_display(save, display, info, rgb_no_red_pen, slide_filename, 4, "No Red Pen", "rgb-no-red-pen")
+  # save_display(save, display, info, rgb_no_red_pen, slide_filename, 4, "No Red Pen", "rgb-no-red-pen")
 
   mask_no_green_pen = filter_green_pen(rgb)
   rgb_no_green_pen = utils.mask_rgb(rgb, mask_no_green_pen)
-  save_display(save, display, info, rgb_no_green_pen, slide_filename, 5, "No Green Pen", "rgb-no-green-pen")
+  # save_display(save, display, info, rgb_no_green_pen, slide_filename, 5, "No Green Pen", "rgb-no-green-pen")
 
   mask_no_blue_pen = filter_blue_pen(rgb)
   rgb_no_blue_pen = utils.mask_rgb(rgb, mask_no_blue_pen)
-  save_display(save, display, info, rgb_no_blue_pen, slide_filename, 6, "No Blue Pen", "rgb-no-blue-pen")
+  # save_display(save, display, info, rgb_no_blue_pen, slide_filename, 6, "No Blue Pen", "rgb-no-blue-pen")
 
   mask_gray_green_pens = mask_not_gray & mask_not_green & mask_no_red_pen & mask_no_green_pen & mask_no_blue_pen
   rgb_gray_green_pens = utils.mask_rgb(rgb, mask_gray_green_pens)
-  save_display(save, display, info, rgb_gray_green_pens, slide_filename, 7, "Not Gray, Not Green, No Pens",
-               "rgb-no-gray-no-green-no-pens")
+  # save_display(save, display, info, rgb_gray_green_pens, slide_filename, 7, "Not Gray, Not Green, No Pens",
+              #  "rgb-no-gray-no-green-no-pens")
 
   mask_remove_small = filter_remove_small_objects(mask_gray_green_pens, min_size=500, output_type="bool")
   rgb_remove_small = utils.mask_rgb(rgb, mask_remove_small)
-  save_display(save, display, info, rgb_remove_small, slide_filename, 8,
-               "Not Gray, Not Green, No Pens,\nRemove Small Objects",
-               "rgb-not-green-not-gray-no-pens-remove-small")
+  # save_display(save, display, info, rgb_remove_small, slide_filename, 8,
+              #  "Not Gray, Not Green, No Pens,\nRemove Small Objects",
+              #  "rgb-not-green-not-gray-no-pens-remove-small")
 
   img = rgb_remove_small
   return img
