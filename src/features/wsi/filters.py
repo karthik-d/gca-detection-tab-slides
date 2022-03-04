@@ -1180,23 +1180,19 @@ def apply_filters_to_image_range(start_ind, end_ind, save, display):
   return start_ind, end_ind, html_page_info
 
 
-def singleprocess_apply_filters_to_images(save=True, display=False, html=True, image_num_list=None):
+def singleprocess_apply_filters_to_images(save=True, display=False):
   """
   Apply a set of filters to training images and optionally save and/or display the filtered images.
   Args:
     save: If True, save filtered images.
     display: If True, display filtered images to screen.
-    html: If True, generate HTML page to display filtered images.
-    image_num_list: Optionally specify a list of image slide numbers.
   """
   t = Time()
   print("Applying filters to images\n")
 
-  if image_num_list is not None:
-    _, info = apply_filters_to_image_list(image_num_list, save, display)
-  else:
-    num_training_slides = slide.get_num_training_slides()
-    (s, e, info) = apply_filters_to_image_range(1, num_training_slides, save, display)
+  training_paths = slide.get_training_slide_paths()
+  num_training_slides = len(training_paths)
+  (path_l, html_info) = apply_filters_to_image_path_list(training_paths, save, display)
 
   print("Time to apply filters to all images: %s\n" % str(t.elapsed()))
 
