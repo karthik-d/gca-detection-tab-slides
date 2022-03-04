@@ -1108,7 +1108,7 @@ def singleprocess_apply_filters_to_images(save=True, display=False):
   num_training_slides = len(training_paths)
   (path_l, html_info) = apply_filters_to_image_path_list(training_paths, save, display)
 
-  print("Time to apply filters to all images: %s\n" % str(t.elapsed()))
+  print("Time taken to apply filters: %s\n" % str(t.elapsed()))
 
 
 # Modified
@@ -1155,4 +1155,4 @@ def multiprocess_apply_filters_to_images(save=True, display=False):
     html_page_info.update(html_page_info_res)
     print(f"Done filtering {len(path_l)} slide(s)")
 
-  print("Time to apply filters to all images (multiprocess): %s\n" % str(timer.elapsed()))
+  print("Time take to apply filters (multiprocess): %s\n" % str(timer.elapsed()))
