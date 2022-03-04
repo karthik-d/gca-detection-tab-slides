@@ -992,6 +992,7 @@ def apply_filters_to_image(slide_filepath, save=True, display=False):
 
   info = dict()
 
+  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
   if save and not os.path.exists(slide.FILTER_DIR):
     os.makedirs(slide.FILTER_DIR)
   img_path = slide.get_downscaled_training_image_path(slide_filepath)
@@ -1010,7 +1011,7 @@ def apply_filters_to_image(slide_filepath, save=True, display=False):
     slide.save_thumbnail(pil_img, slide.THUMBNAIL_SIZE, thumbnail_path)
     print("%-20s | Time: %-14s  Name: %s" % ("Save Thumbnail", str(t1.elapsed()), thumbnail_path))
 
-  print("Slide #%03d processing time: %s\n" % (slide_num, str(t.elapsed())))
+  print("Slide %s processing time: %s\n" % (slide_filename, str(t.elapsed())))
 
   return filtered_np_img, info
 
