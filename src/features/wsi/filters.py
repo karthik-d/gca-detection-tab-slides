@@ -1271,6 +1271,7 @@ def singleprocess_apply_filters_to_images(save=True, display=False, html=True, i
     generate_filter_html_result(info)
 
 
+# Modified
 def multiprocess_apply_filters_to_images(save=True, display=False, html=True, image_num_list=None):
   """
   Apply a set of filters to all training images using multiple processes (one process per core).
@@ -1301,30 +1302,17 @@ def multiprocess_apply_filters_to_images(save=True, display=False, html=True, im
   print("Number of processes: " + str(num_processes))
   print("Number of training images: " + str(num_train_images))
 
+  training_paths = get_training_slide_paths()
   tasks = []
-  for num_process in range(1, num_processes + 1):
-    start_index = (num_process - 1) * images_per_process + 1
-    end_index = num_process * images_per_process
-    start_index = int(start_index)
-    end_index = int(end_index)
-    if image_num_list is not None:
-      sublist = image_num_list[start_index - 1:end_index]
-      tasks.append((sublist, save, display))
-      print("Task #" + str(num_process) + ": Process slides " + str(sublist))
-    else:
-      tasks.append((start_index, end_index, save, display))
-      if start_index == end_index:
-        print("Task #" + str(num_process) + ": Process slide " + str(start_index))
-      else:
-        print("Task #" + str(num_process) + ": Process slides " + str(start_index) + " to " + str(end_index))
+  for num_process in range(num_processes):
+    start_idx = num_process*images_per_process
+    end_idx = (num_process+1)*images_per_process
+    tasks.append((training_paths[start_idx:end_idx], save, display))
 
   # start tasks
   results = []
   for t in tasks:
-    if image_num_list is not None:
-      results.append(pool.apply_async(apply_filters_to_image_list, t))
-    else:
-      results.append(pool.apply_async(apply_filters_to_image_range, t))
+    results.append(pool.apply_async(apply_filters_to_image_path_list, t))
 
   html_page_info = dict()
   for result in results:
