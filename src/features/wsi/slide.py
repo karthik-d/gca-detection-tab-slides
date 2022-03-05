@@ -38,6 +38,9 @@ FILTER_PAGINATION_SIZE = 50
 FILTER_PAGINATE = True
 FILTER_HTML_DIR = BASE_DIR
 
+ROI_SUFFIX = ""
+ROI_DIR = os.path.join(BASE_DIR, "roi_" + DEST_TRAIN_EXT)
+
 TILE_SUMMARY_DIR = os.path.join(BASE_DIR, "tile_summary_" + DEST_TRAIN_EXT)
 TILE_SUMMARY_ON_ORIGINAL_DIR = os.path.join(BASE_DIR, "tile_summary_on_original_" + DEST_TRAIN_EXT)
 TILE_SUMMARY_SUFFIX = "tile_summary"
@@ -419,3 +422,25 @@ def multiprocess_training_slides_to_images():
 		results[-1].get()
 
 	timer.elapsed_display()
+
+
+# ADDED Functions
+
+def get_roi_image_result_path(slide_filepath):
+	"""
+	Convert slide number to the path to the file that is the final result of filtering.
+	Example:
+	5 -> ../data/filter_png/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.png
+	Args:
+	slide_number: The slide number.
+	Returns:
+	Path to the filter image file.
+	"""
+	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+	training_img_path = get_downscaled_training_image_path(slide_filepath)
+	large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+
+	img_path = os.path.join(ROI_DIR, slide_filename + "-" + str(
+	SCALE_FACTOR) + "x-" + ROI_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+	small_h) + "-" + "-region_{region_num}." + DEST_TRAIN_EXT)
+	return img_path
