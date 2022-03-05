@@ -2,7 +2,7 @@ import multiprocessing
 import numpy as np
 import os 
 import ntpath
-from skimage import measure, morphology
+from skimage import measure, morphology, transform
 from skimage.draw import polygon_perimeter
 
 import matplotlib.pyplot as plot
@@ -18,22 +18,22 @@ ROI_BOUND_PAD_RIGHT = 20
 def extract_roi_from_image(slide_filepath, display=False, save=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
-	np_gray = filters.filter_rgb_to_grayscale(np_orig)
+	np_gray_rot90 = filters.filter_rgb_to_grayscale(np_orig).T
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
-	np_gray = filters.apply_binary_closing(np_gray, (30,30))
-	np_gray = filters.apply_binary_opening(np_gray, (16,16))
-	contours = measure.find_contours(np_gray)
+	np_gray_rot90 = filters.apply_binary_closing(np_gray_rot90, (30,30))
+	np_gray_rot90 = filters.apply_binary_opening(np_gray_rot90, (16,16))
+	contours = measure.find_contours(np_gray_rot90)
 	# Draw Bounding Boxes
 	bounding_boxes = []
 	for contour in contours:
 		X_min = max(np.min(contour[:,0])-ROI_BOUND_PAD_LEFT, 0)
-		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray.shape[0]-1)
+		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray_rot90.shape[0]-1)
 		Y_min = max(np.min(contour[:,1])-ROI_BOUND_PAD_TOP, 0)
-		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray.shape[1]-1)
+		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray_rot90.shape[1]-1)
 		bounding_boxes.append([X_min, X_max, Y_min, Y_max])
 
-	with_boxes  = np.copy(np_gray)
+	with_boxes  = np.copy(np_gray_rot90)
 	for box in bounding_boxes:
 		# Formatted as [X_min, X_max, Y_min, Y_max]
 		r = [ box[0], box[1], box[1], box[0], box[0] ]
@@ -47,7 +47,7 @@ def extract_roi_from_image(slide_filepath, display=False, save=False):
 	# Display the image and plot all contours found
 	if display:
 		fig, ax = plot.subplots()
-		ax.imshow(np_gray, cmap=plot.cm.gray)	
+		ax.imshow(np_gray_rot90, cmap=plot.cm.gray)	
 		for contour in contours:
 			ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
 		plot.show()
