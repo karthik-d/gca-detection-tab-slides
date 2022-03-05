@@ -133,7 +133,7 @@ def roi_labelling_order(box_extents):
 	- box_extents : [X_min, X_max, Y_min, Y_max]
 	"""
 	sort_key = np.array(
-		(box_extents[2], box_extents[0]),
+		(box_extents[0], box_extents[2]),
 		dtype=[('vertical', 'i2'),('horizontal', 'i2')]
 	)
 	return sort_key
