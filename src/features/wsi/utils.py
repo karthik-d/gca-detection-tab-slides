@@ -121,3 +121,19 @@ class Time:
     self.end = datetime.datetime.now()
     time_elapsed = self.end - self.start
     return time_elapsed
+
+
+## ADDED functions
+
+def roi_labelling_order(box_extents):
+	"""
+	Returns a sort key for boxes, with the descending precedence [vertical_posn, horizontal_posn]
+	For use with np.argsort() - named fields
+	Leverages Python's tuple sort logic
+	- box_extents : [X_min, X_max, Y_min, Y_max]
+	"""
+	sort_key = np.array(
+		(box_extents[2], box_extents[0]),
+		dtype=[('vertical', 'i2'),('horizontal', 'i2')]
+	)
+	return sort_key
