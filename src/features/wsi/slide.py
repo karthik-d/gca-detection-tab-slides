@@ -113,7 +113,6 @@ def get_downscaled_training_image_path(slide_filepath, large_w=None, large_h=Non
 	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
 	if large_w is None and large_h is None and small_w is None and small_h is None:
 		wildcard_path = os.path.join(DEST_TRAIN_DIR, slide_filename + "*." + DEST_TRAIN_EXT)
-		print(wildcard_path)
 		img_path = glob.glob(wildcard_path)[0]
 	else:
 		img_path = os.path.join(
@@ -201,23 +200,22 @@ def get_filter_image_filename(slide_filepath, filter_number, filter_name_info, t
 
 # Modified
 def get_filter_image_result_path(slide_filepath):
-	"""
-	Convert slide number to the path to the file that is the final result of filtering.
-	Example:
-	5 -> ../data/filter_png/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.png
-	Args:
-	slide_number: The slide number.
-	Returns:
-	Path to the filter image file.
-	"""
-	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-	training_img_path = get_downscaled_training_image_path(slide_filepath)
-	large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
-
-	img_path = os.path.join(FILTER_DIR, slide_filename + "-" + str(
-	SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
-	small_h) + "-" + FILTER_RESULT_TEXT + "." + DEST_TRAIN_EXT)
-	return img_path
+  """
+  Convert slide number to the path to the file that is the final result of filtering.
+  Example:
+  5 -> ../data/filter_png/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.png
+  Args:
+  slide_number: The slide number.
+  Returns:
+  Path to the filter image file.
+  """
+  slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+  training_img_path = get_downscaled_training_image_path(slide_filepath)
+  large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
+  img_path = os.path.join(FILTER_DIR, slide_filename + "-" + str(
+  SCALE_FACTOR) + "x-" + FILTER_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+  small_h) + "-" + FILTER_RESULT_TEXT + "." + DEST_TRAIN_EXT)
+  return img_path
 
 
 # Modified
@@ -253,7 +251,9 @@ def parse_dimensions_from_image_filename(filename):
   Returns:
     Tuple consisting of the original width, original height, the converted width, and the converted height.
   """
+  print("PARSE")
   m = re.match(".*-([\d]*)x([\d]*)-([\d]*)x([\d]*).*\..*", filename)
+  print("PARSE")
   large_w = int(m.group(1))
   large_h = int(m.group(2))
   small_w = int(m.group(3))
