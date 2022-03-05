@@ -3,12 +3,17 @@ import numpy as np
 import os 
 import ntpath
 from skimage import measure, morphology
+from skimage.draw import polygon_perimeter
 
 import matplotlib.pyplot as plot
 
 from wsi import slide, filters, utils
 from wsi.utils import Time
 
+ROI_BOUND_PAD_TOP = 20
+ROI_BOUND_PAD_BOTTOM = 20
+ROI_BOUND_PAD_LEFT = 20
+ROI_BOUND_PAD_RIGHT = 20
 
 def extract_roi_from_image(slide_filepath, display=False, save=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
@@ -16,9 +21,29 @@ def extract_roi_from_image(slide_filepath, display=False, save=False):
 	np_gray = filters.filter_rgb_to_grayscale(np_orig)
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
-	np_gray = filters.apply_binary_closing(np_gray, (40,40))
-	np_gray = filters.apply_binary_opening(np_gray, (20,20))
+	np_gray = filters.apply_binary_closing(np_gray, (30,30))
+	np_gray = filters.apply_binary_opening(np_gray, (16,16))
 	contours = measure.find_contours(np_gray)
+	# Draw Bounding Boxes
+	bounding_boxes = []
+	for contour in contours:
+		X_min = max(np.min(contour[:,0])-ROI_BOUND_PAD_LEFT, 0)
+		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray.shape[0]-1)
+		Y_min = max(np.min(contour[:,1])-ROI_BOUND_PAD_TOP, 0)
+		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray.shape[1]-1)
+		bounding_boxes.append([X_min, X_max, Y_min, Y_max])
+
+	with_boxes  = np.copy(np_gray)
+	for box in bounding_boxes:
+		# Formatted as [X_min, X_max, Y_min, Y_max]
+		r = [ box[0], box[1], box[1], box[0], box[0] ]
+		c = [ box[3], box[3], box[2], box[2], box[3] ]
+		rr, cc = polygon_perimeter(r, c, with_boxes.shape)
+		with_boxes[rr, cc] = 1 
+
+	plot.imshow(with_boxes, cmap=plot.cm.gray)
+	plot.show()
+
 	# Display the image and plot all contours found
 	if display:
 		fig, ax = plot.subplots()
