@@ -10,25 +10,23 @@ from wsi import slide, filters, utils
 from wsi.utils import Time
 
 
-def extract_roi_from_image(slide_filepath):
+def extract_roi_from_image(slide_filepath, display=False, save=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
 	np_gray = filters.filter_rgb_to_grayscale(np_orig)
-	np_gray = filters.apply_binary_closing(np_gray, (20,20))
+	# "close" to club nearby speckles, "open" to remove islands of speckles
+	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
+	np_gray = filters.apply_binary_closing(np_gray, (40,40))
+	np_gray = filters.apply_binary_opening(np_gray, (20,20))
 	contours = measure.find_contours(np_gray)
-
 	# Display the image and plot all contours found
-	fig, ax = plot.subplots()
-	ax.imshow(np_gray, cmap=plot.cm.gray)
-	
-	for contour in contours:
-		ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
-	
+	if display:
+		fig, ax = plot.subplots()
+		ax.imshow(np_gray, cmap=plot.cm.gray)	
+		for contour in contours:
+			ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
+		plot.show()
 
-	ax.axis('image')
-	ax.set_xticks([])
-	ax.set_yticks([])
-	plot.show()
 	return slide_filepath
 
 
