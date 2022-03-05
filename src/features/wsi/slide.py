@@ -440,7 +440,13 @@ def get_roi_image_result_path(slide_filepath):
 	training_img_path = get_downscaled_training_image_path(slide_filepath)
 	large_w, large_h, small_w, small_h = parse_dimensions_from_image_filename(training_img_path)
 
-	img_path = os.path.join(ROI_DIR, slide_filename + "-" + str(
-	SCALE_FACTOR) + "x-" + ROI_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
-	small_h) + "-" + "-region_{region_num}." + DEST_TRAIN_EXT)
+	img_path = os.path.join(
+    ROI_DIR, 
+    slide_filename + "-" + str(
+    SCALE_FACTOR) + "x-" + ROI_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+    small_h),
+    slide_filename + "-" + str(
+    SCALE_FACTOR) + "x-" + ROI_SUFFIX + str(large_w) + "x" + str(large_h) + "-" + str(small_w) + "x" + str(
+    small_h) + "-region_{region_num}." + DEST_TRAIN_EXT
+  )
 	return img_path

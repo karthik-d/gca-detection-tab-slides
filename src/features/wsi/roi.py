@@ -2,6 +2,7 @@ import multiprocessing
 import numpy as np
 import os 
 import ntpath
+from pathlib import Path
 from skimage import measure, morphology, transform
 from skimage import draw
 
@@ -49,8 +50,10 @@ def get_roi_boxes_from_image(np_img):
 def save_roi_portions(slide_filepath, np_img, roi_boxes, padding=True):
 	# Make result path
 	base_img_path = slide.get_roi_image_result_path(slide_filepath)
-	if not os.path.exists(slide.ROI_DIR):
-		os.makedirs(slide.ROI_DIR)
+	Path(ntpath.split(base_img_path)[0]).mkdir(
+		parents=True,
+		exist_ok=True
+	)
 	# Extract each region and save
 	for serial, box in enumerate(roi_boxes, start=1):
 		# Formatted as [X_min, X_max, Y_min, Y_max]
