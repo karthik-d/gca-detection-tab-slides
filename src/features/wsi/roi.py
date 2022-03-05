@@ -17,7 +17,7 @@ ROI_BOUND_PAD_LEFT = 20
 ROI_BOUND_PAD_RIGHT = 20
 
 
-def get_roi_contours_from_image(np_img, close_neighborhood=(30,30), open_neighborhood=(16,16)):
+def get_roi_contours_from_image(np_img, close_neighborhood=(50,50), open_neighborhood=(30,30)):
 	np_gray = filters.filter_rgb_to_grayscale(np_img)
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
@@ -46,7 +46,12 @@ def get_roi_boxes_from_image(np_img):
 	return np.array(roi_boxes)[sorted_idx]
 
 
-def save_roi_portions(np_img, roi_boxes, padding=True):
+def save_roi_portions(slide_filepath, np_img, roi_boxes, padding=True):
+	# Make result path
+	base_img_path = slide.get_roi_image_result_path(slide_filepath)
+	if not os.path.exists(slide.ROI_DIR):
+		os.makedirs(slide.ROI_DIR)
+	# Extract each region and save
 	for serial, box in enumerate(roi_boxes, start=1):
 		# Formatted as [X_min, X_max, Y_min, Y_max]
 		# Apply padding
@@ -58,42 +63,15 @@ def save_roi_portions(np_img, roi_boxes, padding=True):
 		# Make PIL img and save
 		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		pil_result = utils.np_to_pil(np_result)
-		pil_result.save(f"region_{serial}.png")
+		pil_result.save(base_img_path.format(region_num=serial))
 
 
-def extract_roi_from_image(slide_filepath, display=False):
+def extract_roi_from_image(slide_filepath, save=False, display=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
 	np_orig_rot90 = utils.rotate_clockwise_90(np_orig)
 	roi_boxes = get_roi_boxes_from_image(np_orig_rot90)
-	save_roi_portions(np_orig_rot90, roi_boxes)
-	
-	"""
-	# Draw Bounding Boxes
-	roi_boxes = []
-	for contour in contours:
-		X_min = max(np.min(contour[:,0])-ROI_BOUND_PAD_LEFT, 0)
-		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray.shape[0]-1)
-		Y_min = max(np.min(contour[:,1])-ROI_BOUND_PAD_TOP, 0)
-		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray.shape[1]-1)
-		roi_boxes.append([X_min, X_max, Y_min, Y_max])
-		
-	contours_sorted_idx = np.argsort(list(map(roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
-
-	roi_boxes_sorted = np.array(roi_boxes)[contours_sorted_idx]
-	for roi in roi_boxes_sorted:
-		print(roi)
-	"""
-
-	"""
-	with_boxes  = np.copy(np_gray)
-	for box in roi_boxes:
-		# Formatted as [X_min, X_max, Y_min, Y_max]
-		r = [ box[0], box[1], box[1], box[0], box[0] ]
-		c = [ box[3], box[3], box[2], box[2], box[3] ]
-		rr, cc = polygon_perimeter(r, c, with_boxes.shape)
-		with_boxes[rr, cc] = 1 
-	"""
+	save_roi_portions(slide_filepath, np_orig_rot90, roi_boxes)
 
 	# Display the image and plot all contours found
 	if display:
@@ -106,13 +84,13 @@ def extract_roi_from_image(slide_filepath, display=False):
 	return slide_filepath
 
 
-def extract_roi_image_path_list(path_l):
+def extract_roi_image_path_list(path_l, save=False, display=False):
 	for slide_path in path_l:
 		_ = extract_roi_from_image(slide_path)
 	return path_l
 
 
-def singleprocess_extract_roi_from_filtered(save=True, display=False):
+def singleprocess_extract_roi_from_filtered(save=False, display=False):
 
   t = Time()
 
@@ -123,7 +101,7 @@ def singleprocess_extract_roi_from_filtered(save=True, display=False):
   print("Time taken to extract ROIs: %s\n" % str(t.elapsed()))
 
 
-def multiprocess_extract_roi_from_filtered(save=True, display=False):
+def multiprocess_extract_roi_from_filtered(save=False, display=False):
 
   timer = Time()
 
@@ -152,11 +130,15 @@ def multiprocess_extract_roi_from_filtered(save=True, display=False):
   # start tasks
   results = []
   for t in tasks:
-    results.append(pool.apply_async(apply_filters_to_image_path_list, t))
-
-  html_page_info = dict()
-  for result in results:
-    (path_l, html_page_info_res) = result.get()
-    html_page_info.update(html_page_info_res)
+    results.append(pool.apply_async(extract_roi_image_path_list, t))
 
   print("Time taken to extract ROIs (multiprocess): %s\n" % str(timer.elapsed()))
+
+
+# TIME-STATS
+# morphology neighborhood Vs. time
+# 50, 30					25s/img (x32)
+# 40, 24					14s/img (x32)
+# 30, 16					9s /img (x32)
+
+# TODO: Display and Save intermediate results

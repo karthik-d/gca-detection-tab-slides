@@ -5,6 +5,7 @@ from wsi import slide, utils, filters, roi
 # filters.singleprocess_apply_filters_to_images()
 # filters.multiprocess_apply_filters_to_images(display=False)
 roi.singleprocess_extract_roi_from_filtered()
+# roi.multiprocess_extract_roi_from_filtered()
 
 # TODO: Use .tiff+lzw in place of .png
 # TODO: Move global constants and config variables to config.py
