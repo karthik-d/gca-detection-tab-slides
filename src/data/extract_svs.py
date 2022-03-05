@@ -3,6 +3,7 @@ import numpy as np
 import tempfile
 from pathlib import Path
 import time
+from skimage import color
 
 import openslide
 from PIL import Image
@@ -28,7 +29,7 @@ EXCLUDE_FILES = [
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-DOWNSCALE_FACTOR = 32
+DOWNSCALE_FACTOR = 16
 
 # 4. Perform LZW Compression ? (True/False)
 COMPRESS_LZW = False
@@ -63,7 +64,7 @@ def make_temp_arrfile(slide, level=0, mode='w+'):
 	# Extract configuration
 	test_part = np.asarray(slide.read_region((0,0), level, size=(1,1)))
 	dtype = test_part.dtype
-	shape=(*slide.level_dimensions[level], *test_part.shape[2:])
+	shape=(*slide.level_dimensions[level], test_part.shape[2])
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
@@ -205,6 +206,8 @@ if __name__=='__main__':
 			level=FACTOR_LEVEL_MAP[DOWNSCALE_FACTOR], 
 			part_size=(2048, 2048)
 		)
+		img = color.rgba2rgb(img)
+		print(img.shape)
 		op_compression = 'tiff_lzw' if COMPRESS_LZW else None
 		save_path = os.path.join(destn_path, 'main.tiff')
 		Image.fromarray(img).save(save_path, compression=op_compression)
