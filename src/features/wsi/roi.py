@@ -15,6 +15,22 @@ ROI_BOUND_PAD_BOTTOM = 20
 ROI_BOUND_PAD_LEFT = 20
 ROI_BOUND_PAD_RIGHT = 20
 
+
+def roi_labelling_order(box_extents):
+	"""
+	Returns a sort key for boxes, with the descending precedence [vertical_posn, horizontal_posn]
+	For use with np.argsort() - named fields
+	Leverages Python's tuple sort logic
+	- box_extents : [X_min, X_max, Y_min, Y_max]
+	"""
+	sort_key = np.array(
+		(box_extents[2], box_extents[0]),
+		dtype=[('vertical', 'i2'),('horizontal', 'i2')]
+	)
+	return sort_key
+
+
+
 def extract_roi_from_image(slide_filepath, display=False, save=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
@@ -32,6 +48,12 @@ def extract_roi_from_image(slide_filepath, display=False, save=False):
 		Y_min = max(np.min(contour[:,1])-ROI_BOUND_PAD_TOP, 0)
 		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray_rot90.shape[1]-1)
 		bounding_boxes.append([X_min, X_max, Y_min, Y_max])
+		
+	contours_sorted_idx = np.argsort(list(map(roi_labelling_order, bounding_boxes)), order=['vertical', 'horizontal'])
+	print(contours_sorted_idx)
+	contours_sorted = contours[contours_sorted_idx]
+	for contour in contours_sorted:
+		pass
 
 	with_boxes  = np.copy(np_gray_rot90)
 	for box in bounding_boxes:
