@@ -137,3 +137,13 @@ def roi_labelling_order(box_extents):
 		dtype=[('vertical', 'i2'),('horizontal', 'i2')]
 	)
 	return sort_key
+
+
+def rotate_clockwise_90(np_img):
+  """
+  90-deg clockwise rotation to make the slide vertical
+  Series of 2 operations - transpose row and col dimensions, invert vals in each row
+  """
+  np_result = np.transpose(np_img, [1, 0, 2])
+  np_result = np_result[:,::-1,:]
+  return np_result
