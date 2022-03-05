@@ -35,10 +35,10 @@ def get_roi_boxes_from_image(np_img):
 	# Make bounding boxes
 	roi_boxes = []
 	for contour in contours:
-		X_min = np.min(contour[:,0])
-		X_max = np.max(contour[:,0])
-		Y_min = np.min(contour[:,1])
-		Y_max = np.max(contour[:,1])
+		X_min = int(np.min(contour[:,0]))
+		X_max = int(np.max(contour[:,0]))
+		Y_min = int(np.min(contour[:,1]))
+		Y_max = int(np.max(contour[:,1]))
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
 	# Sort in labelling order
 	sorted_idx = np.argsort(list(map(utils.roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
@@ -56,9 +56,10 @@ def extract_roi_from_image(slide_filepath, display=False):
 	i = 1
 	for box in roi_boxes:
 		# Formatted as [X_min, X_max, Y_min, Y_max]
-		r = [ box[0], box[1], box[1], box[0], box[0] ]
-		c = [ box[3], box[3], box[2], box[2], box[3] ]
-		rr, cc = draw.polygon(r, c, (np_orig.shape[1], np_orig.shape[0]))
+		start = (box[0], box[2])
+		end = (box[1], box[3])
+		rr, cc = draw.rectangle(start, end, shape=(np_orig.shape[1], np_orig.shape[0]))
+		np_gray_rot90[rr,cc,:] = 1
 		i += 1
 		print("done")
 	# save_roi_portions(np_orig)
@@ -90,7 +91,7 @@ def extract_roi_from_image(slide_filepath, display=False):
 		with_boxes[rr, cc] = 1 
 	"""
 
-	plot.imshow(roi_regions[-1])
+	plot.imshow(np_gray_rot90, cmap=plot.cm.gray)
 	plot.show()
 
 	# Display the image and plot all contours found
