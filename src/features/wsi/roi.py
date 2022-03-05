@@ -2,7 +2,7 @@ import multiprocessing
 import numpy as np
 import os 
 import ntpath
-from skimage import measure
+from skimage import measure, morphology
 
 import matplotlib.pyplot as plot
 
@@ -14,15 +14,16 @@ def extract_roi_from_image(slide_filepath):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
 	np_gray = filters.filter_rgb_to_grayscale(np_orig)
-	
+	np_gray = filters.apply_binary_closing(np_gray, (20,20))
 	contours = measure.find_contours(np_gray)
 
 	# Display the image and plot all contours found
 	fig, ax = plot.subplots()
 	ax.imshow(np_gray, cmap=plot.cm.gray)
-
+	
 	for contour in contours:
 		ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
+	
 
 	ax.axis('image')
 	ax.set_xticks([])
