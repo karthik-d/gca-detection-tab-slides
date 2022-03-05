@@ -10,6 +10,7 @@ import matplotlib.pyplot as plot
 from wsi import slide, filters, utils
 from wsi.utils import Time
 
+
 ROI_BOUND_PAD_TOP = 20
 ROI_BOUND_PAD_BOTTOM = 20
 ROI_BOUND_PAD_LEFT = 20
@@ -56,8 +57,8 @@ def save_roi_portions(np_img, roi_boxes, padding=True):
 			box[3] = min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[1]-1)
 		# Make PIL img and save
 		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
-		plot.imshow(np_result)
-		plot.show()
+		pil_result = utils.np_to_pil(np_result)
+		pil_result.save(f"region_{serial}.png")
 
 
 def extract_roi_from_image(slide_filepath, display=False):
@@ -93,7 +94,7 @@ def extract_roi_from_image(slide_filepath, display=False):
 		rr, cc = polygon_perimeter(r, c, with_boxes.shape)
 		with_boxes[rr, cc] = 1 
 	"""
-	
+
 	# Display the image and plot all contours found
 	if display:
 		fig, ax = plot.subplots()
