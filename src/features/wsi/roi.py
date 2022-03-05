@@ -55,16 +55,13 @@ def extract_roi_from_image(slide_filepath, display=False):
 	roi_regions = []
 	i = 1
 	for box in roi_boxes:
+		# Formatted as [X_min, X_max, Y_min, Y_max]
 		# Apply padding
 		box[0] = max(box[0]-ROI_BOUND_PAD_LEFT, 0)
 		box[1] = min(box[1]+ROI_BOUND_PAD_RIGHT, np_orig.shape[1]-1)
 		box[2] = max(box[2]-ROI_BOUND_PAD_TOP, 0)
 		box[3] = min(box[3]+ROI_BOUND_PAD_BOTTOM, np_orig.shape[0]-1)
-		# Formatted as [X_min, X_max, Y_min, Y_max]
-		start = (box[0], box[2])
-		end = (box[1], box[3])
-		rr, cc = draw.rectangle(start, end, shape=(np_orig.shape[1], np_orig.shape[0]))
-		np_gray_rot90[rr,cc] = 1
+		roi_regions.append(np_orig[box[2]:box[3]+1, box[0]:box[1]+1, :])
 		i += 1
 		print("done")
 	# save_roi_portions(np_orig)
@@ -96,7 +93,7 @@ def extract_roi_from_image(slide_filepath, display=False):
 		with_boxes[rr, cc] = 1 
 	"""
 
-	plot.imshow(np_gray_rot90, cmap=plot.cm.gray)
+	plot.imshow(roi_regions[-1])
 	plot.show()
 
 	# Display the image and plot all contours found
