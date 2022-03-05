@@ -17,12 +17,12 @@ ROI_BOUND_PAD_RIGHT = 20
 
 
 def get_roi_contours_from_image(np_img, close_neighborhood=(30,30), open_neighborhood=(16,16)):
-	np_gray_rot90 = filters.filter_rgb_to_grayscale(np_img).T
+	np_gray = filters.filter_rgb_to_grayscale(np_img)
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
-	np_gray_rot90 = filters.apply_binary_closing(np_gray_rot90, close_neighborhood)
-	np_gray_rot90 = filters.apply_binary_opening(np_gray_rot90, open_neighborhood)
-	contours = measure.find_contours(np_gray_rot90)
+	np_gray = filters.apply_binary_closing(np_gray, close_neighborhood)
+	np_gray = filters.apply_binary_opening(np_gray, open_neighborhood)
+	contours = measure.find_contours(np_gray)
 	return contours
 
 
@@ -45,35 +45,36 @@ def get_roi_boxes_from_image(np_img):
 	return np.array(roi_boxes)[sorted_idx]
 
 
+def save_roi_portions(np_img, roi_boxes, padding=True):
+	for serial, box in enumerate(roi_boxes, start=1):
+		# Formatted as [X_min, X_max, Y_min, Y_max]
+		# Apply padding
+		if padding:
+			box[0] = max(box[0]-ROI_BOUND_PAD_LEFT, 0)
+			box[1] = min(box[1]+ROI_BOUND_PAD_RIGHT, np_img.shape[0]-1)
+			box[2] = max(box[2]-ROI_BOUND_PAD_TOP, 0)
+			box[3] = min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[1]-1)
+		# Make PIL img and save
+		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
+		plot.imshow(np_result)
+		plot.show()
+
+
 def extract_roi_from_image(slide_filepath, display=False):
 	img_path = slide.get_filter_image_result_path(slide_filepath)
 	np_orig = slide.open_image_np(img_path)
-	# Find ROI boxes
-	np_gray_rot90 = np.zeros(np_orig.shape[:2]).T
-	roi_boxes = get_roi_boxes_from_image(np_orig)
-	print(len(roi_boxes))
-	roi_regions = []
-	i = 1
-	for box in roi_boxes:
-		# Formatted as [X_min, X_max, Y_min, Y_max]
-		# Apply padding
-		box[0] = max(box[0]-ROI_BOUND_PAD_LEFT, 0)
-		box[1] = min(box[1]+ROI_BOUND_PAD_RIGHT, np_orig.shape[1]-1)
-		box[2] = max(box[2]-ROI_BOUND_PAD_TOP, 0)
-		box[3] = min(box[3]+ROI_BOUND_PAD_BOTTOM, np_orig.shape[0]-1)
-		roi_regions.append(np_orig[box[2]:box[3]+1, box[0]:box[1]+1, :])
-		i += 1
-		print("done")
-	# save_roi_portions(np_orig)
+	np_orig_rot90 = utils.rotate_clockwise_90(np_orig)
+	roi_boxes = get_roi_boxes_from_image(np_orig_rot90)
+	save_roi_portions(np_orig_rot90, roi_boxes)
 	
 	"""
 	# Draw Bounding Boxes
 	roi_boxes = []
 	for contour in contours:
 		X_min = max(np.min(contour[:,0])-ROI_BOUND_PAD_LEFT, 0)
-		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray_rot90.shape[0]-1)
+		X_max = min(np.max(contour[:,0])+ROI_BOUND_PAD_RIGHT, np_gray.shape[0]-1)
 		Y_min = max(np.min(contour[:,1])-ROI_BOUND_PAD_TOP, 0)
-		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray_rot90.shape[1]-1)
+		Y_max = min(np.max(contour[:,1])+ROI_BOUND_PAD_BOTTOM, np_gray.shape[1]-1)
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
 		
 	contours_sorted_idx = np.argsort(list(map(roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
@@ -84,7 +85,7 @@ def extract_roi_from_image(slide_filepath, display=False):
 	"""
 
 	"""
-	with_boxes  = np.copy(np_gray_rot90)
+	with_boxes  = np.copy(np_gray)
 	for box in roi_boxes:
 		# Formatted as [X_min, X_max, Y_min, Y_max]
 		r = [ box[0], box[1], box[1], box[0], box[0] ]
@@ -92,14 +93,11 @@ def extract_roi_from_image(slide_filepath, display=False):
 		rr, cc = polygon_perimeter(r, c, with_boxes.shape)
 		with_boxes[rr, cc] = 1 
 	"""
-
-	plot.imshow(roi_regions[-1])
-	plot.show()
-
+	
 	# Display the image and plot all contours found
 	if display:
 		fig, ax = plot.subplots()
-		ax.imshow(np_gray_rot90, cmap=plot.cm.gray)	
+		ax.imshow(np_gray, cmap=plot.cm.gray)	
 		for contour in contours:
 			ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
 		plot.show()
