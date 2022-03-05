@@ -1159,3 +1159,32 @@ def multiprocess_apply_filters_to_images(save=True, display=False):
     print(f"Done filtering {len(path_l)} slide(s)")
 
   print("Time take to apply filters (multiprocess): %s\n" % str(timer.elapsed()))
+
+
+# Additional Functions
+
+# For the 'roi' module
+def apply_binary_closing(np_img_2d, neighborhood_shape=(3,3)):
+  """ 
+  Wrapper around skimage's morphology operation for erosion, then dilation.
+  Neighborhood is rectangular
+  """
+  footprint = np.ones(neighborhood_shape)
+  cleaned_np_img = sk_morphology.binary_closing(
+		np_img_2d,
+		footprint
+	)
+  return cleaned_np_img
+
+# For the 'roi' module
+def apply_binary_opening(np_img_2d, neighborhood_shape=(3,3)):
+  """ 
+  Wrapper around skimage's morphology operation for erosion, then dilation.
+  Neighborhood is rectangular
+  """
+  footprint = np.ones(neighborhood_shape)
+  cleaned_np_img = sk_morphology.binary_opening(
+		np_img_2d,
+		footprint
+	)
+  return cleaned_np_img
