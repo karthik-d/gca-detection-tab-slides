@@ -8,3 +8,4 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
     - [X] only retain the unflitered and roi (black background) files
 2. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
     - [X] extract roi
+3. Labelling
