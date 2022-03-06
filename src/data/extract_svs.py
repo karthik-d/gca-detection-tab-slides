@@ -42,11 +42,7 @@ EXCLUDE_FILES = [
 ]
 
 # 3. Downscaling level - set to one of the values in `DOWNSCALE_FACTORS` list above
-<<<<<<< HEAD
-DOWNSCALE_FACTOR = 16
-=======
-DOWNSCALE_FACTOR = 1
->>>>>>> 1fdb28871b6037d7585498cb4a6a3a4271b9660b
+DOWNSCALE_FACTOR = 8
 
 # 4. Perform LZW Compression ? (True/False)
 COMPRESS_LZW = True
