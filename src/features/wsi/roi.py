@@ -110,7 +110,7 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 			# Covert to RGB if required
 			if channels==3:
 				part_data = utils.rgba_to_rgb(part_data, channel_axis=-1)
-			# Run generator 1-step
+			# Run generator one step
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
 				last_x,
@@ -142,15 +142,13 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	print(y_dim)
 	# Open accumulator file. Make memory-mapped array
 	img_acc = make_temp_memarr_file(slide, level, dimensions=(x_dim, y_dim, 3))
+	# Iterate y, for each iteration of x
 	store_x, store_y = (0, 0)
 	for part, last_x, last_y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
 		img_acc[store_x:(store_x+part.shape[0]), store_y:(store_y+part.shape[1]), :] = part
-		if last_x:
-			store_x = 0
-		else:
-			store_x += part.shape[0]
 		if last_y:
 			store_y = 0
+			store_x += part.shape[0]
 		else:
 			store_y += part.shape[1]
 	# Retranspose the array
@@ -244,7 +242,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 				level_0_y 
 			)
 		# Make PIL img and save
-		np_result = extract_level_from_slide(slide_obj, level=3, start_xy=(box[0], box[2]), end_xy=(box[1], box[3]))
+		np_result = extract_level_from_slide(slide_obj, level=0, start_xy=(box[0], box[2]), end_xy=(box[1], box[3]))
 		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		Image.fromarray(np_result).save(f"check_{serial}.png", compression="tiff_lzw")
 		# pil_result.save(base_img_path.format(region_num=serial))
