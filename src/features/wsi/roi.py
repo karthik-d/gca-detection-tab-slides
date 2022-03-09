@@ -75,12 +75,14 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 	extent_x = prescale*range_x
 	extent_x_downscaled = range_x
 	last_x = False
-	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=end_x):
+	while (not last_x) or (extent_x>0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
 		if not last_x and (start_x+extent_x)>end_x:
 			extent_x = end_x - start_x
 			extent_x_downscaled = end_x_downscaled - start_x_downscaled
+			if extent_x<=0 or extent_x_downscaled<=0:
+				break
 			last_x = True
 
 		# Iterate vertically
@@ -95,11 +97,13 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 		extent_y_downscaled = range_y
 		last_y = False
 
-		while (not last_y) or (extent_y!=0 and (start_y+extent_y)<=end_y):
+		while (not last_y) or (extent_y>0 and (start_y+extent_y)<=end_y):
 			# Include remainder patch
 			if not last_y and (start_y+extent_y)>end_y:
 				extent_y = end_y - start_y
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
+				if extent_y<=0 or extent_y_downscaled<=0:
+					break
 				last_y = True
 			# Extract part
 			part_data = np.asarray(slide.read_region(
@@ -193,21 +197,12 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		parents=True,
 		exist_ok=True
 	)
-	padding=False
-	# Extract each region from level-0 and save
 	level_0_x, level_0_y = slide_obj.level_dimensions[0]
 	level_3_x, level_3_y = slide_obj.level_dimensions[3]
-
-	plot.imshow(np_img)
-	plot.show()
+	# Extract each region from level-0 and save
 	for serial, box in enumerate(roi_boxes, start=1):
 		# Rotate bounding box - counter-clockwise 90-deg
 		box = utils.rotate_bounding_box_anticlockwise_90(box, np_img.shape[:2])
-		print("AFTER")
-		start_xy=(box[3], box[1])
-		end_xy=(box[2], box[0])
-		print(start_xy)
-		print(end_xy)
 		# Formatted as [X_min, X_max, Y_min, Y_max]
 		# Apply padding and scale to level-0
 		if padding:
@@ -255,10 +250,9 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		print(start_xy, end_xy)
-		np_result = extract_level_from_slide(slide_obj, level=3, start_xy=start_xy, end_xy=end_xy)
+		np_result = extract_level_from_slide(slide_obj, level=2, start_xy=start_xy, end_xy=end_xy)
 		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
-		Image.fromarray(np_result).save(f"check_{serial}.png", compression="tiff_lzw")
+		Image.fromarray(np_result).save(f"check_{serial}.tiff", compression="tiff_lzw")
 		# pil_result.save(base_img_path.format(region_num=serial))
 
 
