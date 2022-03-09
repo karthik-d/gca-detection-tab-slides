@@ -1,6 +1,7 @@
 import datetime
 import numpy as np
 from PIL import Image, ImageDraw, ImageFont
+from skimage import color
 
 # If True, display additional NumPy array stats (min, max, mean, is_binary).
 ADDITIONAL_NP_STATS = False
@@ -147,6 +148,21 @@ def rotate_clockwise_90(np_img):
   np_result = np.transpose(np_img, [1, 0, 2])
   np_result = np_result[:,::-1,:]
   return np_result
+
+
+def rgba_to_rgb(rgba_img, background=(1,1,1), channel_axis=2):
+  """
+  Use alpha-blending to convert RGBA to RGB image
+  Image is contained in an np array
+  """
+  target_dtype = rgba_img.dtype
+  rgb_img = color.rgba2rgb(rgba_img, background=background, channel_axis=channel_axis)
+  # Convert back to 8-bit int from float if source data was so
+  if target_dtype=='uint8':
+    rgb_img *= 255
+    rgb_img = rgb_img.astype(target_dtype)
+  return rgb_img
+
 
 
 def small_to_large_mapping(small_pixel, large_dimensions):

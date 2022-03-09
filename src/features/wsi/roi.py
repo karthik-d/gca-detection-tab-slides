@@ -7,6 +7,9 @@ from skimage import measure, morphology, transform, draw, color
 
 import matplotlib.pyplot as plot
 
+from PIL import Image 
+import tempfile
+
 from wsi import slide, filters, utils
 from wsi.utils import Time
 
@@ -78,7 +81,8 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None):
 			))
 			# Covert to RGB if required
 			if channels==3:
-				part_data = color.rgba2rgb(part_data, channel_axis=-1)
+				part_data = utils.rgba_to_rgb(part_data, channel_axis=-1)
+			# Run generator 1-step
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
 				start_x_downscaled,
@@ -99,7 +103,7 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
 	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
 	# Open accumulator file
-	img_acc = make_temp_memarr_file(slide, level, op_channels=3)
+	img_acc = make_temp_memarr_file(slide, level, op_channels=4)
 	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
@@ -163,21 +167,23 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	slide_orig = slide.open_slide(slide_filepath)
 	if slide_orig is None:
 		return None
-	# Extract the 32x level i.e. level 4, locate the ROIs from it
-	np_downscaled = extract_level_from_slide(slide_orig, level=4)
-	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	# Extract the 32x level i.e. level 3, locate the ROIs from it
+	np_downscaled = extract_level_from_slide(slide_orig, level=3)
+	Image.fromarray(np_downscaled).save("here.tiff", compression="tiff_lzw")
+	#np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	#roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_orig, roi_boxes)
+	#save_roi_portions(slide_orig, roi_boxes)
 
 	# Display the image and plot all contours found
+	"""
 	if display:
 		fig, ax = plot.subplots()
 		ax.imshow(np_gray, cmap=plot.cm.gray)	
 		for contour in contours:
 			ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
 		plot.show()
-
+	"""
 	return slide_filepath
 
 
