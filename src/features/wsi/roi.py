@@ -178,8 +178,6 @@ def get_roi_boxes_from_image(np_img):
 		Y_min = int(np.min(contour[:,1]))
 		Y_max = int(np.max(contour[:,1]))
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
-	plot.imshow(np_img)
-	plot.show()
 
 	# Sort in labelling order
 	sorted_idx = np.argsort(list(map(utils.roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
@@ -189,23 +187,25 @@ def get_roi_boxes_from_image(np_img):
 def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
 	# box-coords are 90-deg clockwise rotated wrt np_img and slide
 	# Make result path
+	print(slide_obj.level_downsamples)
 	base_img_path = slide.get_roi_image_result_path(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
 		parents=True,
 		exist_ok=True
 	)
+	padding=False
 	# Extract each region from level-0 and save
 	level_0_x, level_0_y = slide_obj.level_dimensions[0]
 	level_3_x, level_3_y = slide_obj.level_dimensions[3]
+
+	plot.imshow(np_img)
+	plot.show()
 	for serial, box in enumerate(roi_boxes, start=1):
 		# Rotate bounding box - counter-clockwise 90-deg
-		start_xy=(box[0], box[2])
-		end_xy=(box[1], box[3])
-		print(start_xy)
-		print(end_xy)
 		box = utils.rotate_bounding_box_anticlockwise_90(box, np_img.shape[:2])
-		start_xy=(box[0], box[2])
-		end_xy=(box[1], box[3])
+		print("AFTER")
+		start_xy=(box[3], box[1])
+		end_xy=(box[2], box[0])
 		print(start_xy)
 		print(end_xy)
 		# Formatted as [X_min, X_max, Y_min, Y_max]
@@ -255,8 +255,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		plot.imshow(np_img)
-		plot.show()
+		print(start_xy, end_xy)
 		np_result = extract_level_from_slide(slide_obj, level=3, start_xy=start_xy, end_xy=end_xy)
 		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		Image.fromarray(np_result).save(f"check_{serial}.png", compression="tiff_lzw")
