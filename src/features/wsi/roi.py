@@ -38,7 +38,6 @@ def make_temp_memarr_file(slide, level=0, mode='w+', dimensions=(None, None, Non
 	if op_channels is None:
 		op_channels = test_part.shape[2]
 	shape = (x_dim, y_dim, op_channels)
-	print(shape)
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
@@ -138,9 +137,6 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	"""    
 	
 	prescale = get_prescale_value_for_level(slide, level)
-	print(start_xy)
-	print(end_xy)
-	print("--")
 	# Set x-dimension of result
 	x_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[0]-start_xy[0])
 	x_dim = None if x_dim is None else (round(x_dim/prescale)+ROI_BUFFER)
@@ -196,7 +192,6 @@ def get_roi_boxes_from_image(np_img):
 def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
 	# box-coords are 90-deg clockwise rotated wrt np_img and slide
 	# Make result path
-	print(slide_obj.level_downsamples)
 	base_img_path = slide.get_roi_image_result_path(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
 		parents=True,
@@ -212,8 +207,6 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Apply padding and scale to level-0
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		# padding=False
-		print(box)
 		if padding:
 			box[0] = utils.scale_value_between_dimensions(
 				max(box[0]-ROI_BOUND_PAD_LEFT, 0),
@@ -259,10 +252,8 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		np_result = extract_level_from_slide(slide_obj, level=2, start_xy=start_xy, end_xy=end_xy)
-		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
+		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(f"check_{serial}.tiff", compression="tiff_lzw")
-		# pil_result.save(base_img_path.format(region_num=serial))
 
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
