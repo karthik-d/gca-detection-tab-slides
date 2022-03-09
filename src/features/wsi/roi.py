@@ -154,11 +154,15 @@ def save_roi_portions(slide_filepath, np_img, roi_boxes, padding=True):
 
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
-	img_path = slide.get_filter_image_result_path(slide_filepath)
-	np_orig = slide.open_image_np(img_path)
-	np_orig_rot90 = utils.rotate_clockwise_90(np_orig)
-	roi_boxes = get_roi_boxes_from_image(np_orig_rot90)
-	save_roi_portions(slide_filepath, np_orig_rot90, roi_boxes)
+	# Load slide object
+	slide_orig = slide.open_slide(slide_filepath)
+	if slide_orig is None:
+		return None
+	# Extract the 32x level i.e. level 4, locate the ROIs from it
+	np_downscaled = extract_level_from_slide(slide_orig, level=4)
+	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	save_roi_portions(slide_filepath, np_downscaled_rot90, roi_boxes)
 
 	# Display the image and plot all contours found
 	if display:
