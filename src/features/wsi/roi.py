@@ -42,36 +42,58 @@ def get_prescale_value_for_level(slide, level):
 	return int(slide.level_downsamples[level]) if level!=0 else 1
 
 
-def read_slide_level_in_parts(slide, level, part_size, channels=None):
+def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=None, end_xy=None):
+	"""
+	Generator to read the slide level in parts
+	start_xy and end_xy are coordinates on level-0, conforming to OpenSlide conventions
+	"""
+	
 	range_x, range_y = part_size
 	prescale = get_prescale_value_for_level(slide, level)
 
-	# Extract till image ends
-	start_x = 0
+	# If start and end xy are not specified, extract whole image
+	if start_xy is None:
+		start_x = 0
+		start_x_downscaled = 0
+	else:
+		start_x = start_xy[0]
+		start_x_downscaled = start_x//prescale
+
+	if end_xy is None:
+		end_x, end_y = slide.level_dimensions[0]
+		end_x_downscaled, end_y_downscaled = slide.level_dimensions[level]
+	else:
+		end_x, end_y = end_xy 
+		end_x_downscaled, end_y_downscaled = end_x//prescale, end_y//prescale
+
 	extent_x = prescale*range_x
-	start_x_downscaled = 0
 	extent_x_downscaled = range_x
 	last_x = False
-	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[0][0]):
+	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
-		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
-			extent_x = slide.level_dimensions[0][0] - start_x
-			extent_x_downscaled = slide.level_dimensions[level][0] - start_x_downscaled
+		if not last_x and (start_x+extent_x)>end_x:
+			extent_x = end_x - start_x
+			extent_x_downscaled = end_x_downscaled - start_x_downscaled
 			last_x = True
 
 		# Iterate vertically
-		start_y = 0
+		if start_xy is None:
+			start_y = 0
+			start_y_downscaled = 0
+		else:
+			start_y = start_xy[1]
+			start_y_downscaled = start_y//prescale
+
 		extent_y = prescale*range_y
-		start_y_downscaled = 0
 		extent_y_downscaled = range_y
 		last_y = False
 
-		while (not last_y) or (extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[0][1]):
+		while (not last_y) or (extent_y!=0 and (start_y+extent_y)<=end_y):
 			# Include remainder patch
-			if not last_y and (start_y+extent_y)>slide.level_dimensions[0][1]:
-				extent_y = slide.level_dimensions[0][1] - start_y
-				extent_y_downscaled = slide.level_dimensions[level][1] - start_y_downscaled
+			if not last_y and (start_y+extent_y)>end_y:
+				extent_y = end_y - start_y
+				extent_y_downscaled = end_y_downscaled - start_y_downscaled
 				last_y = True
 			# Extract part
 			part_data = np.asarray(slide.read_region(
@@ -96,7 +118,7 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None):
 		start_x_downscaled += extent_x_downscaled
 	
 
-def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
+def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=None, end_xy=None):
 	"""
 	Extracts a specific magnification level from the slide object
 	part_size is used to specify the chunks in which data is copied from the slide
@@ -104,7 +126,7 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
 	"""    
 	# Open accumulator file
 	img_acc = make_temp_memarr_file(slide, level, op_channels=3)
-	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3):
+	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
@@ -212,10 +234,11 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 		return None
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
-	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	Image.fromarray(np_downscaled).save("test.tiff", compression="tiff_lzw")
+	# np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	# roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	# save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
 
 	# Display the image and plot all the contours found	
 	# NOT FUNCTIONAL!
