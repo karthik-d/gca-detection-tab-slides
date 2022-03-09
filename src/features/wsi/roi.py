@@ -75,12 +75,10 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 	extent_x = prescale*range_x
 	extent_x_downscaled = range_x
 	last_x = False
-	print("START: ", start_x, extent_x)
 	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
 		if not last_x and (start_x+extent_x)>end_x:
-			print("IN")
 			extent_x = end_x - start_x
 			extent_x_downscaled = end_x_downscaled - start_x_downscaled
 			last_x = True
@@ -104,9 +102,6 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
 				last_y = True
 			# Extract part
-			print(extent_x_downscaled, extent_y_downscaled)
-			print(extent_x, extent_y)
-			print(start_x, end_x)
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -135,10 +130,19 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	part_size is used to specify the chunks in which data is copied from the slide
 	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
-	# Open accumulator file
-	img_acc = make_temp_memarr_file(slide, level, dimensions=(None, None, 3))
+	
+	prescale = get_prescale_value_for_level(slide, level)
+	# Set x-dimension of result
+	x_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[0]-start_xy[0])
+	x_dim = None if x_dim is None else x_dim//prescale
+	print(x_dim)
+	# Set y-dimension of result
+	y_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[1]-start_xy[1])
+	y_dim = None if y_dim is None else y_dim//prescale
+	print(y_dim)
+	# Open accumulator file. Make memory-mapped array
+	img_acc = make_temp_memarr_file(slide, level, dimensions=(x_dim, y_dim, 3))
 	store_x, store_y = (0, 0)
-	print("FULL", img_acc.shape)
 	for part, last_x, last_y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
 		img_acc[store_x:(store_x+part.shape[0]), store_y:(store_y+part.shape[1]), :] = part
 		if last_x:
