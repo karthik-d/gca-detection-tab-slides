@@ -161,7 +161,8 @@ def save_roi_portions(slide_filepath, np_img, roi_boxes, padding=True):
 		# Make PIL img and save
 		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		pil_result = utils.np_to_pil(np_result)
-		pil_result.save(base_img_path.format(region_num=serial))
+		pil_result.save(f"check_{serial}.png")
+		# pil_result.save(base_img_path.format(region_num=serial))
 
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
@@ -174,14 +175,13 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_orig, roi_boxes)
+	save_roi_portions(slide_filepath, np_downscaled_rot90, roi_boxes)
 
 	# Display the image and plot all the contours found	
 	if display:
 		fig, ax = plot.subplots()
 		ax.imshow(np_downscaled)	
 		for box in roi_boxes:
-			box.append(box[0])
 			ax.plot(box[:, 1], contour[:, 0], linewidth=2)
 		plot.show()
 
