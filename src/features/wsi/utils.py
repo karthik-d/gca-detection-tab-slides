@@ -164,6 +164,23 @@ def rgba_to_rgb(rgba_img, background=(1,1,1), channel_axis=2):
   return rgb_img
 
 
+def rotate_bounding_box_anticlockwise_90(box, img_dims):
+  """
+  Transforms bounding-box coordinates [X_min, X_max, Y_min, Y_max]
+  when image is rotated counter-clockwise by 90-deg about its center
+  - img_dims: X and Y dimensions in a tuple - (X,Y) after rotating img by anticlockwise-90
+  - box: Box attributes as described above
+  """
+  x_dim, y_dim = img_dims 
+  new_box = [ 
+    box[2],
+    box[3],
+    y_dim - box[1],
+    y_dim - box[0]
+  ]
+  return new_box
+
+
 def scale_value_between_dimensions(value, from_dim, to_dim):
   """
   Map a single value on a linear scale from from_dim to to_dim
