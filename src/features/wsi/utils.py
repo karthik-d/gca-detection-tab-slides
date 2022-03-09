@@ -172,11 +172,11 @@ def rotate_bounding_box_anticlockwise_90(box, img_dims):
   - box: Box attributes as described above
   """
   x_dim, y_dim = img_dims 
-  new_box = [ 
-    box[2],
-    box[3],
-    y_dim - box[1],
-    y_dim - box[0]
+  new_box = [
+    box[0],
+    box[1],
+    x_dim - box[3],
+    x_dim - box[2]
   ]
   return new_box
 
@@ -187,6 +187,7 @@ def scale_value_between_dimensions(value, from_dim, to_dim):
   Use this to locate pixels on different levels on the same slide
   """
   scale = to_dim / from_dim 
+  print("SCALE", scale)
   scaled_val = round(scale * value)
   return int(scaled_val)
 
