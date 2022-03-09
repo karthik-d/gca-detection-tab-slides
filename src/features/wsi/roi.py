@@ -142,22 +142,62 @@ def get_roi_boxes_from_image(np_img):
 	return np.array(roi_boxes)[sorted_idx]
 
 
-def save_roi_portions(slide_filepath, np_img, roi_boxes, padding=True):
+def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
+	# box-coords are 90-deg clockwise rotated wrt np_img and slide
 	# Make result path
 	base_img_path = slide.get_roi_image_result_path(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
 		parents=True,
 		exist_ok=True
 	)
-	# Extract each region and save
+	# Extract each region from level-0 and save
+	level_0_x, level_0_y = slide_obj.level_dimensions[0]
+	level_3_x, level_3_y = slide_obj.level_dimensions[3]
 	for serial, box in enumerate(roi_boxes, start=1):
 		# Formatted as [X_min, X_max, Y_min, Y_max]
-		# Apply padding
+		# Apply padding and scale to level-0
 		if padding:
-			box[0] = max(box[0]-ROI_BOUND_PAD_LEFT, 0)
-			box[1] = min(box[1]+ROI_BOUND_PAD_RIGHT, np_img.shape[0]-1)
-			box[2] = max(box[2]-ROI_BOUND_PAD_TOP, 0)
-			box[3] = min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[1]-1)
+			box[0] = utils.scale_value_between_dimensions(
+				max(box[0]-ROI_BOUND_PAD_LEFT, 0),
+				level_3_x,
+				level_0_x
+			)
+			box[1] = utils.scale_value_between_dimensions(
+				min(box[1]+ROI_BOUND_PAD_RIGHT, np_img.shape[0]-1),
+				level_3_x,
+				level_0_x
+			)
+			box[2] = utils.scale_value_between_dimensions(
+				max(box[2]-ROI_BOUND_PAD_TOP, 0),
+				level_3_y,
+				level_0_y
+			)
+			box[3] = utils.scale_value_between_dimensions(
+				min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[1]-1),
+				level_3_y,
+				level_0_y 
+			)
+		else:
+			box[0] = utils.scale_value_between_dimensions(
+				box[0],
+				level_3_x,
+				level_0_x
+			)
+			box[1] = utils.scale_value_between_dimensions(
+				box[1],
+				level_3_x,
+				level_0_x
+			)
+			box[2] = utils.scale_value_between_dimensions(
+				box[2],
+				level_3_y,
+				level_0_y
+			)
+			box[3] = utils.scale_value_between_dimensions(
+				box[3],
+				level_3_y,
+				level_0_y 
+			)
 		# Make PIL img and save
 		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		pil_result = utils.np_to_pil(np_result)
@@ -175,9 +215,10 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_filepath, np_downscaled_rot90, roi_boxes)
+	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
 
 	# Display the image and plot all the contours found	
+	# NOT FUNCTIONAL!
 	if display:
 		fig, ax = plot.subplots()
 		ax.imshow(np_downscaled)	

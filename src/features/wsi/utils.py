@@ -164,10 +164,19 @@ def rgba_to_rgb(rgba_img, background=(1,1,1), channel_axis=2):
   return rgb_img
 
 
+def scale_value_between_dimensions(value, from_dim, to_dim):
+  """
+  Map a single value on a linear scale from from_dim to to_dim
+  Use this to locate pixels on different levels on the same slide
+  """
+  scale = to_dim / from_dim 
+  scaled_val = round(scale * value)
+  return int(scaled_val)
+
 
 def small_to_large_mapping(small_pixel, large_dimensions):
   """
-  Map a scaled-down pixel width and height to the corresponding pixel of the original whole-slide image.
+  Map a pixel coordinates on a linear scale onto the WSI
   """
   small_x, small_y = small_pixel
   large_w, large_h = large_dimensions
