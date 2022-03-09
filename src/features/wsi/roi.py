@@ -38,6 +38,7 @@ def make_temp_memarr_file(slide, level=0, mode='w+', dimensions=(None, None, Non
 	if op_channels is None:
 		op_channels = test_part.shape[2]
 	shape = (x_dim, y_dim, op_channels)
+	print(shape)
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
@@ -132,10 +133,14 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	"""
 	Extracts a specific magnification level from the slide object
 	part_size is used to specify the chunks in which data is copied from the slide
+	start_xy and end_xy are specified wrt slide-0, conforming to OpenSlide conventions
 	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
 	
 	prescale = get_prescale_value_for_level(slide, level)
+	print(start_xy)
+	print(end_xy)
+	print("--")
 	# Set x-dimension of result
 	x_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[0]-start_xy[0])
 	x_dim = None if x_dim is None else (round(x_dim/prescale)+ROI_BUFFER)
@@ -205,6 +210,10 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		box = utils.rotate_bounding_box_anticlockwise_90(box, np_img.shape[:2])
 		# Formatted as [X_min, X_max, Y_min, Y_max]
 		# Apply padding and scale to level-0
+		start_xy=(box[0], box[2])
+		end_xy=(box[1], box[3])
+		# padding=False
+		print(box)
 		if padding:
 			box[0] = utils.scale_value_between_dimensions(
 				max(box[0]-ROI_BOUND_PAD_LEFT, 0),
@@ -212,7 +221,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 				level_0_x
 			)
 			box[1] = utils.scale_value_between_dimensions(
-				min(box[1]+ROI_BOUND_PAD_RIGHT, np_img.shape[0]-1),
+				min(box[1]+ROI_BOUND_PAD_RIGHT, np_img.shape[1]-1),
 				level_3_x,
 				level_0_x
 			)
@@ -222,7 +231,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 				level_0_y
 			)
 			box[3] = utils.scale_value_between_dimensions(
-				min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[1]-1),
+				min(box[3]+ROI_BOUND_PAD_BOTTOM, np_img.shape[0]-1),
 				level_3_y,
 				level_0_y 
 			)
