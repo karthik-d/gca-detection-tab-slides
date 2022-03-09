@@ -24,7 +24,7 @@ def get_roi_contours_from_image(np_img, close_neighborhood=(50,50), open_neighbo
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
 	np_gray = filters.apply_binary_closing(np_gray, close_neighborhood)
 	np_gray = filters.apply_binary_opening(np_gray, open_neighborhood)
-	contours = measure.find_contours(np_gray)
+	contours = measure.find_contours(np_gray, level=0.85)
 	return contours
 
 
