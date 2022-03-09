@@ -21,7 +21,7 @@ ROI_BOUND_PAD_RIGHT = 20
 
 
 
-def make_temp_memarr_file(slide, level=0, mode='w+', op_channels=None):
+def make_temp_memarr_file(slide, level=0, mode='w+', dimensions=(None, None, None)):
 	"""
 	Create or truncate an existing memory-mapped array file	with required shape buffer
 	Return its file pointer object
@@ -29,9 +29,15 @@ def make_temp_memarr_file(slide, level=0, mode='w+', op_channels=None):
 	# Extract configuration
 	test_part = np.asarray(slide.read_region((0,0), level, size=(1,1)))
 	dtype = test_part.dtype
+	# Infer required dimensions
+	x_dim, y_dim, op_channels = dimensions 
+	if x_dim is None:
+		x_dim = slide.level_dimensions[level][0]
+	if y_dim is None:
+		y_dim = slide.level_dimensions[level][1]
 	if op_channels is None:
 		op_channels = test_part.shape[2]
-	shape=(*slide.level_dimensions[level], op_channels)
+	shape = (x_dim, y_dim, op_channels)
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
@@ -96,6 +102,7 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
 				last_y = True
 			# Extract part
+
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -125,7 +132,7 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
 	# Open accumulator file
-	img_acc = make_temp_memarr_file(slide, level, op_channels=3)
+	img_acc = make_temp_memarr_file(slide, level, dimensions=(None, None, 3))
 	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
@@ -149,7 +156,6 @@ def get_roi_boxes_from_image(np_img):
 	sorted as per the labelling order
 	"""
 	contours = get_roi_contours_from_image(np_img)
-	print(contours)
 	# Make bounding boxes
 	roi_boxes = []
 	for contour in contours:
@@ -159,7 +165,6 @@ def get_roi_boxes_from_image(np_img):
 		Y_max = int(np.max(contour[:,1]))
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
 	# Sort in labelling order
-	print(list(map(utils.roi_labelling_order, roi_boxes)))
 	sorted_idx = np.argsort(list(map(utils.roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
 	return np.array(roi_boxes)[sorted_idx]
 
@@ -221,9 +226,9 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 				level_0_y 
 			)
 		# Make PIL img and save
-		np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
-		pil_result = utils.np_to_pil(np_result)
-		pil_result.save(f"check_{serial}.png")
+		np_result = extract_level_from_slide(slide_obj, level=3, start_xy=(box[0], box[2]), end_xy=(box[1], box[3]))
+		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
+		Image.fromarray(np_result).save(f"check_{serial}.png", compression="tiff_lzw")
 		# pil_result.save(base_img_path.format(region_num=serial))
 
 
@@ -235,10 +240,10 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
 	Image.fromarray(np_downscaled).save("test.tiff", compression="tiff_lzw")
-	# np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	# roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	# save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
 
 	# Display the image and plot all the contours found	
 	# NOT FUNCTIONAL!
