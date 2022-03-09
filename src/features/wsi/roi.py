@@ -103,7 +103,7 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
 	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
 	# Open accumulator file
-	img_acc = make_temp_memarr_file(slide, level, op_channels=4)
+	img_acc = make_temp_memarr_file(slide, level, op_channels=3)
 	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
