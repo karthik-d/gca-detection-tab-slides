@@ -111,13 +111,13 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
 	return img_acc
 
 
-def get_roi_contours_from_image(np_img, close_neighborhood=(50,50), open_neighborhood=(30,30)):
-	np_gray = filters.filter_rgb_to_grayscale(np_img)
+def get_roi_contours_from_image(np_img, close_neighborhood=(30,30), open_neighborhood=(16,16)):
+	np_gray = filters.filter_grays(np_img, output_type='uint8')
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
 	np_gray = filters.apply_binary_closing(np_gray, close_neighborhood)
 	np_gray = filters.apply_binary_opening(np_gray, open_neighborhood)
-	contours = measure.find_contours(np_gray, level=0.85)
+	contours = measure.find_contours(np_gray)
 	return contours
 
 
@@ -127,6 +127,7 @@ def get_roi_boxes_from_image(np_img):
 	sorted as per the labelling order
 	"""
 	contours = get_roi_contours_from_image(np_img)
+	print(contours)
 	# Make bounding boxes
 	roi_boxes = []
 	for contour in contours:
@@ -136,6 +137,7 @@ def get_roi_boxes_from_image(np_img):
 		Y_max = int(np.max(contour[:,1]))
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
 	# Sort in labelling order
+	print(list(map(utils.roi_labelling_order, roi_boxes)))
 	sorted_idx = np.argsort(list(map(utils.roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
 	return np.array(roi_boxes)[sorted_idx]
 
@@ -169,27 +171,26 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 		return None
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
-	Image.fromarray(np_downscaled).save("here.tiff", compression="tiff_lzw")
-	#np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	#roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	#save_roi_portions(slide_orig, roi_boxes)
+	save_roi_portions(slide_orig, roi_boxes)
 
-	# Display the image and plot all contours found
-	"""
+	# Display the image and plot all the contours found	
 	if display:
 		fig, ax = plot.subplots()
-		ax.imshow(np_gray, cmap=plot.cm.gray)	
-		for contour in contours:
-			ax.plot(contour[:, 1], contour[:, 0], linewidth=2)
+		ax.imshow(np_downscaled)	
+		for box in roi_boxes:
+			box.append(box[0])
+			ax.plot(box[:, 1], contour[:, 0], linewidth=2)
 		plot.show()
-	"""
+
 	return slide_filepath
 
 
 def extract_roi_image_path_list(path_l, save=False, display=False):
 	for slide_path in path_l:
-		_ = extract_roi_from_image(slide_path)
+		_ = extract_roi_from_image(slide_path, save, display)
 	return path_l
 
 
@@ -199,7 +200,7 @@ def singleprocess_extract_roi_from_filtered(save=False, display=False):
 
   training_paths = slide.get_training_slide_paths()
   num_training_slides = len(training_paths)
-  path_l = extract_roi_image_path_list(training_paths)
+  path_l = extract_roi_image_path_list(training_paths, save, display)
 
   print("Time taken to extract ROIs: %s\n" % str(t.elapsed()))
 

@@ -12,6 +12,8 @@ import skimage.morphology as sk_morphology
 import skimage.segmentation as sk_segmentation
 import ntpath
 
+import matplotlib.pyplot as plot
+
 from wsi import slide, utils
 from wsi.utils import Time
 
@@ -565,7 +567,7 @@ def filter_binary_opening(np_img, disk_size=3, iterations=1, output_type="uint8"
 def filter_binary_closing(np_img, disk_size=3, iterations=1, output_type="uint8"):
   """
   Close a binary object (bool, float, or uint8). Closing is a dilation followed by an erosion.
-  Closing can be used to remove small holes.
+  Closing can be used to remove small holes
   Args:
     np_img: Binary image as a NumPy array.
     disk_size: Radius of the disk structuring element used for closing.
@@ -1165,16 +1167,16 @@ def multiprocess_apply_filters_to_images(save=True, display=False):
 
 # For the 'roi' module
 def apply_binary_closing(np_img_2d, neighborhood_shape=(3,3)):
-  """ 
-  Wrapper around skimage's morphology operation for erosion, then dilation.
-  Neighborhood is rectangular
-  """
-  footprint = np.ones(neighborhood_shape)
-  cleaned_np_img = sk_morphology.binary_closing(
+	""" 
+	Wrapper around skimage's morphology operation for erosion, then dilation.
+	Neighborhood is rectangular
+	"""
+	footprint = np.ones(neighborhood_shape)
+	cleaned_np_img = sk_morphology.binary_closing(
 		np_img_2d,
 		footprint
 	)
-  return cleaned_np_img
+	return cleaned_np_img
 
 # For the 'roi' module
 def apply_binary_opening(np_img_2d, neighborhood_shape=(3,3)):
