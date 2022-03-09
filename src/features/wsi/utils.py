@@ -147,3 +147,14 @@ def rotate_clockwise_90(np_img):
   np_result = np.transpose(np_img, [1, 0, 2])
   np_result = np_result[:,::-1,:]
   return np_result
+
+
+def small_to_large_mapping(small_pixel, large_dimensions):
+  """
+  Map a scaled-down pixel width and height to the corresponding pixel of the original whole-slide image.
+  """
+  small_x, small_y = small_pixel
+  large_w, large_h = large_dimensions
+  large_x = round((large_w / SCALE_FACTOR) / math.floor(large_w / SCALE_FACTOR) * (SCALE_FACTOR * small_x))
+  large_y = round((large_h / SCALE_FACTOR) / math.floor(large_h / SCALE_FACTOR) * (SCALE_FACTOR * small_y))
+  return large_x, large_y

@@ -259,22 +259,6 @@ def parse_dimensions_from_image_filename(filename):
   return large_w, large_h, small_w, small_h
 
 
-def small_to_large_mapping(small_pixel, large_dimensions):
-  """
-  Map a scaled-down pixel width and height to the corresponding pixel of the original whole-slide image.
-  Args:
-    small_pixel: The scaled-down width and height.
-    large_dimensions: The width and height of the original whole-slide image.
-  Returns:
-    Tuple consisting of the scaled-up width and height.
-  """
-  small_x, small_y = small_pixel
-  large_w, large_h = large_dimensions
-  large_x = round((large_w / SCALE_FACTOR) / math.floor(large_w / SCALE_FACTOR) * (SCALE_FACTOR * small_x))
-  large_y = round((large_h / SCALE_FACTOR) / math.floor(large_h / SCALE_FACTOR) * (SCALE_FACTOR * small_y))
-  return large_x, large_y
-
-
 # Modified (using slide_path in place of slide_num)
 def training_slide_to_image(slide_filepath):
 	"""

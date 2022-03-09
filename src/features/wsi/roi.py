@@ -18,6 +18,90 @@ ROI_BOUND_PAD_LEFT = 20
 ROI_BOUND_PAD_RIGHT = 20
 
 
+
+def make_temp_memarr_file(slide, level=0, mode='w+'):
+	"""
+	Create or truncate an existing memory-mapped array file	with required shape buffer
+	Return its file pointer object
+	"""
+	# Extract configuration
+	test_part = np.asarray(slide.read_region((0,0), level, size=(1,1)))
+	dtype = test_part.dtype
+	shape=(*slide.level_dimensions[level], test_part.shape[2])
+	# Prepare file
+	tempdir = tempfile.TemporaryDirectory()
+	file_destn = os.path.join(tempdir.name, 'temp_')
+	return np.memmap(file_destn, shape=shape, dtype=dtype, mode=mode)
+
+
+def get_prescale_value_for_level(slide, level):
+	return int(slide.level_downsamples[level]) if level!=0 else 1
+
+
+def read_slide_level_in_parts(slide, level, part_size):
+	range_x, range_y = part_size
+	prescale = get_prescale_value_for_level(slide, level)
+
+	# Extract till image ends
+	start_x = 0
+	extent_x = prescale*range_x
+	start_x_downscaled = 0
+	extent_x_downscaled = range_x
+	last_x = False
+	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=slide.level_dimensions[0][0]):
+		
+		# Include remainder patch
+		if not last_x and (start_x+extent_x)>slide.level_dimensions[0][0]:
+			extent_x = slide.level_dimensions[0][0] - start_x
+			extent_x_downscaled = slide.level_dimensions[level][0] - start_x_downscaled
+			last_x = True
+
+		# Iterate vertically
+		start_y = 0
+		extent_y = prescale*range_y
+		start_y_downscaled = 0
+		extent_y_downscaled = range_y
+		last_y = False
+
+		while (not last_y) or (extent_y!=0 and (start_y+extent_y)<=slide.level_dimensions[0][1]):
+			# Include remainder patch
+			if not last_y and (start_y+extent_y)>slide.level_dimensions[0][1]:
+				extent_y = slide.level_dimensions[0][1] - start_y
+				extent_y_downscaled = slide.level_dimensions[level][1] - start_y_downscaled
+				last_y = True
+			# Extract part
+			part_data = np.asarray(slide.read_region(
+				(start_x, start_y), 
+				level=level,
+				size=(extent_x_downscaled, extent_y_downscaled)
+			))
+			yield (
+				np.transpose(part_data, (1, 0, 2)),
+				start_x_downscaled,
+				start_y_downscaled
+			)
+			start_y += extent_y
+			start_y_downscaled += extent_y_downscaled
+			
+		# Next x-row
+		start_x += extent_x
+		start_x_downscaled += extent_x_downscaled
+	
+
+def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
+	"""
+	Extracts a specific magnification level from the slide object
+	part_size is used to specify the chunks in which data is copied from the slide
+	"""    
+	# Open accumulator file
+	img_acc = make_temp_memarr_file(slide, level)
+	for part, x, y in read_slide_level_in_parts(slide, level, part_size):
+		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
+	# Retranspose the array
+	img_acc = np.transpose(img_acc, (1, 0, 2))
+	return img_acc
+
+
 def get_roi_contours_from_image(np_img, close_neighborhood=(50,50), open_neighborhood=(30,30)):
 	np_gray = filters.filter_rgb_to_grayscale(np_img)
 	# "close" to club nearby speckles, "open" to remove islands of speckles
