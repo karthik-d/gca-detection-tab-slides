@@ -3,8 +3,7 @@ import numpy as np
 import os 
 import ntpath
 from pathlib import Path
-from skimage import measure, morphology, transform
-from skimage import draw
+from skimage import measure, morphology, transform, draw, color
 
 import matplotlib.pyplot as plot
 
@@ -19,7 +18,7 @@ ROI_BOUND_PAD_RIGHT = 20
 
 
 
-def make_temp_memarr_file(slide, level=0, mode='w+'):
+def make_temp_memarr_file(slide, level=0, mode='w+', op_channels=None):
 	"""
 	Create or truncate an existing memory-mapped array file	with required shape buffer
 	Return its file pointer object
@@ -27,7 +26,9 @@ def make_temp_memarr_file(slide, level=0, mode='w+'):
 	# Extract configuration
 	test_part = np.asarray(slide.read_region((0,0), level, size=(1,1)))
 	dtype = test_part.dtype
-	shape=(*slide.level_dimensions[level], test_part.shape[2])
+	if op_channels is None:
+		op_channels = test_part.shape[2]
+	shape=(*slide.level_dimensions[level], op_channels)
 	# Prepare file
 	tempdir = tempfile.TemporaryDirectory()
 	file_destn = os.path.join(tempdir.name, 'temp_')
@@ -38,7 +39,7 @@ def get_prescale_value_for_level(slide, level):
 	return int(slide.level_downsamples[level]) if level!=0 else 1
 
 
-def read_slide_level_in_parts(slide, level, part_size):
+def read_slide_level_in_parts(slide, level, part_size, channels=None):
 	range_x, range_y = part_size
 	prescale = get_prescale_value_for_level(slide, level)
 
@@ -75,6 +76,9 @@ def read_slide_level_in_parts(slide, level, part_size):
 				level=level,
 				size=(extent_x_downscaled, extent_y_downscaled)
 			))
+			# Covert to RGB if required
+			if channels==3:
+				part_data = color.rgba2rgb(part_data, channel_axis=-1)
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
 				start_x_downscaled,
@@ -92,10 +96,11 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048)):
 	"""
 	Extracts a specific magnification level from the slide object
 	part_size is used to specify the chunks in which data is copied from the slide
+	NOTE: The RGBA image in .svs is converted down to 3-channel RGB during conversion - using alpha blending
 	"""    
 	# Open accumulator file
-	img_acc = make_temp_memarr_file(slide, level)
-	for part, x, y in read_slide_level_in_parts(slide, level, part_size):
+	img_acc = make_temp_memarr_file(slide, level, op_channels=3)
+	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3):
 		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
@@ -162,7 +167,8 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	np_downscaled = extract_level_from_slide(slide_orig, level=4)
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
-	save_roi_portions(slide_filepath, np_downscaled_rot90, roi_boxes)
+	# Extract ROI from full-resolution slide and save
+	save_roi_portions(slide_orig, roi_boxes)
 
 	# Display the image and plot all contours found
 	if display:
