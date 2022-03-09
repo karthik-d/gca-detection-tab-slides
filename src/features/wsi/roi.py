@@ -75,10 +75,12 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 	extent_x = prescale*range_x
 	extent_x_downscaled = range_x
 	last_x = False
+	print("START: ", start_x, extent_x)
 	while (not last_x) or (extent_x!=0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
 		if not last_x and (start_x+extent_x)>end_x:
+			print("IN")
 			extent_x = end_x - start_x
 			extent_x_downscaled = end_x_downscaled - start_x_downscaled
 			last_x = True
@@ -102,7 +104,9 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
 				last_y = True
 			# Extract part
-
+			print(extent_x_downscaled, extent_y_downscaled)
+			print(extent_x, extent_y)
+			print(start_x, end_x)
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -114,8 +118,8 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 			# Run generator 1-step
 			yield (
 				np.transpose(part_data, (1, 0, 2)),
-				start_x_downscaled,
-				start_y_downscaled
+				last_x,
+				last_y
 			)
 			start_y += extent_y
 			start_y_downscaled += extent_y_downscaled
@@ -133,8 +137,18 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	"""    
 	# Open accumulator file
 	img_acc = make_temp_memarr_file(slide, level, dimensions=(None, None, 3))
-	for part, x, y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
-		img_acc[x:x+part.shape[0], y:y+part.shape[1], :] = part
+	store_x, store_y = (0, 0)
+	print("FULL", img_acc.shape)
+	for part, last_x, last_y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
+		img_acc[store_x:(store_x+part.shape[0]), store_y:(store_y+part.shape[1]), :] = part
+		if last_x:
+			store_x = 0
+		else:
+			store_x += part.shape[0]
+		if last_y:
+			store_y = 0
+		else:
+			store_y += part.shape[1]
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
