@@ -187,7 +187,6 @@ def scale_value_between_dimensions(value, from_dim, to_dim):
   Use this to locate pixels on different levels on the same slide
   """
   scale = to_dim / from_dim 
-  print("SCALE", scale)
   scaled_val = round(scale * value)
   return int(scaled_val)
 
