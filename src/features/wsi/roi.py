@@ -18,7 +18,7 @@ ROI_BOUND_PAD_TOP = 20
 ROI_BOUND_PAD_BOTTOM = 20
 ROI_BOUND_PAD_LEFT = 20
 ROI_BOUND_PAD_RIGHT = 20
-ROI_BUFFER = 50
+ROI_BUFFER = 10
 
 
 def make_temp_memarr_file(slide, level=0, mode='w+', dimensions=(None, None, None)):
@@ -135,11 +135,9 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	# Set x-dimension of result
 	x_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[0]-start_xy[0])
 	x_dim = None if x_dim is None else (round(x_dim/prescale)+ROI_BUFFER)
-	print(x_dim)
 	# Set y-dimension of result
 	y_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[1]-start_xy[1])
 	y_dim = None if y_dim is None else (round(y_dim/prescale)+ROI_BUFFER)
-	print(y_dim)
 	# Open accumulator file. Make memory-mapped array
 	img_acc = make_temp_memarr_file(slide, level, dimensions=(x_dim, y_dim, 3))
 	# Iterate y, for each iteration of x
@@ -180,6 +178,16 @@ def get_roi_boxes_from_image(np_img):
 		Y_min = int(np.min(contour[:,1]))
 		Y_max = int(np.max(contour[:,1]))
 		roi_boxes.append([X_min, X_max, Y_min, Y_max])
+
+	with_boxes  = filters.filter_rgb_to_grayscale(np_img)
+	for box in roi_boxes:
+		#[Xmin, Xmax, Ymin, Ymax]
+		r = [box[0],box[1],box[1],box[0], box[0]]
+		c = [box[3],box[3],box[2],box[2], box[3]]
+		rr, cc = draw.polygon_perimeter(r, c, with_boxes.shape)
+		with_boxes[rr, cc] = 0 #set color white
+	plot.imshow(with_boxes, interpolation='nearest', cmap=plot.cm.gray)
+	plot.show()
 	# Sort in labelling order
 	sorted_idx = np.argsort(list(map(utils.roi_labelling_order, roi_boxes)), order=['vertical', 'horizontal'])
 	return np.array(roi_boxes)[sorted_idx]
@@ -242,7 +250,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 				level_0_y 
 			)
 		# Make PIL img and save
-		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=(box[0], box[2]), end_xy=(box[1], box[3]))
+		np_result = extract_level_from_slide(slide_obj, level=3, start_xy=(box[0], box[3]), end_xy=(box[1], box[2]))
 		#np_result = np_img[box[0]:box[1]+1, box[2]:box[3]+1, :]
 		Image.fromarray(np_result).save(f"check_{serial}.png", compression="tiff_lzw")
 		# pil_result.save(base_img_path.format(region_num=serial))
@@ -259,7 +267,7 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	# save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
 
 	# Display the image and plot all the contours found	
 	# NOT FUNCTIONAL!
