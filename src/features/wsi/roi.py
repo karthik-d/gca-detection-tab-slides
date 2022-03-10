@@ -166,11 +166,12 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 
 def get_roi_contours_from_image(np_img, close_neighborhood=(30,30), open_neighborhood=(16,16)):
 	np_gray = filters.filter_grays(np_img, output_type='uint8')
+	contour_level = (np.max(np_gray)-np.min(np_gray))/(2*255)
 	# "close" to club nearby speckles, "open" to remove islands of speckles
 	# Neighborhood can be large - hence, approximate - only extracting bounding boxes
 	np_gray = filters.apply_binary_closing(np_gray, close_neighborhood)
 	np_gray = filters.apply_binary_opening(np_gray, open_neighborhood)
-	contours = measure.find_contours(np_gray)
+	contours = measure.find_contours(np_gray, level=contour_level)
 	return contours
 
 
