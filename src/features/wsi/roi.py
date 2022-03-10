@@ -13,6 +13,11 @@ import tempfile
 from wsi import slide, filters, utils
 from wsi.utils import Time
 
+REL_IMGS_DIR_NAME = "related-imgs"
+REL_IMG_FORMAT = 'png'
+
+THUMBNAIL_METANAME = 'thumbnail'
+LABEL_METANAME = 'label'
 
 ROI_BOUND_PAD_TOP = 20
 ROI_BOUND_PAD_BOTTOM = 20
@@ -192,7 +197,7 @@ def get_roi_boxes_from_image(np_img):
 def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
 	# box-coords are 90-deg clockwise rotated wrt np_img and slide
 	# Make result path
-	base_img_path = slide.get_roi_image_result_path(slide_filepath)
+	base_img_path = slide.get_roi_image_result_filepath(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
 		parents=True,
 		exist_ok=True
@@ -260,14 +265,16 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	# Load slide object
 	slide_orig = slide.open_slide(slide_filepath)
 	if slide_orig is None:
+		print(f"Could not find {slide_filepath}")
 		return None
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
-	Image.fromarray(np_downscaled).save("test.tiff", compression="tiff_lzw")
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	# roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	# save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	save_wholeside_related_images(slide_filepath)
+
 
 	# Display the image and plot all the contours found	
 	# NOT FUNCTIONAL!
@@ -285,6 +292,36 @@ def extract_roi_image_path_list(path_l, save=False, display=False):
 	for slide_path in path_l:
 		_ = extract_roi_from_image(slide_path, save, display)
 	return path_l
+
+
+def save_wholeside_related_images(slide_filepath, include_thumbnail=True, include_label=True):
+	# Load slide object
+	slide_orig = slide.open_slide(slide_filepath)
+	if slide_orig is None:
+		print(f"Could not find {slide_filepath}")
+		return None
+	# Locate ROI directory and make required subdirs
+	roi_dir = slide.get_roi_image_result_dirpath(slide_filepath)
+	related_imgs_dir = os.path.join(roi_dir, REL_IMGS_DIR_NAME)
+	Path(related_imgs_dir).mkdir(
+		parents=True,
+		exist_ok=True
+	)
+	# Save reqd images, if they exist
+	reqd_rel_imgs = []
+	reqd_rel_imgs.append(THUMBNAIL_METANAME) if include_thumbnail else None
+	reqd_rel_imgs.append(LABEL_METANAME) if include_label else None
+	for img_metaname in reqd_rel_imgs:
+		if isinstance(slide_orig.associated_images.get(img_metaname), Image.Image):
+			save_path = ".".join([
+				os.path.join(related_imgs_dir, img_metaname),
+				REL_IMG_FORMAT
+			])
+			slide_orig.associated_images.get(img_metaname).save(
+				fp=save_path,
+				format=REL_IMG_FORMAT
+			)
+			print("Saved related images")
 
 
 def singleprocess_extract_roi_from_filtered(save=False, display=False):

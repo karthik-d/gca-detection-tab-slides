@@ -23,6 +23,7 @@ SRC_TRAIN_DIR = os.path.join(BASE_DIR, "final")
 SRC_TRAIN_EXT = "svs"
 DEST_TRAIN_SUFFIX = ""  # Example: "train-"
 DEST_TRAIN_EXT = "png"
+DEST_ROI_EXT = "tiff"
 SCALE_FACTOR = 32
 DEST_TRAIN_DIR = os.path.join(BASE_DIR, "training_" + DEST_TRAIN_EXT)
 THUMBNAIL_SIZE = 300
@@ -39,7 +40,7 @@ FILTER_PAGINATE = True
 FILTER_HTML_DIR = BASE_DIR
 
 ROI_SUFFIX = ""
-ROI_DIR = os.path.join(BASE_DIR, "roi_" + DEST_TRAIN_EXT)
+ROI_DIR = os.path.join(BASE_DIR, "roi")
 
 TILE_SUMMARY_DIR = os.path.join(BASE_DIR, "tile_summary_" + DEST_TRAIN_EXT)
 TILE_SUMMARY_ON_ORIGINAL_DIR = os.path.join(BASE_DIR, "tile_summary_on_original_" + DEST_TRAIN_EXT)
@@ -408,11 +409,9 @@ def multiprocess_training_slides_to_images():
 
 # ADDED Functions
 
-def get_roi_image_result_path(slide_filepath):
+def get_roi_image_result_filepath(slide_filepath):
 	"""
-	Convert slide number to the path to the file that is the final result of filtering.
-	Example:
-	5 -> ../data/filter_png/TUPAC-TR-005-32x-49920x108288-1560x3384-filtered.png
+	Convert slide number to the path to the file that is the final result of ROI extraction.
 	Args:
 	slide_number: The slide number.
 	Returns:
@@ -424,6 +423,24 @@ def get_roi_image_result_path(slide_filepath):
 	img_path = os.path.join(
     ROI_DIR, 
     slide_filename,
-    slide_filename + "-" + "region_{region_num}." + DEST_TRAIN_EXT
+    slide_filename + "-" + "region_{region_num}." + DEST_ROI_EXT
+  )
+	return img_path
+
+
+def get_roi_image_result_dirpath(slide_filepath):
+	"""
+	Convert slide number to the path to the directory containing the final result of ROI extraction.
+	Args:
+	slide_number: The slide number.
+	Returns:
+	Path to the filter image file.
+	"""
+	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
+	training_img_path = get_downscaled_training_image_path(slide_filepath)
+
+	img_path = os.path.join(
+    ROI_DIR, 
+    slide_filename
   )
 	return img_path
