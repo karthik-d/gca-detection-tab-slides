@@ -252,7 +252,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=start_xy, end_xy=end_xy)
+		np_result = extract_level_from_slide(slide_obj, level=0, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(f"check_{serial}.tiff", compression="tiff_lzw")
 
 
