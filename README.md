@@ -21,7 +21,7 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 ## Procedure to Extract ROI
 
-Please download and extract this zipped archive.
+Please download and extract the zipped archive with the scripts [from here](https://drive.google.com/file/d/1hw_JGWN8uumKNLK6Cvu9nqv9Ff-BuPSM/view?usp=sharing).
 
 ### Install dependencies
 
@@ -29,6 +29,7 @@ Please ensure that you are using a **macOS** or **Linux** development environmen
 Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommended)**.
 
 #### **(Recommended)** Using an Anaconda environment
+- Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-conda.txt) or from the zip-folder `GCA-Detection/`
 - **Either** create a new environment with all dependencies by running   
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
@@ -39,6 +40,7 @@ Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommende
 
 
 #### **(Not preferred)** Using pip
+- Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-pip.txt) or from the zip-folder `GCA-Detection/`
 - Install all dependencies by running   
 `pip install -r dep-file-pip.txt`
 
