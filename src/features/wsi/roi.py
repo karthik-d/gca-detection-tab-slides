@@ -265,13 +265,19 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
 	# Load slide object
+	print(slide_filepath)
 	slide_orig = slide.open_slide(slide_filepath)
+	print("HERE")
 	if slide_orig is None:
 		print(f"Could not find {slide_filepath}")
+		print("HERE")
 		return None
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
+	print("HERE")
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
+	print("HERE")
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
+	print("HERE")
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
 	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
@@ -340,36 +346,37 @@ def singleprocess_extract_roi_from_filtered(save=False, display=False):
 
 def multiprocess_extract_roi_from_filtered(save=False, display=False):
 
-  timer = Time()
+	timer = Time()
 
-  if save and not os.path.exists(slide.FILTER_DIR):
-    os.makedirs(slide.FILTER_DIR)
+	if save and not os.path.exists(slide.FILTER_DIR):
+		os.makedirs(slide.FILTER_DIR)
 
-  # how many processes to use
-  num_processes = multiprocessing.cpu_count()
-  pool = multiprocessing.Pool(num_processes)
+	# how many processes to use
+	num_processes = multiprocessing.cpu_count()
+	pool = multiprocessing.Pool(num_processes)
 
-  num_train_images = slide.get_num_training_slides()
-  if num_processes > num_train_images:
-    num_processes = num_train_images
-  images_per_process = (num_train_images // num_processes)+1
+	num_train_images = slide.get_num_training_slides()
+	if num_processes > num_train_images:
+		num_processes = num_train_images
+	images_per_process = (num_train_images // num_processes)+1
 
-  print("Number of processes: " + str(num_processes))
-  print("Number of training images: " + str(num_train_images))
+	print("Number of processes: " + str(num_processes))
+	print("Number of training images: " + str(num_train_images))
 
-  training_paths = slide.get_training_slide_paths()
-  tasks = []
-  for num_process in range(num_processes):
-    start_idx = num_process*images_per_process
-    end_idx = (num_process+1)*images_per_process
-    tasks.append((training_paths[start_idx:end_idx], save, display))
+	training_paths = slide.get_training_slide_paths()
+	tasks = []
+	for num_process in range(num_processes):
+		start_idx = num_process*images_per_process
+		end_idx = (num_process+1)*images_per_process
+		tasks.append((training_paths[start_idx:end_idx], save, display))
 
-  # start tasks
-  results = []
-  for t in tasks:
-    results.append(pool.apply_async(extract_roi_image_path_list, t))
+	# start tasks
+	results = []
+	for t in tasks:
+		results.append(pool.apply_async(extract_roi_image_path_list, t))
+		results[-1].get()
 
-  print("\nTime taken to extract ROIs (multiprocess): %s\n" % str(timer.elapsed()))
+	print("\nTime taken to extract ROIs (multiprocess): %s\n" % str(timer.elapsed()))
 
 
 # TIME-STATS
