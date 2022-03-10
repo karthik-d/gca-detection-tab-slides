@@ -195,7 +195,7 @@ def get_roi_boxes_from_image(np_img):
 	return np.array(roi_boxes)[sorted_idx]
 
 
-def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
+def save_roi_portions(slide_filepath, slide_obj, downscale_level, np_img, roi_boxes, padding=True):
 	# Make result path skeleton
 	base_img_path = slide.get_roi_image_result_filepath(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
@@ -258,29 +258,23 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=start_xy, end_xy=end_xy)
+		np_result = extract_level_from_slide(slide_obj, level=downscale_level, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(base_img_path.format(region_num=serial), compression="tiff_lzw")
 	print(f"Extracted and saved {len(roi_boxes)} ROI(s)")
 
 
-def extract_roi_from_image(slide_filepath, save=False, display=False):
+def extract_roi_from_image(slide_filepath, downscale_level, save=False, display=False):
 	# Load slide object
-	print(slide_filepath)
 	slide_orig = slide.open_slide(slide_filepath)
-	print("HERE")
 	if slide_orig is None:
 		print(f"Could not find {slide_filepath}")
-		print("HERE")
 		return None
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
-	print("HERE")
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
-	print("HERE")
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	print("HERE")
 	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	save_roi_portions(slide_filepath, slide_orig, downscale_level, np_downscaled, roi_boxes)
 	save_wholeside_related_images(slide_filepath)
 
 
@@ -296,10 +290,10 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	return slide_filepath
 
 
-def extract_roi_image_path_list(path_l, save=False, display=False):
+def extract_roi_image_path_list(path_l, downscale_level, save=False, display=False):
 	for slide_path in path_l:
 		print("\nProcessing", slide_path)
-		_ = extract_roi_from_image(slide_path, save, display)
+		_ = extract_roi_from_image(slide_path, downscale_level, save, display)
 	return path_l
 
 
@@ -339,12 +333,12 @@ def singleprocess_extract_roi_from_filtered(save=False, display=False):
 
   training_paths = slide.get_training_slide_paths()
   num_training_slides = len(training_paths)
-  path_l = extract_roi_image_path_list(training_paths, save, display)
+  path_l = extract_roi_image_path_list(training_paths, downscale_level, save, display)
 
   print("\nTime taken to extract ROIs: %s\n" % str(t.elapsed()))
 
 
-def multiprocess_extract_roi_from_filtered(save=False, display=False):
+def multiprocess_extract_roi_from_filtered(downscale_level=1, save=False, display=False):
 
 	timer = Time()
 
@@ -368,7 +362,7 @@ def multiprocess_extract_roi_from_filtered(save=False, display=False):
 	for num_process in range(num_processes):
 		start_idx = num_process*images_per_process
 		end_idx = (num_process+1)*images_per_process
-		tasks.append((training_paths[start_idx:end_idx], save, display))
+		tasks.append((training_paths[start_idx:end_idx], downscale_level, save, display))
 
 	# start tasks
 	results = []

@@ -156,7 +156,8 @@ def rgba_to_rgb(rgba_img, background=(1,1,1), channel_axis=2):
   Image is contained in an np array
   """
   target_dtype = rgba_img.dtype
-  rgb_img = color.rgba2rgb(rgba_img, background=background, channel_axis=channel_axis)
+  # rgb_img = color.rgba2rgb(rgba_img, background=background, channel_axis=channel_axis)
+  rgb_img = color.rgba2rgb(rgba_img, background=background)
   # Convert back to 8-bit int from float if source data was so
   if target_dtype=='uint8':
     rgb_img *= 255
