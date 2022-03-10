@@ -1,6 +1,8 @@
 # GCA-Detection-TAB-Slides
 
-Deep Neural Network to automate the detection of Giant Cell Arteritis from digital pathology slides of Temporal Artery Biopsy
+Deep Neural Network to automate the detection of Giant Cell Arteritis from digital pathology slides of Temporal Artery Biopsy.
+
+## Progress Tracking & Working Notes
 
  Link to doc notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
  Link to sample ROIs: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
@@ -12,6 +14,8 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 2. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
     - [X] extract roi
 3. Labelling
+    - [ ] Map from annotations file
+    - [ ] Verify labelled dataset
 
 ## Procedure to Extract ROI
 
@@ -19,7 +23,10 @@ Please download and extract this zipped archive.
 
 ### Install dependencies
 
-#### **(Recommended)** Using an anaconda environment
+Please ensure that you are using a **macOS** or **Linux** development environment as some dependencies are OS specific.
+Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommended)**.
+
+#### **(Recommended)** Using an Anaconda environment
 - **Either** create a new environment with all dependencies by running   
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
