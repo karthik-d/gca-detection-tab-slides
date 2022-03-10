@@ -2,7 +2,7 @@
 
 Deep Neural Network to automate the detection of Giant Cell Arteritis from digital pathology slides of Temporal Artery Biopsy
 
- Link to doc notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)
+ Link to doc notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
  Link to sample ROIs: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
 
 1. IBM Code adapted:
