@@ -85,7 +85,7 @@ Please download and extract this zipped archive.
 
 - The extracted ROIs will be contained in `GCA-Detection/dataset/data/roi/`
 
-- A subdirectory will be generated in `.../roi` for each input `.svs` image in `GCA-Detection/dataset/data/final/` with the same name as the input image.
+- A subdirectory will be generated in `../roi` for each input `.svs` image in `GCA-Detection/dataset/data/final/` with the same name as the input image.
 
     Each of these subdirectories contains:
     - All the ROIs extracted from that slide, named as `<slide_name>_region_<roi_num>.tiff`
