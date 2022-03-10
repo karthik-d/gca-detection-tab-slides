@@ -333,7 +333,11 @@ def get_num_training_slides():
 
 # Added
 def get_training_slide_paths():
-  return glob.glob(os.path.join(SRC_TRAIN_DIR, "*."+SRC_TRAIN_EXT))
+  search_term = os.path.join(SRC_TRAIN_DIR, "*."+SRC_TRAIN_EXT)
+  paths = glob.glob(search_term)
+  print(f"\nGlobbing for .svs files - {search_term}...")
+  print(f"Found {len(paths)}\n")
+  return paths
 
 
 # Expunged
