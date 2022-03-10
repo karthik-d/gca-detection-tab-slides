@@ -7,8 +7,8 @@ from wsi import slide, utils, filters, roi
 roi.singleprocess_extract_roi_from_filtered()
 # roi.multiprocess_extract_roi_from_filtered()
 
-# TODO: Use .tiff+lzw in place of .png
-# TODO: Move global constants and config variables to config.py
-# TODO: Change directory prefix and suffix
-# TODO: Split boolean arg `save` into save_intermediate and save_final
 # TODO: Add 'level' arg to find_contours() method
+# TODO: Fix extract_roi multiprocess
+# TODO: Save ROI to correct location
+# TODO: Save slide thumbnail with ROIs
+# TODO: Move global constants and config variables to config.py
