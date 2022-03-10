@@ -21,7 +21,9 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 ## Procedure to Extract ROI
 
-Please download and extract the zipped archive with the scripts [from here](https://drive.google.com/file/d/1hw_JGWN8uumKNLK6Cvu9nqv9Ff-BuPSM/view?usp=sharing).
+Check out the video demo [here](https://drive.google.com/file/d/1Hb6pySfqGVqKtTUiBUeS54muv80gTESg/view?usp=sharing)
+
+Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1hw_JGWN8uumKNLK6Cvu9nqv9Ff-BuPSM/view?usp=sharing).
 
 ### Install dependencies
 
