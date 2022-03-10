@@ -195,13 +195,13 @@ def get_roi_boxes_from_image(np_img):
 
 
 def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True):
-	# box-coords are 90-deg clockwise rotated wrt np_img and slide
-	# Make result path
+	# Make result path skeleton
 	base_img_path = slide.get_roi_image_result_filepath(slide_filepath)
 	Path(ntpath.split(base_img_path)[0]).mkdir(
 		parents=True,
 		exist_ok=True
 	)
+	# box-coords are 90-deg clockwise rotated wrt np_img and slide
 	level_0_x, level_0_y = slide_obj.level_dimensions[0]
 	level_3_x, level_3_y = slide_obj.level_dimensions[3]
 	# Extract each region from level-0 and save
@@ -257,8 +257,8 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
-		np_result = extract_level_from_slide(slide_obj, level=0, start_xy=start_xy, end_xy=end_xy)
-		Image.fromarray(np_result).save(f"check_{serial}.tiff", compression="tiff_lzw")
+		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=start_xy, end_xy=end_xy)
+		Image.fromarray(np_result).save(base_img_path.format(region_num=serial), compression="tiff_lzw")
 
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
@@ -270,9 +270,9 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 	# Extract the 32x level i.e. level 3, locate the ROIs from it
 	np_downscaled = extract_level_from_slide(slide_orig, level=3)
 	np_downscaled_rot90 = utils.rotate_clockwise_90(np_downscaled)
-	# roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
+	roi_boxes = get_roi_boxes_from_image(np_downscaled_rot90)
 	# Extract ROI from full-resolution slide and save
-	# save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
+	save_roi_portions(slide_filepath, slide_orig, np_downscaled, roi_boxes)
 	save_wholeside_related_images(slide_filepath)
 
 
