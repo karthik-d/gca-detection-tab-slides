@@ -12,3 +12,71 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 2. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
     - [X] extract roi
 3. Labelling
+
+## Procedure to Extract ROI
+
+Please download and extract this zipped archive.
+
+### Install dependencies
+
+#### 1. **(Recommended)** Using an anaconda environment
+- **Either** create a new environment with all dependencies by running   
+`conda create --name myenv --file dep-file-conda.txt`
+- **Or** install to an existing environment by running   
+`conda install --name myenv --file dep-file-conda.txt`
+
+    **Finally**, switch to the created/modified environment by running   
+    `conda activate myenv`
+
+
+#### 2. **(Not preferred)** Using pip
+- Install all dependencies by running   
+`pip install -r dep-file-pip.txt`
+
+
+### Load the data
+
+1. Navigate to `GCA-Detection/dataset/data/final`
+2. Move/Copy all .svs files from which ROIs need to be extracted into this folder.
+
+    The directory should finally look something like:   
+    ```
+        GCA-Detection
+        |_ dataset
+            |_ data
+            |_final
+                |_ Neg_13829$2020-025-5$US$SCAN$OR$001 -003.svs
+                |_ Postivie_13829$2000-005-5$US$SCAN$OR$001 -003.svs
+                |_ mixed_13829$2000-050-10$US$SCAN$OR$001 -001.svs
+                |_ .
+                |_ .
+        |_ src
+            |_ .
+            |_ .
+    ```
+
+### Execute the extraction script
+
+1. Navigate to `GCA-Detection/src/features`
+2. Set the downsampling level:    
+    - Edit the file `extract_roi.py`
+    - Set the `downscale_level` argument in the function `roi.multiprocess_extract_roi_from_filtered()` to a suitable value.    
+    Please refer to the instructions in the file.   
+    The same instructions are reproduced here for convenience:   
+
+        ```
+        Set downscale_level to:
+        
+        0, if ROIs must be from - TOP SLIDE (Highest Resolution) 
+        1, if ROIs must be from - x4 DOWNSCALED SLIDE
+        2, if ROIs must be from - x16 DOWNSCALED SLIDE
+        3, if ROIs must be from - x64 DOWNSCALED SLIDE
+        
+        NOTE: Only one of 0, 1, 2 or 3 must be specified. 
+        Other downscaling levels have been pruned to improve execution time.
+        ```
+3. Execute the `extract_roi.py` file using the command  
+        ```
+        python extract_roi.py
+        ```
+4. Resultant ROIs will be generated into ``GCA-Detection/dataset/data/roi`
