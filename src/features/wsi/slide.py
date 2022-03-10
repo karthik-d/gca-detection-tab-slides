@@ -418,8 +418,6 @@ def get_roi_image_result_filepath(slide_filepath):
 	Path to the filter image file.
 	"""
 	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-	training_img_path = get_downscaled_training_image_path(slide_filepath)
-
 	img_path = os.path.join(
     ROI_DIR, 
     slide_filename,
@@ -437,8 +435,6 @@ def get_roi_image_result_dirpath(slide_filepath):
 	Path to the filter image file.
 	"""
 	slide_filename = ntpath.basename(slide_filepath).split('.')[0]
-	training_img_path = get_downscaled_training_image_path(slide_filepath)
-
 	img_path = os.path.join(
     ROI_DIR, 
     slide_filename
