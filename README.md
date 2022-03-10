@@ -19,7 +19,7 @@ Please download and extract this zipped archive.
 
 ### Install dependencies
 
-#### 1. **(Recommended)** Using an anaconda environment
+#### **(Recommended)** Using an anaconda environment
 - **Either** create a new environment with all dependencies by running   
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
@@ -29,7 +29,7 @@ Please download and extract this zipped archive.
     `conda activate myenv`
 
 
-#### 2. **(Not preferred)** Using pip
+#### **(Not preferred)** Using pip
 - Install all dependencies by running   
 `pip install -r dep-file-pip.txt`
 
@@ -79,4 +79,14 @@ Please download and extract this zipped archive.
         ```
         python extract_roi.py
         ```
-4. Resultant ROIs will be generated into ``GCA-Detection/dataset/data/roi`
+4. Extracted ROIs will be generated into `GCA-Detection/dataset/data/roi/`
+
+### Result Description
+
+- The extracted ROIs will be contained in `GCA-Detection/dataset/data/roi/`
+
+- A subdirectory will be generated in `.../roi` for each input `.svs` image in `GCA-Detection/dataset/data/final/` with the same name as the input image.
+
+    Each of these subdirectories contains:
+    - All the ROIs extracted from that slide, named as `<slide_name>_region_<roi_num>.tiff`
+    - A subdirectory called `related-imgs` containing a _thumbnail_ and the _label_ meta-images of the slide.
