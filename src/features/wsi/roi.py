@@ -259,6 +259,7 @@ def save_roi_portions(slide_filepath, slide_obj, np_img, roi_boxes, padding=True
 		end_xy=(box[1], box[3])
 		np_result = extract_level_from_slide(slide_obj, level=1, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(base_img_path.format(region_num=serial), compression="tiff_lzw")
+	print(f"Extracted and saved {len(roi_boxes)} ROI(s)")
 
 
 def extract_roi_from_image(slide_filepath, save=False, display=False):
@@ -290,6 +291,7 @@ def extract_roi_from_image(slide_filepath, save=False, display=False):
 
 def extract_roi_image_path_list(path_l, save=False, display=False):
 	for slide_path in path_l:
+		print("\nProcessing", slide_path)
 		_ = extract_roi_from_image(slide_path, save, display)
 	return path_l
 
@@ -321,7 +323,7 @@ def save_wholeside_related_images(slide_filepath, include_thumbnail=True, includ
 				fp=save_path,
 				format=REL_IMG_FORMAT
 			)
-			print("Saved related images")
+	print("Saved related images")
 
 
 def singleprocess_extract_roi_from_filtered(save=False, display=False):
@@ -332,7 +334,7 @@ def singleprocess_extract_roi_from_filtered(save=False, display=False):
   num_training_slides = len(training_paths)
   path_l = extract_roi_image_path_list(training_paths, save, display)
 
-  print("Time taken to extract ROIs: %s\n" % str(t.elapsed()))
+  print("\nTime taken to extract ROIs: %s\n" % str(t.elapsed()))
 
 
 def multiprocess_extract_roi_from_filtered(save=False, display=False):
@@ -366,7 +368,7 @@ def multiprocess_extract_roi_from_filtered(save=False, display=False):
   for t in tasks:
     results.append(pool.apply_async(extract_roi_image_path_list, t))
 
-  print("Time taken to extract ROIs (multiprocess): %s\n" % str(timer.elapsed()))
+  print("\nTime taken to extract ROIs (multiprocess): %s\n" % str(timer.elapsed()))
 
 
 # TIME-STATS
