@@ -76,7 +76,6 @@ def open_slide(filename):
     An OpenSlide object representing a whole-slide image.
   """
   try:
-    print(os.path.isfile(filename))
     slide = openslide.OpenSlide(filename)
   except OpenSlideError:
     slide = None
