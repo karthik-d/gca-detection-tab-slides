@@ -36,6 +36,8 @@ Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommende
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
 `conda install --name myenv --file dep-file-conda.txt`
+- **Or** install using the environment.yml file <br>
+`conda-env create -n my_env -f= environment.yml`
 
     **Finally**, switch to the created/modified environment by running   
     `conda activate myenv`
