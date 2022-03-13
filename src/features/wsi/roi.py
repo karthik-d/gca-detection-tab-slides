@@ -80,8 +80,8 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 	extent_x = prescale*range_x
 	extent_x_downscaled = range_x
 	last_x = False
-	if start_xy is not None:
-		print(f"Limits: ({start_x_downscaled}, {start_xy[1]//prescale}) to ({end_x_downscaled}, {end_y_downscaled})")
+	# if start_xy is not None:
+		# print(f"Limits: ({start_x_downscaled}, {start_xy[1]//prescale}) to ({end_x_downscaled}, {end_y_downscaled})")
 	while (not last_x) or (extent_x>0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
@@ -106,7 +106,7 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 
 		while (not last_y) or (extent_y>0 and (start_y+extent_y)<=end_y):
 			# Include remainder patch
-			print("DEBUG: ", (start_y+extent_y), end_y )
+			# print("DEBUG: ", (start_y+extent_y), end_y )
 			if not last_y and ((start_y+extent_y)>=end_y or (start_y_downscaled+extent_y_downscaled)>=end_y_downscaled):
 				extent_y = end_y - start_y
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
@@ -114,7 +114,8 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 					break
 				last_y = True
 			# Extract part
-			print(f"Reading ({start_x_downscaled}, {start_y_downscaled}) to ({start_x_downscaled+extent_x_downscaled}, {start_y_downscaled+extent_y_downscaled}) ==> {last_x}, {last_y}")
+			# print(f"Reading ({start_x_downscaled}, {start_y_downscaled}) to ({start_x_downscaled+extent_x_downscaled}, {start_y_downscaled+extent_y_downscaled}) ==> {last_x}, {last_y}")
+			print(f"Reading ({start_x_downscaled}, {start_y_downscaled}) to ({start_x_downscaled+extent_x_downscaled}, {start_y_downscaled+extent_y_downscaled})")
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -264,7 +265,7 @@ def save_roi_portions(slide_filepath, slide_obj, downscale_level, np_img, roi_bo
 		end_xy=(box[1], box[3])
 		np_result = extract_level_from_slide(slide_obj, level=downscale_level, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(base_img_path.format(region_num=serial), compression="tiff_lzw")
-	print(f"Extracted and saved {len(roi_boxes)} ROI(s)")
+	print(f"\nExtracted and saved {len(roi_boxes)} ROI(s)")
 
 
 def extract_roi_from_image(slide_filepath, downscale_level, save=False, display=False):
