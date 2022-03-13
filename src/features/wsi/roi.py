@@ -111,6 +111,10 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 					break
 				last_y = True
 			# Extract part
+			print("Extracting...")
+			print(start_x, start_x/4, extent_x_downscaled)
+			print(start_y, start_y/4, extent_y_downscaled)
+			print("...")
 			part_data = np.asarray(slide.read_region(
 				(start_x, start_y), 
 				level=level,
@@ -142,23 +146,32 @@ def extract_level_from_slide(slide, level=0, part_size=(2048, 2048), start_xy=No
 	"""    
 	
 	prescale = get_prescale_value_for_level(slide, level)
+	print("\nLevel: ", level)
 	# Set x-dimension of result
+	print("Start:", start_xy)
+	print("End:", end_xy)
 	x_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[0]-start_xy[0])
 	x_dim = None if x_dim is None else (round(x_dim/prescale)+ROI_BUFFER)
 	# Set y-dimension of result
 	y_dim = None if (start_xy is None) or (end_xy is None) else (end_xy[1]-start_xy[1])
 	y_dim = None if y_dim is None else (round(y_dim/prescale)+ROI_BUFFER)
+	print(prescale, x_dim, y_dim)
 	# Open accumulator file. Make memory-mapped array
 	img_acc = make_temp_memarr_file(slide, level, dimensions=(x_dim, y_dim, 3))
-	# Iterate y, for each iteration of x
-	store_x, store_y = (0, 0)
+	print(img_acc.shape)
+	# Iterate y, for each iteration of x -- x and y are transposed w.r.t the read_region config
+	store_x, store_y = (0, 0) 
 	for part, last_x, last_y in read_slide_level_in_parts(slide, level, part_size, channels=3, start_xy=start_xy, end_xy=end_xy):
+		print(part.shape)
+		print("Store X", store_x)
+		print("Store Y", store_y)
+		print(img_acc[store_x:(store_x+part.shape[0]), store_y:(store_y+part.shape[1]), :].shape)
 		img_acc[store_x:(store_x+part.shape[0]), store_y:(store_y+part.shape[1]), :] = part
-		if last_y:
-			store_y = 0
-			store_x += part.shape[0]
-		else:
+		if last_x:
+			store_x = 0
 			store_y += part.shape[1]
+		else:
+			store_x += part.shape[0]
 	# Retranspose the array
 	img_acc = np.transpose(img_acc, (1, 0, 2))
 	return img_acc
