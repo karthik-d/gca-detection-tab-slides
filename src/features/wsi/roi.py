@@ -85,7 +85,7 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 	while (not last_x) or (extent_x>0 and (start_x+extent_x)<=end_x):
 		
 		# Include remainder patch
-		if not last_x and (start_x+extent_x)>=end_x:
+		if not last_x and ((start_x+extent_x)>=end_x or (start_x_downscaled+extent_x_downscaled)>=end_x_downscaled):
 			extent_x = end_x - start_x
 			extent_x_downscaled = end_x_downscaled - start_x_downscaled
 			if extent_x<=0 or extent_x_downscaled<=0:
@@ -107,11 +107,10 @@ def read_slide_level_in_parts(slide, level, part_size, channels=None, start_xy=N
 		while (not last_y) or (extent_y>0 and (start_y+extent_y)<=end_y):
 			# Include remainder patch
 			print("DEBUG: ", (start_y+extent_y), end_y )
-			if not last_y and (start_y+extent_y)>=end_y:
+			if not last_y and ((start_y+extent_y)>=end_y or (start_y_downscaled+extent_y_downscaled)>=end_y_downscaled):
 				extent_y = end_y - start_y
 				extent_y_downscaled = end_y_downscaled - start_y_downscaled
 				if extent_y<=0 or extent_y_downscaled<=0:
-					print("Breaking...")
 					break
 				last_y = True
 			# Extract part
