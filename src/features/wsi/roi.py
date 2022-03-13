@@ -327,7 +327,7 @@ def save_wholeside_related_images(slide_filepath, include_thumbnail=True, includ
 	print("Saved related images")
 
 
-def singleprocess_extract_roi_from_filtered(save=False, display=False):
+def singleprocess_extract_roi_from_filtered(downscale_level=1, save=False, display=False):
 
   t = Time()
 
