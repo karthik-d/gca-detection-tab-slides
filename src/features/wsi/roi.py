@@ -263,6 +263,7 @@ def save_roi_portions(slide_filepath, slide_obj, downscale_level, np_img, roi_bo
 		# Make PIL img and save
 		start_xy=(box[0], box[2])
 		end_xy=(box[1], box[3])
+		print(f"\nExtracting ROI #{serial}...")
 		np_result = extract_level_from_slide(slide_obj, level=downscale_level, start_xy=start_xy, end_xy=end_xy)
 		Image.fromarray(np_result).save(base_img_path.format(region_num=serial), compression="tiff_lzw")
 	print(f"\nExtracted and saved {len(roi_boxes)} ROI(s)")
