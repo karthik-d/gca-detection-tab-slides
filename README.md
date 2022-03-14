@@ -23,7 +23,7 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 **Skip 2:40 to 3:20** Check out the video demo [here!](https://drive.google.com/file/d/1Hb6pySfqGVqKtTUiBUeS54muv80gTESg/view?usp=sharing)
 
-Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1hw_JGWN8uumKNLK6Cvu9nqv9Ff-BuPSM/view?usp=sharing).
+Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1C9q9iBO6B72okd34DB3xHJp5LrY76eSb/view?usp=sharing).
 
 ### Install dependencies
 
