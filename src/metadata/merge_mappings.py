@@ -50,7 +50,7 @@ def merge_mappings():
                     """
                     pass
                 else:
-                    print("Storing sample ", sample)
+                    print(f"Storing sample: {sample}...")
                     # print("\n--------------------------------------------------")
                     fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
                     num_rois = len(merged_rows['roi_number'])
