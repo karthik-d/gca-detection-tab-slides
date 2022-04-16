@@ -14,7 +14,7 @@ Set downscale_level to:
 # NOTE: Only one of 0, 1, 2 or 3 must be specified. 
 Other downscaling levels have been pruned to improve execution time.
 """
-roi.multiprocess_extract_roi_from_filtered(downscale_level=3)
+roi.multiprocess_extract_roi_from_filtered(downscale_level=1)
 # roi.singleprocess_extract_roi_from_filtered(downscale_level=1)
 
 # TODO: Fix extract_roi multiprocess
