@@ -13,76 +13,112 @@ sc_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_sample-clas
 # File-Sample-Class mapping
 merged_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class.csv')
 
+# NOT-Relevant-For-Analysis rows
+no_analysis_path = os.path.join((config.get("METADATA_PATH")), 'not_analysis_relevant.csv')
+
 def merge_mappings():
-    fs_mapping = pd.read_csv(fs_mapping_path)
+	fs_mapping = pd.read_csv(fs_mapping_path)
 
-    sc_mapping = csv.reader(open(sc_mapping_path))
-    header_row = next(sc_mapping)     # ignore row
+	sc_mapping = csv.reader(open(sc_mapping_path))
+	header_row = next(sc_mapping)     # ignore row
 
-    merged_mapping = pd.DataFrame(columns=[
-        'slidename',
-        'order',
-        'sample',
-        'roi_number',
-        'is_analysis_relevant',
-        'is_positive',
-        'notes'
-    ])
+	merged_mapping = pd.DataFrame(columns=[
+		'slidename',
+		'order',
+		'sample',
+		'roi_number',
+		'is_analysis_relevant',
+		'is_positive',
+		'notes'
+	])
 
-    sample = None
-    sample_has_rows = False
-    notes = ''
-    for row in sc_mapping:
+	no_analysis = pd.DataFrame(columns=[
+		'slidename',
+		'order',
+		'sample',
+		'notes'
+	])
 
-        sample = row[0]
-        is_valid_sample = ( len(fs_mapping.loc[fs_mapping['Sample']==sample, :])>0 )
-        if is_valid_sample:
-            # Merge and Store collected rows
-            if sample_has_rows:
-                
-                if(len(fs_mapping.loc[fs_mapping['Sample']==sample, :])!=1):
-                    """
-                    print("\n--------------------------------------------------")
-                    print("Sample:", sample, row)
-                    print(fs_mapping.loc[fs_mapping['Sample']==sample, :])
-                    print("\n--------------------------------------------------\n")
-                    # print("\n--------------------------------------------------\n")
-                    """
-                    pass
-                else:
-                    print(f"Storing sample: {sample}...")
-                    # print("\n--------------------------------------------------")
-                    fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
-                    num_rois = len(merged_rows['roi_number'])
-                    merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
-                    merged_rows['order'] = [ str(fs_rows['Order']) for x in range(num_rois) ]
-                    merged_rows['sample'] = [ str(fs_rows['Sample']) for x in range(num_rois) ]
-                    # Append to merged dataframe
-                    merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
-            
-            # Sample starting row - reset dictionary
-            sample, is_analysis_relevant, _, notes = tuple(row) 
-            sample_roi_rows = []
-            merged_rows = {
-                'slidename': [],
-                'order': [],
-                'sample': [],
-                'roi_number': [],
-                'is_analysis_relevant': [],
-                'is_positive': [],
-                'notes': []
-            }
+	sample = None
+	notes = ''
+	first_read = True
+	for row in sc_mapping:
 
-        else:
-            roi_num, is_analysis_relevant, is_positive, notes = tuple(row)
-            merged_rows['roi_number'].append(roi_num)
-            merged_rows['is_analysis_relevant'].append(is_analysis_relevant)
-            merged_rows['is_positive'].append(is_positive)
-            merged_rows['notes'].append(notes)
-            sample_has_rows = True
-        
-    print(merged_mapping)
-    merged_mapping.to_csv(merged_mapping_path)
+			sample = row[0]
+			is_valid_sample = ( len(fs_mapping.loc[fs_mapping['Sample']==sample, :])>0 )
+
+			if is_valid_sample:
+				sample_proc, is_analysis_relevant, _, notes = tuple(row) 
+
+				if not first_read:                
+					if(len(fs_mapping.loc[fs_mapping['Sample']==sample, :])>1):
+						# Take the first matching row
+						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].iloc[:1].to_dict(orient='records')[0]
+					else:
+						# print(f"Storing sample: {sample}...")
+						# print("\n--------------------------------------------------")
+						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
+
+					print("Saving", str(fs_rows['Slide Name']), "...")
+					# Merge and Store collected rows    
+					if analysis_row:               
+						# Create row in merged_df
+						num_rois = len(merged_rows['roi_number'])
+						merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
+						merged_rows['order'] = [ str(fs_rows['Order']) for x in range(num_rois) ]
+						merged_rows['sample'] = [ str(fs_rows['Sample']) for x in range(num_rois) ]
+						merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
+					else:
+						merged_rows['slidename'] = [ str(fs_rows['Slide Name']) ]
+						merged_rows['order'] = [ str(fs_rows['Order']) ]
+						merged_rows['sample'] = [ str(fs_rows['Sample']) ]
+						no_analysis = pd.concat([no_analysis, pd.DataFrame(merged_rows)])
+
+				# Reset dictionary for the new sample
+				if is_analysis_relevant == 'N':
+					# Eg: ['2020-041-11', 'N', '', 'Immuno']
+					analysis_row = False
+					merged_rows = {
+						'slidename': [],
+						'order': [],
+						'sample': [],
+						'notes': [notes]
+					}
+				else:
+					analysis_row = True
+					merged_rows = {
+						'slidename': [],
+						'order': [],
+						'sample': [],
+						'roi_number': [],
+						'is_analysis_relevant': [],
+						'is_positive': [],
+						'notes': []
+					}
+
+			else:
+				roi_num, is_analysis_relevant, is_positive, notes = tuple(row)
+				merged_rows['roi_number'].append(roi_num)
+				merged_rows['is_analysis_relevant'].append(is_analysis_relevant)
+				merged_rows['is_positive'].append(is_positive)
+				merged_rows['notes'].append(notes)
+			
+			first_read = False
+		
+	# Store last row
+	fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
+	num_rois = len(merged_rows['roi_number'])
+	merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
+	merged_rows['order'] = [ str(fs_rows['Order']) for x in range(num_rois) ]
+	merged_rows['sample'] = [ str(fs_rows['Sample']) for x in range(num_rois) ]
+	# Append to merged dataframe
+	merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
+
+	print(merged_mapping)
+	merged_mapping.to_csv(merged_mapping_path)
+
+	print(no_analysis_path)
+	no_analysis.to_csv(no_analysis_path)
 
 
 
