@@ -48,16 +48,15 @@ def merge_mappings():
 			is_valid_sample = ( len(fs_mapping.loc[fs_mapping['Sample']==sample, :])>0 )
 
 			if is_valid_sample:
-				sample_proc, is_analysis_relevant, _, notes = tuple(row) 
 
 				if not first_read:                
 					if(len(fs_mapping.loc[fs_mapping['Sample']==sample, :])>1):
 						# Take the first matching row
-						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].iloc[:1].to_dict(orient='records')[0]
+						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].iloc[:1].to_dict(orient='records')[0]
 					else:
 						# print(f"Storing sample: {sample}...")
 						# print("\n--------------------------------------------------")
-						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
+						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 
 					print("Saving", str(fs_rows['Slide Name']), "...")
 					# Merge and Store collected rows    
@@ -74,6 +73,7 @@ def merge_mappings():
 						merged_rows['sample'] = [ str(fs_rows['Sample']) ]
 						no_analysis = pd.concat([no_analysis, pd.DataFrame(merged_rows)])
 
+				sample_prestore, is_analysis_relevant, _, notes = tuple(row) 
 				# Reset dictionary for the new sample
 				if is_analysis_relevant == 'N':
 					# Eg: ['2020-041-11', 'N', '', 'Immuno']
@@ -106,7 +106,7 @@ def merge_mappings():
 			first_read = False
 		
 	# Store last row
-	fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_proc, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
+	fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 	num_rois = len(merged_rows['roi_number'])
 	merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
 	merged_rows['order'] = [ str(fs_rows['Order']) for x in range(num_rois) ]
