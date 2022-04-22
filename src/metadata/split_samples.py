@@ -12,7 +12,7 @@ fileset_paths = [
 samples_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_trial.csv')
 
 split_samples_paths = [
-    os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_trial-' + str(x+1) + '.csv')
+    os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_set-' + str(x+1) + '.csv')
     for x in range(len(fileset_paths))
 ]
 
