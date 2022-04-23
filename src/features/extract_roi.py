@@ -13,9 +13,11 @@ Set downscale_level to:
 - 3, if ROIs must be from - x64 DOWNSCALED SLIDE
 # NOTE: Only one of 0, 1, 2 or 3 must be specified. 
 Other downscaling levels have been pruned to improve execution time.
+
+.svs files to be processed must be placed in "dataset/data/final"
 """
-# roi.multiprocess_extract_roi_from_filtered(downscale_level=3)
-roi.singleprocess_extract_roi_from_filtered(downscale_level=1)
+roi.multiprocess_extract_roi_from_filtered(downscale_level=1)
+# roi.singleprocess_extract_roi_from_filtered(downscale_level=1)
 
 # TODO: Fix extract_roi multiprocess
 # TODO: Move global constants and config variables to config.py
