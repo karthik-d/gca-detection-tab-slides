@@ -19,6 +19,10 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
     - [ ] Map from annotations file
     - [ ] Verify labelled dataset
 
+### Procedure to Annotate Extracted ROIs
+
+Link to Annotation Procedure file: [here](./annotation-procedure.md)
+
 ## Procedure to Extract ROI
 
 **Skip 2:40 to 3:20** Check out the video demo [here!](https://drive.google.com/file/d/1Hb6pySfqGVqKtTUiBUeS54muv80gTESg/view?usp=sharing)
