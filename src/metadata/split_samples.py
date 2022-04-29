@@ -6,14 +6,15 @@ from config import config
 
 fileset_paths = [
     os.path.join(config.get("METADATA_PATH"), 'fileset_1.txt'),
-    os.path.join(config.get("METADATA_PATH"), 'fileset_2.txt')
+    os.path.join(config.get("METADATA_PATH"), 'fileset_2.txt'),
+    os.path.join(config.get("METADATA_PATH"), 'fileset_extra.txt')
 ]
 
 samples_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_trial.csv')
 
 split_samples_paths = [
-    os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_set-' + str(x+1) + '.csv')
-    for x in range(len(fileset_paths))
+    os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_set-' + (path.split('.')[0]).split('_')[-1] + '.csv')
+    for path in fileset_paths
 ]
 
 def split_samples():
