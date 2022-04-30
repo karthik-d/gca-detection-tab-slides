@@ -19,7 +19,7 @@ split_samples_paths = [
 
 def split_samples():
     with open(samples_path) as f_src:
-        fileset_dfs = [pd.read_csv(filepath) for filepath in fileset_paths]
+        fileset_dfs = [pd.read_csv(filepath, header=None) for filepath in fileset_paths]
         split_sample_files = [open(filepath, 'w') for filepath in split_samples_paths]
         sample_ctrs = [0 for x in range(len(fileset_paths))]
         instance_ctrs = [0 for x in range(len(fileset_paths))]
@@ -52,7 +52,6 @@ def split_samples():
     for f_path in fileset_paths:
         print("\nChecking", f_path)
         with open(os.path.join(config.get("METADATA_PATH"), f_path)) as f_in:
-            _ = f_in.readline()
             check_fd = pd.read_csv(os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_trial.csv'))
             sample_name = f_in.readline().strip()
             ctr = 0
