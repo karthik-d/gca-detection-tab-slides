@@ -11,6 +11,7 @@
     - `P`: Positive
     - `N`: Negative
     - `E`: Extra, Irrelevant
+    - `NAR`: Valid ROI, but Not Relevant fo Analysis 
 - Update the mapping spreadsheet column - `filepath` with the file path of the ROI image
 
        
