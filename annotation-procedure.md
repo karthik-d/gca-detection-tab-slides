@@ -23,6 +23,6 @@ Assuming the image file is names: `file-region_4.tiff`,
     (i.e) complete all ROIs at a particular height - left to right, then move to the next height level
 2. Crop out each ROI into a separate file
 3. Name them as `file-region_4_x.tiff` where `x` is the ROI number, assigned to it in step-1.
-4. Place the cropped out ROIs into the corres-odning category.
+4. Place the cropped out ROIs into the correspodning category.
 5. Place the original image (containing multiple ROIs) into the `E` category folder.
 
