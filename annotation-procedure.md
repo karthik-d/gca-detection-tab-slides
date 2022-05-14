@@ -2,7 +2,7 @@
 
 ### Runing the script
 - Place .svs files to be processed into `dataset/data/final`
-- Execute `src/features/extract_roi.py` with Python 3
+- Execute `src/features/extract_roi.py` with Python 3 (check that downscale=4)
 - Find the resultant slide-wise segregated ROIs in `dataset/data/roi`
 
 ### Verification, Labeling and Data Entry
