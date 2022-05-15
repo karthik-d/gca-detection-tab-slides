@@ -15,7 +15,13 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 1. [GCA_project](https://drive.google.com/drive/folders/1f4Iwodhixomwwb4sxPjJ3PCHW2382mNQ?usp=sharing)
 2. [TAB_Opthananology](https://drive.google.com/drive/folders/1Oxh3VMHT2IRmN4J1q8ZTAE7CaUb1QOGj?usp=sharing)
 3. [New Files](https://drive.google.com/drive/folders/1wNMkBg7kh8HdLntc05PEawvz-KLSkGQh?usp=sharing)
- 
+
+## Documentation
+
+1. Rendering .SVS files: [here](./docs/01-render_svs_files.md)
+2. ROI Extraction: [here](./docs/02-roi_extraction_procedure.md)
+3. ROI Annotation: [here](./docs/03-annotation_procedure.md)
+
 ## Progress Tracking
 
 1. Script for rendering .SVS files 
@@ -43,9 +49,3 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
    - [ ] complete manual labelling using the annotation sheet generated in the previous step
    - [ ] check for duplicates between ND and KD
    - [ ] verify labelled dataset
-
-## Documentation
-
-1. Rendering .SVS files: [here](./docs/01-render_svs_files.md)
-2. ROI Extraction: [here](./docs/02-roi_extraction_procedure.md)
-3. ROI Annotation: [here](./docs/03-annotation_procedure.md)
