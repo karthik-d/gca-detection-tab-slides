@@ -36,12 +36,13 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
    - [X] setup the configuration file paths for the .svs files rendering cmd tool
    - [X] documentation to use scripts
 4. Labelling
-   - [X] Track uploads and downloads on the drive
-   - [X] Create sheets for roi labelling and progress tracking
+   - [X] procedure practice as instructed by ma'am - `rotate right (once clockwise) and number top to bottom, left to right`
+   - [X] track uploads and downloads on the drive
+   - [X] create sheets for roi labelling and progress tracking
    - [X] documentation to use scripts
-   - [ ] Complete manual labelling using the annotation sheet generated in the previous step
-   - [ ] Check for duplicates between ND and KD
-   - [ ] Verify labelled dataset
+   - [ ] complete manual labelling using the annotation sheet generated in the previous step
+   - [ ] check for duplicates between ND and KD
+   - [ ] verify labelled dataset
 
 ## Documentation
 
