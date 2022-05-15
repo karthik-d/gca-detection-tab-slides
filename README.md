@@ -6,38 +6,49 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 ### ND-KD Shared Workspace
 
-1. [GCADetection-TABSlides](https://drive.google.com/drive/folders/1_RQTxfbj7Awx1GhnnLKy6KeTRhale__2?usp=sharing)
+#### Drive Directory
+
+[GCADetection-TABSlides](https://drive.google.com/drive/folders/1_RQTxfbj7Awx1GhnnLKy6KeTRhale__2?usp=sharing)
+
+#### Working Notes
+
+ 1. Progress Tracking and Working Notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
+ 2. Sample ROIs for granularity verification to determine downscale factor with ma'am: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
 
 ### Shared by Naveena ma'am
 
 1. [GCA_project](https://drive.google.com/drive/folders/1f4Iwodhixomwwb4sxPjJ3PCHW2382mNQ?usp=sharing)
 2. [TAB_Opthananology](https://drive.google.com/drive/folders/1Oxh3VMHT2IRmN4J1q8ZTAE7CaUb1QOGj?usp=sharing)
-
-## Working Notes
-
- Link to doc notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
- Link to sample ROIs: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
  
 ## Progress Tracking
 
-1. IBM Code adapted:
-    - [X] retain original file names post conversions
-    - [X] perform 16x, 8x & w/o downscaling (update immediately)
-    - [X] only retain the unflitered and roi (black background) files
-2. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
-    - [X] extract roi
-3. Labelling
-    - [ ] Map from annotations file
-    - [ ] Verify labelled dataset
+1. Script for rendering .SVS files 
+   - [X] setup the openslide environment
+   - [X] modify the wsi viewer python script
+   - [X] setup the configuration file paths for the .svs files rendering cmd tool
+   - [X] documentation to use scripts
+2. Conversion of .SVS to .TIFF files
+   - [X] adapt the [IBM](https://developer.ibm.com/articles/an-automatic-method-to-identify-tissues-from-big-whole-slide-images-pt1/) code for file format conversion 
+   - [X] retain original file names post conversions
+   - [X] try both lossless and lossy conversions
+   - [X] perform 16x, 8x & w/o downscaling and summarize the [results](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit#heading=h.awk4rggu1nqh) (update ma'am immediately)
+   - [X] Granularity verification - choose `downscale factor=4`
+   - [X] only retain the unflitered and roi (black background) files
+   - [X] documentation to use scripts
+3. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
+   - [X] extract roi
+   - [X] setup the configuration file paths for the .svs files rendering cmd tool
+   - [X] documentation to use scripts
+4. Labelling
+   - [X] Track uploads and downloads on the drive
+   - [X] Create sheets for roi labelling and progress tracking
+   - [X] documentation to use scripts
+   - [ ] Complete manual labelling using the annotation sheet generated in the previous step
+   - [ ] Check for duplicates between ND and KD
+   - [ ] Verify labelled dataset
 
-## Procedure to Render .SVS files
+## Documentation
 
-Link to Render .svs files procedure: [here](./docs/01-render_svs_files.md)
-
-## Procedure to Extract ROI
-
-Link to ROI Extraction Procedure file: [here](./docs/02-roi_extraction_procedure.md)
-
-## Procedure to Annotate Extracted ROIs
-
-Link to Annotation Procedure file: [here](./docs/03-annotation_procedure.md)
+1. Rendering .SVS files: [here](./docs/01-render_svs_files.md)
+2. ROI Extraction: [here](./docs/02-roi_extraction_procedure.md)
+3. ROI Annotation: [here](./docs/03-annotation_procedure.md)
