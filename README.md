@@ -6,19 +6,15 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 ### ND-KD Shared Workspace
 
-#### Drive Directory
-
-[GCADetection-TABSlides](https://drive.google.com/drive/folders/1_RQTxfbj7Awx1GhnnLKy6KeTRhale__2?usp=sharing)
-
-#### Working Notes
-
- 1. Progress Tracking and Working Notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
- 2. Sample ROIs for granularity verification to determine downscale factor with ma'am: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
+1. Drive Root - [GCADetection-TABSlides](https://drive.google.com/drive/folders/1_RQTxfbj7Awx1GhnnLKy6KeTRhale__2?usp=sharing)
+2. Progress Tracking and Working Notes: [here](https://docs.google.com/document/d/1EI5U-VP_N0la0jteKMeJGxWmzn7jbAj8no2Khai4MwM/edit)      
+3. Sample ROIs for granularity verification to determine downscale factor with ma'am: [here](https://drive.google.com/drive/folders/1w94vfqY0z4Gr2lwi8LnAQiKYCEJDIUHV?usp=sharing)
 
 ### Shared by Naveena ma'am
 
 1. [GCA_project](https://drive.google.com/drive/folders/1f4Iwodhixomwwb4sxPjJ3PCHW2382mNQ?usp=sharing)
 2. [TAB_Opthananology](https://drive.google.com/drive/folders/1Oxh3VMHT2IRmN4J1q8ZTAE7CaUb1QOGj?usp=sharing)
+3. [New Files](https://drive.google.com/drive/folders/1wNMkBg7kh8HdLntc05PEawvz-KLSkGQh?usp=sharing)
  
 ## Progress Tracking
 
