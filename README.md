@@ -37,7 +37,7 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
    - [X] Granularity verification - choose `downscale factor=4`
    - [X] only retain the unflitered and roi (black background) files
    - [X] documentation to use scripts
-3. Create a code to pick each ROI and filename_01, filename_02, ... (segmentation)
+3. Prepare scripts to pick each ROI and filename_01, filename_02, ... (segmentation)
    - [X] extract roi
    - [X] setup the configuration file paths for the .svs files rendering cmd tool
    - [X] documentation to use scripts
