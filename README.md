@@ -18,10 +18,11 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
 
 ## Documentation
 
-1. Rendering .SVS files: [here](./docs/01-render_svs_files.md)
-2. ROI Extraction: [here](./docs/02-roi_extraction_procedure.md)
-3. ROI Annotation: [here](./docs/03-annotation_procedure.md)
-4. Progress Report (June '22): [here](https://docs.google.com/document/d/14vXHEkumhzXJesqY8LUNyQd2O7FVP_vWxGg40SNi9_Q/edit?usp=sharing)
+1. [Rendering .SVS files](./docs/01-render_svs_files.md)
+2. [ROI Extraction](./docs/02-roi_extraction_procedure.md)
+3. [ROI Annotation](./docs/03-annotation_procedure.md)
+4. Progress Report (Updated: June '22): [here](https://docs.google.com/document/d/14vXHEkumhzXJesqY8LUNyQd2O7FVP_vWxGg40SNi9_Q/edit?usp=sharing)
+5. Manuscript Draft: [here
 
 ## Progress Tracking
 
