@@ -18,8 +18,8 @@ def overlay_heatmap_on_image(img, mask, use_rgb=True):
             "The input image should np.float32 in the range [0, 1]"
         )
 
-    overlay = heatmap + img
-    overlay = 1 - (overlay / np.max(overlay))
+    overlay = 1-heatmap + img
+    overlay = overlay / np.max(overlay)
     return np.uint8(255 * overlay)
 
 
@@ -43,9 +43,9 @@ def make_detailed_overlay_img(img, mask_0, mask_1, label, classes, use_rgb=True,
     if show_preview:
         plot.show()
 
-    # if save_path is not None:
-    #     fig.savefig(save_path, dpi=1000)
-    #     print("\nSaved", save_path)
+    if save_path is not None:
+        fig.savefig(save_path, dpi=1000)
+        print("\nSaved", save_path)
 
     fig.canvas.draw()
     fig_img = np.array(fig.canvas.renderer.buffer_rgba())

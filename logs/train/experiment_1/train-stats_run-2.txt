@@ -1,0 +1,369 @@
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+train composition: {0: 179, 1: 99}
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+valid composition: {0: 44, 1: 24}
+
+--------------------------
+Dataset Configuration
+--------------------------
+--------------------------
+classes_count: 2
+class_names: ['Y', 'N']
+train_set_size: 288
+valid_set_size: 80
+
+--------------------------
+Training Configuration
+--------------------------
+--------------------------
+model: ResNet
+num_layers: 18
+batch_size: 16
+learning_rate: 0.001
+learning_rate_decay: 0.85
+weight_decay: 0.0001
+n_epochs: 10
+pretrain: True
+resume_checkpoint: False
+checkpointing_frequency: 1
+using_CUDA: True
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9497 0.0503
+N          0.1616 0.8384
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.8864 0.1136
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 0
+learning_rate: [0.00085]
+train_loss: 0.341071961136039
+train_acc: 0.9100719424460432
+valid_loss: 0.2536630927009837
+valid_acc: 0.9264705882352942
+epoch_duration: 24.115915536880493 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9777 0.0223
+N          0.0202 0.9798
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.7045 0.2955
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 1
+learning_rate: [0.0007224999999999999]
+train_loss: 0.07876465811307053
+train_acc: 0.9784172661870504
+valid_loss: 0.4014648158130619
+valid_acc: 0.8088235294117647
+epoch_duration: 20.26714539527893 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9888 0.0112
+N          0.0808 0.9192
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.7955 0.2045
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 2
+learning_rate: [0.000614125]
+train_loss: 0.10606787886416955
+train_acc: 0.9640287769784173
+valid_loss: 0.5658871899632245
+valid_acc: 0.8676470588235294
+epoch_duration: 20.67843770980835 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9944 0.0056
+N          0.0606 0.9394
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9545 0.0455
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 3
+learning_rate: [0.00052200625]
+train_loss: 0.06264013177949748
+train_acc: 0.9748201438848921
+valid_loss: 0.09552633919520304
+valid_acc: 0.9705882352941176
+epoch_duration: 19.68420171737671 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9888 0.0112
+N          0.0101 0.9899
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 4
+learning_rate: [0.00044370531249999997]
+train_loss: 0.027790049075487357
+train_acc: 0.9892086330935252
+valid_loss: 0.008151850711703231
+valid_acc: 1.0
+epoch_duration: 19.46003818511963 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9888 0.0112
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 5
+learning_rate: [0.00037714951562499996]
+train_loss: 0.021517853822103507
+train_acc: 0.9928057553956835
+valid_loss: 0.0020350508172722426
+valid_acc: 1.0
+epoch_duration: 20.62020230293274 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9944 0.0056
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 6
+learning_rate: [0.00032057708828124994]
+train_loss: 0.014701818467767762
+train_acc: 0.9964028776978417
+valid_loss: 0.0018366648171864012
+valid_acc: 1.0
+epoch_duration: 20.686034440994263 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9944 0.0056
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 7
+learning_rate: [0.0002724905250390624]
+train_loss: 0.010124089511231981
+train_acc: 0.9964028776978417
+valid_loss: 0.000986849019468269
+valid_acc: 1.0
+epoch_duration: 21.214393854141235 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9944 0.0056
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 8
+learning_rate: [0.00023161694628320305]
+train_loss: 0.008937643320599518
+train_acc: 0.9964028776978417
+valid_loss: 0.00132931414169862
+valid_acc: 1.0
+epoch_duration: 22.339240550994873 seconds
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 9
+learning_rate: [0.0001968744043407226]
+train_loss: 0.008449076999836474
+train_acc: 1.0
+valid_loss: 0.0021556687219451893
+valid_acc: 1.0
+epoch_duration: 20.492977142333984 seconds

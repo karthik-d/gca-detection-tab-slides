@@ -98,8 +98,8 @@ def save_visualization():
 
     for ip_tensor, op_tensor, img_path in render_inputs(dataloader):
 
-        if(op_tensor.item()!=1):
-            continue
+        # if(op_tensor.item()!=1):
+        #     continue
 
         img_name = os.path.basename(img_path)
         # aug_smooth=True and eigen_smooth=True
@@ -118,8 +118,8 @@ def save_visualization():
             use_rgb=False,
             save_path=os.path.join(
                 config.get('DESTN_PATH'),
-                f"{img_name}_actualclass-{classes[op_tensor.item()]}-gradcam.png"
+                f"{img_name}_actualclass-{classes[op_tensor.item()]}_gradcam.png"
             ),
-            show_preview=True
+            show_preview=False
         )
         # utils.plot_img(overlayed_img)

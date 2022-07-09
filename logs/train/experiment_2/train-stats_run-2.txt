@@ -1,0 +1,389 @@
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+train composition: {0: 1253, 1: 693}
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+valid composition: {0: 44, 1: 24}
+
+--------------------------
+Dataset Configuration
+--------------------------
+--------------------------
+classes_count: 2
+class_names: ['P', 'N']
+train_set_size: 1952
+valid_set_size: 80
+
+--------------------------
+Training Configuration
+--------------------------
+--------------------------
+model: ResNet
+num_layers: 18
+batch_size: 16
+learning_rate: 0.001
+learning_rate_decay: 0.85
+weight_decay: 0.0001
+n_epochs: 10
+pretrain: True
+resume_checkpoint: False
+checkpointing_frequency: 1
+using_CUDA: True
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9258 0.0742
+N          0.2597 0.7403
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.2917 0.7083
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 0
+learning_rate: [0.00085]
+train_loss: 0.34460608907740753
+train_acc: 0.8597122302158273
+valid_loss: 0.2321987542707254
+valid_acc: 0.8970588235294118
+epoch_duration: 71.24572825431824 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9098 0.0902
+N          0.1068 0.8932
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 1
+learning_rate: [0.0007224999999999999]
+train_loss: 0.24086666666162712
+train_acc: 0.9039054470709147
+valid_loss: 0.02703075379352359
+valid_acc: 1.0
+epoch_duration: 69.71813821792603 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9338 0.0662
+N          0.1154 0.8846
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 2
+learning_rate: [0.000614125]
+train_loss: 0.20132452861347522
+train_acc: 0.9162384378211716
+valid_loss: 0.011463844381711063
+valid_acc: 1.0
+epoch_duration: 69.01846718788147 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9513 0.0487
+N          0.0837 0.9163
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 3
+learning_rate: [0.00052200625]
+train_loss: 0.16902307153728247
+train_acc: 0.9388489208633094
+valid_loss: 0.044173057738910705
+valid_acc: 1.0
+epoch_duration: 69.90912795066833 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9721 0.0279
+N          0.0476 0.9524
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 4
+learning_rate: [0.00044370531249999997]
+train_loss: 0.10282670133742375
+train_acc: 0.9650565262076054
+valid_loss: 0.023675948352962117
+valid_acc: 1.0
+epoch_duration: 69.77597999572754 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9705 0.0295
+N          0.0606 0.9394
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 5
+learning_rate: [0.00037714951562499996]
+train_loss: 0.12159016517441786
+train_acc: 0.9594039054470709
+valid_loss: 0.00231345283699578
+valid_acc: 1.0
+epoch_duration: 70.47585844993591 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9840 0.0160
+N          0.0433 0.9567
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 6
+learning_rate: [0.00032057708828124994]
+train_loss: 0.09908194748545017
+train_acc: 0.9743062692702981
+valid_loss: 0.006595981649725753
+valid_acc: 1.0
+epoch_duration: 67.75156497955322 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9856 0.0144
+N          0.0245 0.9755
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 7
+learning_rate: [0.0002724905250390624]
+train_loss: 0.057732373820608224
+train_acc: 0.9820143884892086
+valid_loss: 0.001928439795258729
+valid_acc: 1.0
+epoch_duration: 68.69081902503967 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9920 0.0080
+N          0.0115 0.9885
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 8
+learning_rate: [0.00023161694628320305]
+train_loss: 0.03532276513439748
+train_acc: 0.9907502569373073
+valid_loss: 0.003846756140667233
+valid_acc: 1.0
+epoch_duration: 67.79921889305115 seconds
+
+Training Step: 0 of 122Training Step: 1 of 122Training Step: 2 of 122Training Step: 3 of 122Training Step: 4 of 122Training Step: 5 of 122Training Step: 6 of 122Training Step: 7 of 122Training Step: 8 of 122Training Step: 9 of 122Training Step: 10 of 122Training Step: 11 of 122Training Step: 12 of 122Training Step: 13 of 122Training Step: 14 of 122Training Step: 15 of 122Training Step: 16 of 122Training Step: 17 of 122Training Step: 18 of 122Training Step: 19 of 122Training Step: 20 of 122Training Step: 21 of 122Training Step: 22 of 122Training Step: 23 of 122Training Step: 24 of 122Training Step: 25 of 122Training Step: 26 of 122Training Step: 27 of 122Training Step: 28 of 122Training Step: 29 of 122Training Step: 30 of 122Training Step: 31 of 122Training Step: 32 of 122Training Step: 33 of 122Training Step: 34 of 122Training Step: 35 of 122Training Step: 36 of 122Training Step: 37 of 122Training Step: 38 of 122Training Step: 39 of 122Training Step: 40 of 122Training Step: 41 of 122Training Step: 42 of 122Training Step: 43 of 122Training Step: 44 of 122Training Step: 45 of 122Training Step: 46 of 122Training Step: 47 of 122Training Step: 48 of 122Training Step: 49 of 122Training Step: 50 of 122Training Step: 51 of 122Training Step: 52 of 122Training Step: 53 of 122Training Step: 54 of 122Training Step: 55 of 122Training Step: 56 of 122Training Step: 57 of 122Training Step: 58 of 122Training Step: 59 of 122Training Step: 60 of 122Training Step: 61 of 122Training Step: 62 of 122Training Step: 63 of 122Training Step: 64 of 122Training Step: 65 of 122Training Step: 66 of 122Training Step: 67 of 122Training Step: 68 of 122Training Step: 69 of 122Training Step: 70 of 122Training Step: 71 of 122Training Step: 72 of 122Training Step: 73 of 122Training Step: 74 of 122Training Step: 75 of 122Training Step: 76 of 122Training Step: 77 of 122Training Step: 78 of 122Training Step: 79 of 122Training Step: 80 of 122Training Step: 81 of 122Training Step: 82 of 122Training Step: 83 of 122Training Step: 84 of 122Training Step: 85 of 122Training Step: 86 of 122Training Step: 87 of 122Training Step: 88 of 122Training Step: 89 of 122Training Step: 90 of 122Training Step: 91 of 122Training Step: 92 of 122Training Step: 93 of 122Training Step: 94 of 122Training Step: 95 of 122Training Step: 96 of 122Training Step: 97 of 122Training Step: 98 of 122Training Step: 99 of 122Training Step: 100 of 122Training Step: 101 of 122Training Step: 102 of 122Training Step: 103 of 122Training Step: 104 of 122Training Step: 105 of 122Training Step: 106 of 122Training Step: 107 of 122Training Step: 108 of 122Training Step: 109 of 122Training Step: 110 of 122Training Step: 111 of 122Training Step: 112 of 122Training Step: 113 of 122Training Step: 114 of 122Training Step: 115 of 122Training Step: 116 of 122Training Step: 117 of 122Training Step: 118 of 122Training Step: 119 of 122Training Step: 120 of 122Training Step: 121 of 122
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          0.9928 0.0072
+N          0.0130 0.9870
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      P      N
+Truth                   
+P          1.0000 0.0000
+N          0.0000 1.0000
+
+--------------------------
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 9
+learning_rate: [0.0001968744043407226]
+train_loss: 0.024844572887031357
+train_acc: 0.9907502569373073
+valid_loss: 0.0022552913801786524
+valid_acc: 1.0
+epoch_duration: 72.42003631591797 seconds

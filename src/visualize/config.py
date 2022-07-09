@@ -26,8 +26,9 @@ config.update(dict(
         'data', 
         'roi',
         'ds_phase_2',
-        'splits',
-        'valid'
+        'visualizations',
+        'gradcam',
+        'samples'
     ),
     DESTN_PATH = os.path.join(
         config.get('ROOT_PATH'), 
@@ -37,7 +38,7 @@ config.update(dict(
         'ds_phase_2', 
         'visualizations', 
         'gradcam',
-        'fc-layer'
+        'gray-cmap'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(
