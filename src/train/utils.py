@@ -14,44 +14,50 @@ from PIL import Image
 from torch.optim import lr_scheduler
 from torchvision import (datasets, transforms)
 
-from utils import (get_image_paths, get_subfolder_paths)
-
-###########################################
-#             MISC FUNCTIONS              #
-###########################################
-
-
-def calculate_confusion_matrix(all_labels: np.ndarray,
-                               all_predicts: np.ndarray, classes: List[str],
-                               num_classes: int) -> None:
+def get_printable_confusion_matrix(
+    all_labels,
+    all_predictions,
+    classes
+):
     """
-    Prints the confusion matrix from the given data.
-
-    Args:
-        all_labels: The ground truth labels.
-        all_predicts: The predicted labels.
-        classes: Names of the classes in the dataset.
-        num_classes: Number of classes in the dataset.
+    Renders a `printable` confusion matrix
+    Uses the pandas display utility
     """
-    remap_classes = {x: classes[x] for x in range(num_classes)}
 
-    pd.options.display.float_format = "{:.2f}".format
+    map_classes = {
+        x: class_ 
+        for x, class_ in enumerate(classes)
+    }
+
+    pd.options.display.float_format = "{:.4f}".format
     pd.options.display.width = 0
 
-    actual = pd.Series(pd.Categorical(
-        pd.Series(all_labels).replace(remap_classes), categories=classes),
-                       name="Actual")
+    truth = pd.Series(
+        pd.Categorical(
+            pd.Series(all_labels).replace(map_classes), 
+            categories=classes
+        ),
+        name="Truth"
+    )
 
-    predicted = pd.Series(pd.Categorical(
-        pd.Series(all_predicts).replace(remap_classes), categories=classes),
-                          name="Predicted")
+    prediction = pd.Series(
+        pd.Categorical(
+            pd.Series(all_predictions).replace(map_classes), 
+            categories=classes
+        ),
+        name="Prediction"
+    )
 
-    cm = pd.crosstab(index=actual, columns=predicted, normalize="index", dropna=False)
+    confusion_matrix = pd.crosstab(
+        index=truth, 
+        columns=prediction, 
+        normalize="index", 
+        dropna=False
+    )
+    confusion_matrix.style.hide(axis='index')
+    return f'\n{confusion_matrix}\n'
 
-    cm.style.hide_index()
-    print(cm)
-
-
+'''
 class Random90Rotation:
     def __init__(self, degrees: Tuple[int] = None) -> None:
         """
@@ -75,31 +81,31 @@ class Random90Rotation:
         return im.rotate(angle=random.sample(population=self.degrees, k=1)[0])
 
 
-def create_model(num_layers: int, num_classes: int,
-                 pretrain: bool) -> torchvision.models.resnet.ResNet:
-    """
-    Instantiate the ResNet model.
+# def create_model(num_layers: int, num_classes: int,
+#                  pretrain: bool) -> torchvision.models.resnet.ResNet:
+#     """
+#     Instantiate the ResNet model.
 
-    Args:
-        num_layers: Number of layers to use in the ResNet model from [18, 34, 50, 101, 152].
-        num_classes: Number of classes in the dataset.
-        pretrain: Use pretrained ResNet weights.
+#     Args:
+#         num_layers: Number of layers to use in the ResNet model from [18, 34, 50, 101, 152].
+#         num_classes: Number of classes in the dataset.
+#         pretrain: Use pretrained ResNet weights.
 
-    Returns:
-        The instantiated ResNet model with the requested parameters.
-    """
-    assert num_layers in (
-        18, 34, 50, 101, 152
-    ), f"Invalid number of ResNet Layers. Must be one of [18, 34, 50, 101, 152] and not {num_layers}"
-    model_constructor = getattr(torchvision.models, f"resnet{num_layers}")
-    model = model_constructor(num_classes=num_classes)
+#     Returns:
+#         The instantiated ResNet model with the requested parameters.
+#     """
+#     assert num_layers in (
+#         18, 34, 50, 101, 152
+#     ), f"Invalid number of ResNet Layers. Must be one of [18, 34, 50, 101, 152] and not {num_layers}"
+#     model_constructor = getattr(torchvision.models, f"resnet{num_layers}")
+#     model = model_constructor(num_classes=num_classes)
 
-    if pretrain:
-        pretrained = model_constructor(pretrained=True).state_dict()
-        if num_classes != pretrained["fc.weight"].size(0):
-            del pretrained["fc.weight"], pretrained["fc.bias"]
-        model.load_state_dict(state_dict=pretrained, strict=False)
-    return model
+#     if pretrain:
+#         pretrained = model_constructor(pretrained=True).state_dict()
+#         if num_classes != pretrained["fc.weight"].size(0):
+#             del pretrained["fc.weight"], pretrained["fc.bias"]
+#         model.load_state_dict(state_dict=pretrained, strict=False)
+#     return model
 
 
 def get_data_transforms(color_jitter_brightness: float,
@@ -143,6 +149,7 @@ def get_data_transforms(color_jitter_brightness: float,
     }
 
 
+## PRUNE THIS
 def print_params(train_folder: Path, num_epochs: int, num_layers: int,
                  learning_rate: float, batch_size: int, weight_decay: float,
                  learning_rate_decay: float, resume_checkpoint: bool,
@@ -181,13 +188,29 @@ def print_params(train_folder: Path, num_epochs: int, num_layers: int,
           f"output in checkpoints_folder: {checkpoints_folder}\n"
           f"pretrain: {pretrain}\n"
           f"log_csv: {log_csv}\n\n")
+'''
+
+def render_verbose_props(title, *args, **kwargs):
+    print("\n--------------------------")
+    print(title)
+    print("--------------------------")
+
+    # Render direct properties
+    for value in args:
+        print(value)
+
+    print("--------------------------")
+
+    # Render key-value based properties
+    for key, value in kwargs.items():
+        print(f"{key}: {value}")
 
 
 ###########################################
 #          MAIN TRAIN FUNCTION            #
 ###########################################
 
-
+'''
 def parse_val_acc(model_path: Path) -> float:
     """
     Parse the validation accuracy from the filename.
@@ -322,3 +345,4 @@ def get_predictions(patches_eval_folder: Path, output_folder: Path,
                     )
 
     print(f"time for {patches_eval_folder}: {time.time() - start:.2f} seconds")
+'''
