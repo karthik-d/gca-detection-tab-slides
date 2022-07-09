@@ -6,7 +6,7 @@ import cv2
 def overlay_heatmap_on_image(img, mask, use_rgb=True):
 
     # heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
-    heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_BONE)
+    heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_PINK)
     # extend dimensions, if not rgb
     if use_rgb:
         heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)

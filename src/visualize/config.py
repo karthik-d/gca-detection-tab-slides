@@ -38,7 +38,7 @@ config.update(dict(
         'ds_phase_2', 
         'visualizations', 
         'gradcam',
-        'gray-cmap'
+        'gray-cmap-quant'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(
