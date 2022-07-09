@@ -122,4 +122,3 @@ def save_visualization():
             ),
             show_preview=False
         )
-        # utils.plot_img(overlayed_img)
