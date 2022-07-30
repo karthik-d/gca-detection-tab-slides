@@ -78,6 +78,7 @@ def save_visualization():
     )
 
     # Load checkpoint file
+    # Use best weights
     checkpoint_resumepath = config.get('CHECKPOINT_FILEPATH')
     if checkpoint_resumepath is not None:
         checkpoint = torch.load(f=checkpoint_resumepath)
@@ -98,11 +99,7 @@ def save_visualization():
 
     for ip_tensor, op_tensor, img_path in render_inputs(dataloader):
 
-        # if(op_tensor.item()!=1):
-        #     continue
-
         img_name = os.path.basename(img_path)
-        # aug_smooth=True and eigen_smooth=True
         grayscale_cam_0 = cam(input_tensor=ip_tensor, targets=targets_0)[0, :]
         grayscale_cam_1 = cam(input_tensor=ip_tensor, targets=targets_1)[0, :]
 
