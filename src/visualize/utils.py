@@ -7,7 +7,7 @@ def overlay_heatmap_on_image(img, mask, use_rgb=False):
 
     # heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
     heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_OCEAN)
-    # extend dimensions, if not rgb
+    # extend dimensions, if not 3-channel
     if use_rgb:
         heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
 
@@ -15,7 +15,7 @@ def overlay_heatmap_on_image(img, mask, use_rgb=False):
 
     if np.max(img) > 1:
         raise Exception(
-            "The input image should np.float32 in the range [0, 1]"
+            "The input image should np.float in the range [0, 1]"
         )
 
     overlay = 1-heatmap + img
@@ -35,7 +35,7 @@ def make_detailed_overlay_img(img, mask_0, mask_1, label, classes, use_rgb=True,
     axes[0].set_title(f"Class {classes[0]} Attention")
 
     axes[1].imshow(img)
-    axes[1].set_title("Original Image")
+    axes[1].set_title("Original Slide Image")
 
     axes[2].imshow(heatmap_overlayed_1)
     axes[2].set_title(f"Class {classes[1]} Attention")
