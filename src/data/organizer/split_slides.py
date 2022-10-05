@@ -1,6 +1,6 @@
 """
 Constructs directories for the split (by ratio specified)
-from: `SRC_DIR` which must of the form:
+from: `SRC_DIR` which must be of the form:
 
     [SRC_DIR]/
         - Y/

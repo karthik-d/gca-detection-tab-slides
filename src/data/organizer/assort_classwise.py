@@ -1,6 +1,6 @@
 """
 Constructs a data-directory
-from: `SRC_DIR` which must of the form:
+from: `SRC_DIR` which must be of the form:
 
     [SRC_DIR]/
         - <wsi-name>/
