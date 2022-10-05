@@ -38,6 +38,7 @@ label_names = ['Y', 'N', 'E', 'NAR']
 
 
 def describe_datafolder(display=True):
+    print(f"[INFO] Describing data folder: {SRC_PATH} ...")
 
     stats_file = csv.writer(open("data_description.csv", "w"))
     stats_file.writerow(["slide_name", "roi_name", "filepath", "label"])
@@ -53,10 +54,9 @@ def describe_datafolder(display=True):
 
                 stats_file.writerow([slide_name, roi_name, roi_path, label])
 
-
-    data_df = pd.read_csv("data_description.csv")
-    data_df.info()
-    print(data_df.groupby(['label']).size())
+    if display:
+        data_df = pd.read_csv("data_description.csv")
+        print(data_df.groupby(['label']).size())
 
 
 

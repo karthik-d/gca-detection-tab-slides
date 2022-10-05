@@ -1,7 +1,7 @@
 # Pipeline the data procesing steps here, for each phase
 
 from .preprocessor.augment import augment 
-from .organizer.descibe import describe_datafolder
+from .organizer.describe import describe_datafolder
 
 def organize():
     pass
