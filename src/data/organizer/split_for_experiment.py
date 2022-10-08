@@ -27,6 +27,7 @@ ds_phase_N/
 
 
 import os
+import pandas as pd
 
 from .describe import describe_datafolder
 
@@ -45,7 +46,7 @@ split_fractions = [0.8, 0.2]
 # Approximate
 
 #--enter
-classes_to_split = ['P', 'N']
+classes_to_split = ['Y', 'N']
 
 
 def extract_year(data_df):
@@ -57,21 +58,34 @@ def extract_year(data_df):
     return data_df
 
 
-def gather_sample_weighting(data_df):
+def split_weighted_chronological(data_df):
 
-    data_df.sort_values(by=['year', 'slide_name', 'label'])
-    print(data_df)
-    print(data_df.groupby(['slide_name', 'label']).count())
+    def var_delta(row):
+        return abs(row[0]-row[1])
+    
+    sample_weights = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]    
+    sample_weights['var_delta'] = sample_weights.apply(var_delta, axis=1)
+    sample_weights.columns = sample_weights.columns.droplevel(level=0)
+    sample_weights['slide_name'] = sample_weights.index
+    print(sample_weights)
+    
+    # data_df_aug = pd.join([data_df, sample_weights], on='slide_')
+    # data_df_aug.sort_values(by=['year', 'slide_name', 'label'])
+    # print(data_df_aug)
+    # print(sample_weights.cumsum())
+
+    return sample_weights
 
 
 def split_for_experiment():
 
-    data_df = describe_datafolder(
+    data_df_raw = describe_datafolder(
         DS_RAW_PATH,
         to_file=False,
         display=False
     )
-    data_df = extract_year(data_df)
-    print(data_df)
+    data_df = extract_year(
+        data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
+    )
 
-    gather_sample_weighting(data_df)
+    sample_weights = split_weighted_chronological(data_df)
