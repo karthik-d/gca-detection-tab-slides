@@ -20,6 +20,7 @@ Generates basic data sample enumeration in the $PWD as "data_description.csv" fi
 import csv
 import os
 import pandas as pd
+import numpy as np
 
 # SET THESE PARAMETERS
 
@@ -37,9 +38,9 @@ SRC_PATH = os.path.abspath(os.path.join(
 label_names = ['Y', 'N', 'E', 'NAR']
 
 
-def describe_datafolder(display=True):
+def _describe_datafolder(data_path, to_file, display):
     print(f"[INFO] Describing data folder: {SRC_PATH} ...")
-
+    
     stats_file = csv.writer(open("data_description.csv", "w"))
     stats_file.writerow(["slide_name", "roi_name", "filepath", "label"])
 
@@ -54,9 +55,26 @@ def describe_datafolder(display=True):
 
                 stats_file.writerow([slide_name, roi_name, roi_path, label])
 
-    if display:
+    if display or not to_file:
         data_df = pd.read_csv("data_description.csv")
-        print(data_df.groupby(['label']).size())
+    
+        if display:
+            print(data_df.groupby(['label']).size())
+
+        if not to_file:
+            os.remove("data_description.csv")
+            return data_df
+
+
+def describe_datafolder(data_path=None, to_file=True, display=True):
+    """
+    Use data_path=None to set data source in as env-var or global-var
+    """
+
+    if data_path is None:
+        return _describe_datafolder(SRC_PATH, to_file, display)
+    else:
+        return _describe_datafolder(data_path, to_file, display)
 
 
 

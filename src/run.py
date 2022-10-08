@@ -9,7 +9,8 @@ from visualize.driver import *
 # split_samples()
 # preprocess()
 # train()
-describe()
+# describe()
+split_data()
 # visualize()
 
 print("ran!")
