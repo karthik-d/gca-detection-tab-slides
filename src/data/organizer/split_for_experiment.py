@@ -52,7 +52,7 @@ classes_to_split = ['Y', 'N']
 def extract_year(data_df):
 
     def extraction_applicator(val):
-        return val.split('$')[1].split('-')[0]
+        return int(val.split('$')[1].split('-')[0])
 
     data_df['year'] = data_df['slide_name'].apply(extraction_applicator)
     return data_df
@@ -63,16 +63,20 @@ def split_weighted_chronological(data_df):
     def var_delta(row):
         return abs(row[0]-row[1])
     
-    sample_weights = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]    
+    sample_weights = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]
+    sample_weights.columns = sample_weights.columns.droplevel(level=0)    
     sample_weights['var_delta'] = sample_weights.apply(var_delta, axis=1)
-    sample_weights.columns = sample_weights.columns.droplevel(level=0)
-    sample_weights['slide_name'] = sample_weights.index
-    print(sample_weights)
+    sample_weights.reset_index()
+    print(sample_weights.columns)
     
-    # data_df_aug = pd.join([data_df, sample_weights], on='slide_')
-    # data_df_aug.sort_values(by=['year', 'slide_name', 'label'])
-    # print(data_df_aug)
-    # print(sample_weights.cumsum())
+    data_df_samples = data_df.loc[:, ['slide_name', 'year']]
+
+    data_df_aug = data_df_samples.merge(sample_weights, on='slide_name').drop_duplicates(keep='first')
+    data_df_aug = data_df_aug.sort_values(by=['year', 'var_delta'], ascending=[True, True])
+    # data_df_aug.to_csv("temp.csv")
+    print(data_df_aug)
+    print(data_df_aug[classes_to_split].cumsum())
+    print(data_df_aug.join(data_df_aug[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("temp.csv", index=False))
 
     return sample_weights
 
