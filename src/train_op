@@ -1,400 +1,0 @@
----> (['N', 'Y'], {'N': 0, 'Y': 1})
-train composition: {0: 179, 1: 99}
----> (['N', 'Y'], {'N': 0, 'Y': 1})
-valid composition: {0: 44, 1: 24}
-
---------------------------
-Dataset Configuration
---------------------------
---------------------------
-classes_count: 2
-class_names: ['P', 'N']
-train_set_size: 288
-valid_set_size: 80
-
---------------------------
-Training Configuration
---------------------------
---------------------------
-model: ResNet
-num_layers: 18
-batch_size: 16
-learning_rate: 0.001
-learning_rate_decay: 0.85
-weight_decay: 0.0001
-n_epochs: 10
-pretrain: True
-resume_checkpoint: False
-checkpointing_frequency: 1
-using_CUDA: True
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.8939 0.1061
-N          0.1818 0.8182
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.9583 0.0417
-
---------------------------
-Checkpoint saved as: epoch#0_val_acc#0-6618.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 0
-learning_rate: [0.00085]
-train_loss: 0.3343336061715222
-train_acc: 0.8669064748201439
-valid_loss: 3.3420834734159293
-valid_acc: 0.6617647058823529
-epoch_duration: 21.718578338623047 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9777 0.0223
-N          0.0505 0.9495
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#1_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 1
-learning_rate: [0.0007224999999999999]
-train_loss: 0.07735961753365805
-train_acc: 0.9676258992805756
-valid_loss: 0.003456423889100038
-valid_acc: 1.0
-epoch_duration: 20.945715188980103 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9777 0.0223
-N          0.0303 0.9697
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#2_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 2
-learning_rate: [0.000614125]
-train_loss: 0.06823835008368968
-train_acc: 0.9748201438848921
-valid_loss: 0.012412145699593513
-valid_acc: 1.0
-epoch_duration: 21.916919231414795 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9832 0.0168
-N          0.0202 0.9798
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#3_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 3
-learning_rate: [0.00052200625]
-train_loss: 0.050021415636640226
-train_acc: 0.9820143884892086
-valid_loss: 0.0043199828852426864
-valid_acc: 1.0
-epoch_duration: 20.987377166748047 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9609 0.0391
-N          0.0101 0.9899
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0833 0.9167
-
---------------------------
-Checkpoint saved as: epoch#4_val_acc#0-9706.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 4
-learning_rate: [0.00044370531249999997]
-train_loss: 0.0735611358067865
-train_acc: 0.9712230215827339
-valid_loss: 0.09380046951392775
-valid_acc: 0.9705882352941176
-epoch_duration: 21.504687070846558 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9888 0.0112
-N          0.0000 1.0000
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#5_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 5
-learning_rate: [0.00037714951562499996]
-train_loss: 0.04606812681815178
-train_acc: 0.9928057553956835
-valid_loss: 0.02998789125943885
-valid_acc: 1.0
-epoch_duration: 20.89214062690735 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9944 0.0056
-N          0.0000 1.0000
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#6_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 6
-learning_rate: [0.00032057708828124994]
-train_loss: 0.019153925724220363
-train_acc: 0.9964028776978417
-valid_loss: 0.0028010257930659197
-valid_acc: 1.0
-epoch_duration: 20.80878973007202 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0202 0.9798
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#7_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 7
-learning_rate: [0.0002724905250390624]
-train_loss: 0.018684949524861445
-train_acc: 0.9928057553956835
-valid_loss: 0.008725145571481656
-valid_acc: 1.0
-epoch_duration: 21.861621141433716 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9832 0.0168
-N          0.0000 1.0000
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.8636 0.1364
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#8_val_acc#0-9118.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 8
-learning_rate: [0.00023161694628320305]
-train_loss: 0.029324634407693857
-train_acc: 0.9892086330935252
-valid_loss: 0.23251252895330682
-valid_acc: 0.9117647058823529
-epoch_duration: 22.332675457000732 seconds
-
-Training Step: 0 of 18Training Step: 1 of 18Training Step: 2 of 18Training Step: 3 of 18Training Step: 4 of 18Training Step: 5 of 18Training Step: 6 of 18Training Step: 7 of 18Training Step: 8 of 18Training Step: 9 of 18Training Step: 10 of 18Training Step: 11 of 18Training Step: 12 of 18Training Step: 13 of 18Training Step: 14 of 18Training Step: 15 of 18Training Step: 16 of 18Training Step: 17 of 18
-
---------------------------
-Confusion Matrix - Train Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          0.9944 0.0056
-N          0.0000 1.0000
-
---------------------------
-
---------------------------
-Confusion Matrix - Validation Data
---------------------------
-
-Prediction      P      N
-Truth                   
-P          1.0000 0.0000
-N          0.0000 1.0000
-
---------------------------
-Checkpoint saved as: epoch#9_val_acc#1-0.ckpt
-
---------------------------
-Training Epoch Summary
---------------------------
---------------------------
-epoch: 9
-learning_rate: [0.0001968744043407226]
-train_loss: 0.009370270898739853
-train_acc: 0.9964028776978417
-valid_loss: 0.001082338680348852
-valid_acc: 1.0
-epoch_duration: 21.45293951034546 seconds
-ran!
