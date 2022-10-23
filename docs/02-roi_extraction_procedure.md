@@ -10,7 +10,7 @@ Please ensure that you are using a **macOS** or **Linux** development environmen
 Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommended)**.
 
 ### **(Recommended)** Using an Anaconda environment
-- Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-conda.txt) or from the zip-folder `GCA-Detection/`
+Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-conda.txt) or from the zip-folder `GCA-Detection/`
 - **Either** create a new environment with all dependencies by running   
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
@@ -54,15 +54,14 @@ Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommende
 1. Navigate to `GCA-Detection/src/features`
 2. Set the downsampling level:    
     - Edit the file `extract_roi.py`
-    - Set the `downscale_level` argument in the function `roi.multiprocess_extract_roi_from_filtered()` to a suitable value.    
-    Please refer to the instructions in the file.   
-    The same instructions are reproduced here for convenience:   
+    - Set the `downscale_level` argument in the function `roi.multiprocess_extract_roi_from_filtered()` to a suitable value (**Use 1 here**).    
+    Please refer to the instructions in the file. The same instructions are reproduced here for convenience:   
 
         ```
         Set downscale_level to:
         
         0, if ROIs must be from - TOP SLIDE (Highest Resolution) 
-        1, if ROIs must be from - x4 DOWNSCALED SLIDE
+        1, if ROIs must be from - x4 DOWNSCALED SLIDE - USE THIS
         2, if ROIs must be from - x16 DOWNSCALED SLIDE
         3, if ROIs must be from - x64 DOWNSCALED SLIDE
         
