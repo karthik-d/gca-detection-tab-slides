@@ -1,6 +1,10 @@
 # Procedure to Extract ROI
 
-**Skip 2:40 to 3:20** Check out the video demo [here!](https://drive.google.com/file/d/1Hb6pySfqGVqKtTUiBUeS54muv80gTESg/view?usp=sharing)
+Check out the video demo [here](https://drive.google.com/file/d/1dOIPB8BWaovi4Cj0zAWIxnHStyxyEoBY/view?usp=sharing)!
+
+Feel free to watch the it at 2x speed since most of the video is just waiting for downloads to complete or the scripts to finish processing.
+
+**NOTE:** The video only demonstrates how to run the ROI extraction scripts from the svs files already downloaded into the local system. Navigate [here](https://github.com/karthik-d/TAB-Slides/blob/main/docs/03-annotation_procedure.md) for the ROI annotation (manual labelling) instructions. Furthermore, the svs files used for the demo are named Mixed, Neg and Pos; as a result, the ROI will be prefixed by the same name. The labelling process is **NOT AUTOMATED by this script**.
 
 Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1C9q9iBO6B72okd34DB3xHJp5LrY76eSb/view?usp=sharing).
 
