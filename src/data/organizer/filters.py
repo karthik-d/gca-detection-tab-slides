@@ -21,7 +21,8 @@ DESTN_PATH = os.path.abspath(os.path.join(
     "dataset",
     "data",
     "roi",
-    "ds_phase_3"
+    "ds_phase_3",
+    "filtered"
 ))
 
 #--enter
@@ -29,22 +30,8 @@ classes_to_extract = [ 'Y', 'N' ]
 
 # ---------------------------------
 
-class_path_map = {
-    class_: os.path.join(DESTN_PATH, 'assorted', class_) 
-    for class_ in classes_to_extract
-}
-
 
 def filter_by_roiname(filenames_file, retain_listed=True):
-
-    # Create destination template
-    for class_, path_ in class_path_map.items():
-        Path(path_).mkdir(
-            parents=True,
-            exist_ok=True
-        )
-
-    print("\nDestination template created")
 
     # Assort data files
     filter_files = list(map(lambda x: x.strip(), open(filenames_file, 'r').readlines()))
@@ -52,30 +39,34 @@ def filter_by_roiname(filenames_file, retain_listed=True):
     for wsi_name in os.listdir(SRC_PATH):
         
         copy_ctr = 0
-        wsi_path = os.path.join(SRC_PATH, wsi_name)
-        for class_name in os.listdir(wsi_path):
+        wsi_suffix = wsi_name
+        for class_name in os.listdir(os.path.join(SRC_PATH, wsi_suffix)):
             
             # check if valid class name
             if class_name in classes_to_extract:
-                class_path = os.path.join(wsi_path, class_name)
+                class_suffix = os.path.join(wsi_suffix, class_name)
                 # Move all .tiff files
-                for filename in glob.glob(os.path.join(class_path, "*.tiff")):
+                for filename in glob.glob(os.path.join(SRC_PATH, class_suffix, "*.tiff")):
                     
                     if (
                         (os.path.basename(filename) in filter_files and retain_listed) 
                         or os.path.basename(filename) not in filter_files and not retain_listed
                     ): 
-                        print(os.path.basename(filename))
-                        # shutil.copy2(
-                        #     src=os.path.join(class_path, filename),
-                        #     dst=class_path_map.get(class_name)
-                        # )
+
+                        # create destination if it doesn't exist
+                        if not os.path.isdir(os.path.join(DESTN_PATH, class_suffix)):
+                            Path(os.path.join(DESTN_PATH, class_suffix)).mkdir(
+                                parents=True,
+                                exist_ok=False
+                            )
+
+                        shutil.copy2(
+                            src=os.path.join(filename),
+                            dst=os.path.join(DESTN_PATH, class_suffix)
+                        )
                         copy_ctr += 1
         
         print(f"\nCopied {copy_ctr} files for {wsi_name}")
         master_ctr += copy_ctr 
     
     print(f"Total Files Copied: {master_ctr}")
-
-    # for filename in open(filenames_file, 'r').readlines():
-    #     filename = filename.strip()
