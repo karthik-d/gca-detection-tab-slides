@@ -4,11 +4,15 @@ Check out the video demo [here](https://drive.google.com/file/d/1dOIPB8BWaovi4Cj
 
 Feel free to watch the it at 2x speed since most of the video is just waiting for downloads to complete or the scripts to finish processing.
 
-**NOTE:** The video only demonstrates how to run the ROI extraction scripts from the svs files already downloaded into the local system. The labelling process is **NOT AUTOMATED by this script**. Furthermore, the svs files used for the demo are named Mixed, Neg and Pos; as a result, the ROI will be prefixed by the same name.
+**NOTE:** The video only demonstrates how to run the ROI extraction scripts from the svs files already downloaded into the local system. The labelling process is **NOT AUTOMATED by this script**. Furthermore, the svs files used for the demo video are named *Mixed*, *Neg* and *Pos*; as a result, the ROI will be prefixed by the same name.
 
 - Please find the ROI annotation (manual labeling) instructions [here](https://drive.google.com/file/d/1RoVPF7XqGhrn3G3inWakuTTyRwctItbU/view?usp=sharing).
 
 - Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1EfgvTixClbUjjJlKVkpirEwigiaUeHc_/view?usp=sharing).
+
+## Sample Data
+
+- Download a test `.svs` slide [from here](https://drive.google.com/file/d/17mrL-B1x6mjx9bwE0I7KRn02Eaw5p3l5/view?usp=sharing) to test out your environment and the extraction pipeline by following the instructions below. If everything falls in place, the run should produce and save 5 ROIs for this test slide.
 
 ## Install dependencies
 
