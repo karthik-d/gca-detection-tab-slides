@@ -2,6 +2,7 @@ import os
 import pandas as pd
 from pathlib import Path
 import glob
+import shutil
 
 
 #--enter
@@ -46,6 +47,7 @@ def filter_by_roiname(filenames_file, retain_listed=True):
     print("\nDestination template created")
 
     # Assort data files
+    filter_files = list(map(lambda x: x.strip(), open(filenames_file, 'r').readlines()))
     master_ctr = 0
     for wsi_name in os.listdir(SRC_PATH):
         
@@ -58,11 +60,17 @@ def filter_by_roiname(filenames_file, retain_listed=True):
                 class_path = os.path.join(wsi_path, class_name)
                 # Move all .tiff files
                 for filename in glob.glob(os.path.join(class_path, "*.tiff")):
-                    # shutil.copy2(
-                    #     src=os.path.join(class_path, filename),
-                    #     dst=class_path_map.get(class_name)
-                    # )
-                    copy_ctr += 1
+                    
+                    if (
+                        (os.path.basename(filename) in filter_files and retain_listed) 
+                        or os.path.basename(filename) not in filter_files and not retain_listed
+                    ): 
+                        print(os.path.basename(filename))
+                        # shutil.copy2(
+                        #     src=os.path.join(class_path, filename),
+                        #     dst=class_path_map.get(class_name)
+                        # )
+                        copy_ctr += 1
         
         print(f"\nCopied {copy_ctr} files for {wsi_name}")
         master_ctr += copy_ctr 
