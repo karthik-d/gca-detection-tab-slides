@@ -49,9 +49,11 @@ Deep Neural Network to automate the detection of Giant Cell Arteritis from digit
    - [X] track uploads and downloads on the drive
    - [X] create sheets for roi labelling and progress tracking
    - [X] documentation to use scripts
-   - [ ] complete manual labelling using the annotation sheet generated in the previous step
+   - [ ] complete manual for part 1 labelling using the annotation sheet generated in the previous step
+   - [ ] complete manual for part 2 labelling using the annotation sheet generated in the previous step
    - [X] check for duplicates between ND and KD
-   - [ ] verify labelled dataset
+   - [ ] verify labelled dataset with Naveena ma'am
+   - [ ] store annotations on hardrive and send post to Naveena ma'am
 5. Deep Neural Network
    - [X] Balancing dataset
    - [X] ResNet18 Model 
