@@ -50,7 +50,7 @@ A Deep Neural Network to automate the detection of Giant Cell Arteritis from dig
    - [X] create sheets for roi labelling and progress tracking
    - [X] documentation to use scripts
    - [X] complete manual for part 1 labelling using the annotation sheet generated in the previous step
-   - [ ] complete manual for part 2 labelling using the annotation sheet generated in the previous step
+   - [X] complete manual for part 2 labelling using the annotation sheet generated in the previous step
    - [X] check for duplicates between ND and KD
    - [ ] verify labelled dataset with Naveena ma'am
    - [ ] store annotations on hardrive and send post to Naveena ma'am
