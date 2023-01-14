@@ -52,6 +52,9 @@ A Deep Neural Network to automate the detection of Giant Cell Arteritis from dig
    - [X] complete manual for part 1 labelling using the annotation sheet generated in the previous step
    - [X] complete manual for part 2 labelling using the annotation sheet generated in the previous step
    - [X] check for duplicates between ND and KD
+   - [ ] merge the mapping excel into one sheet
+   - [ ] collect statistics from ma'am on the data - total no. of files, lost, re-upload
+   - [ ] find missing files
    - [ ] verify labelled dataset with Naveena ma'am
    - [ ] store annotations on hardrive and send post to Naveena ma'am
 5. Deep Neural Network
