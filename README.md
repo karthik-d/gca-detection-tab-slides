@@ -56,4 +56,5 @@ A Deep Neural Network to automate the detection of Giant Cell Arteritis from dig
    - [ ] store annotations on hardrive and send post to Naveena ma'am
 5. Deep Neural Network
    - [X] Balancing dataset
-   - [X] ResNet18 Model 
+   - [X] ResNet18 Model
+   - [X] GradCAM
