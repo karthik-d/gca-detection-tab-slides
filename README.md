@@ -1,6 +1,6 @@
-# GCA-Detection-TAB-Slides
+# GCA Detection from TAB Slides
 
-A Deep Neural Network to automate the detection of Giant Cell Arteritis from digital pathology slides of Temporal Artery Biopsy.
+A Deep Learning -based approach to automate the detection of Giant Cell Arteritis from digital pathology slides of Temporal Artery Biopsy.
 
 ## Drive Directories
 
@@ -14,14 +14,14 @@ A Deep Neural Network to automate the detection of Giant Cell Arteritis from dig
 
 1. [GCA_project](https://drive.google.com/drive/folders/1f4Iwodhixomwwb4sxPjJ3PCHW2382mNQ?usp=sharing) - Metadata and Labeling Spreadsheets 
 2. [TAB_Opthananology](https://drive.google.com/drive/folders/1Oxh3VMHT2IRmN4J1q8ZTAE7CaUb1QOGj?usp=sharing) - Sample .SVS files for testing scripts 
-3. [New Files](https://drive.google.com/drive/folders/1wNMkBg7kh8HdLntc05PEawvz-KLSkGQh?usp=sharing) - Erroneous ROI Extracts
+3. [New Files](https://drive.google.com/drive/folders/1wNMkBg7kh8HdLntc05PEawvz-KLSkGQh?usp=sharing) - Erroneous ROI extracts on ma'am's system
 
 ## Documentation
 
 1. [Rendering .SVS files](./docs/01-render_svs_files.md)
 2. [ROI Extraction](./docs/02-roi_extraction_procedure.md)
 3. [ROI Annotation](./docs/03-annotation_procedure.md)
-4. [Progress Report (Updated: June '22)](https://docs.google.com/document/d/14vXHEkumhzXJesqY8LUNyQd2O7FVP_vWxGg40SNi9_Q/edit?usp=sharing)
+4. [Progress Report (Updated: September '22)](https://docs.google.com/document/d/14vXHEkumhzXJesqY8LUNyQd2O7FVP_vWxGg40SNi9_Q/edit?usp=sharing)
 5. [GradCAM Visualization Results - Slides](https://docs.google.com/presentation/d/1GQD0_uGlFD01MreCIrYuCU_YlGyblGtRPHYrLJ8xOL8/edit?usp=sharing)
 6. [Manuscript Draft](https://docs.google.com/document/d/1Wkmae8R-DypWB5Hv9i0qM-ujm_lL0Q6_02oDFgkkQCk/edit?usp=sharing)
 
