@@ -52,9 +52,12 @@ A Deep Learning -based approach to automate the detection of Giant Cell Arteriti
    - [X] complete manual for part 1 labelling using the annotation sheet generated in the previous step
    - [X] complete manual for part 2 labelling using the annotation sheet generated in the previous step
    - [X] check for duplicates between ND and KD
+   - [X] sort out annotation-related issues with ma'am
+   - [ ] replace/add annotations to the drive after fixing 
+   - [X] update spreadsheet for fixed files.
+   - [X] collect statistics from ma'am on the data - total no. of files, lost, re-upload
    - [ ] merge the mapping excel into one sheet
-   - [ ] collect statistics from ma'am on the data - total no. of files, lost, re-upload
-   - [ ] find missing files
+   - [ ] find and list missing slides - send list to ma'am
    - [ ] verify labelled dataset with Naveena ma'am
    - [ ] store annotations on hardrive and send post to Naveena ma'am
 5. Deep Neural Network
