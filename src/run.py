@@ -9,9 +9,10 @@ from visualize.driver import *
 # split_samples()
 # preprocess()
 # train()
-# describe()
+# fold_classnames()
+describe()
 # split_data()
-filter_data()
+# filter_data()
 # visualize()
 
 print("ran!")

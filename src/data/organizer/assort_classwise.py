@@ -12,7 +12,7 @@ from: `SRC_DIR` which must be of the form:
             - .
             - .
 
-at: the specified `DESTN_PATH` of the form:
+at the specified `DESTN_PATH` of the form:
     
     - [DESTN_PATH]/
         - assorted/

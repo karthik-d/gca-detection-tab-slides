@@ -25,13 +25,20 @@ import numpy as np
 # SET THESE PARAMETERS
 
 #--enter
+# SRC_PATH = os.path.abspath(os.path.join(
+#     os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*3), 
+#     "dataset",
+#     "data",
+#     "roi",
+#     "ds_phase_3_raw",
+#     "labeled"
+# ))
+
 SRC_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*3), 
+    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*4), 
     "dataset",
-    "data",
-    "roi",
-    "ds_phase_3_raw",
-    "labeled"
+    "annotations",
+    "phase-on-07Feb23"
 ))
 
 #--enter

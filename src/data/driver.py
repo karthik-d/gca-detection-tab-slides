@@ -2,6 +2,7 @@
 
 from .preprocessor.augment import augment 
 from .organizer.describe import describe_datafolder
+from .organizer.fold_classnames import fold_classnames as fold_classes
 from .organizer.split_for_experiment import split_for_experiment
 from .organizer.filters import filter_by_roiname
 
@@ -13,6 +14,9 @@ def preprocess():
 
 def describe():
     describe_datafolder()
+
+def fold_classnames():
+    fold_classes()
 
 def split_data():
     split_for_experiment()
