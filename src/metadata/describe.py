@@ -37,7 +37,7 @@ def describe_any_slide_list(slides_list_path):
 	reqd_slides = pd.read_csv(slides_list_path)
 	analysis_slides = pd.read_csv(analysis_slidenames_path)
 
-	print(reqd_slides)
-	for_describe = analysis_slides.merge(reqd_slides, on='slidename', how='inner')
-	print(for_describe)
-	# _describe_analysis_slides(for_describe)
+	# drop-duplicates is used to fix issues with slide duplicates
+	for_describe = analysis_slides.merge(reqd_slides, on='slidename', how='inner').drop_duplicates(keep='first')
+	# print(for_describe)
+	_describe_analysis_slides(for_describe)

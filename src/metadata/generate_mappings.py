@@ -107,8 +107,10 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 					# print("\n--------------------------------------------------")
 					fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 
+				fs_rows['Slide Name'] = fs_rows['Slide Name'].rstrip('.svs').strip()
 				#print("Saving", str(fs_rows['Slide Name']), "...")
-				# Merge and Store collected rows    
+
+				# Merge and Store collected rows 
 				if analysis_row:             
 					# slide diagnostic inference
 					slide_inference = 'Y' if 'Y' in merged_rows['is_positive'] else 'N'  
@@ -203,7 +205,7 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 	# write to analysis-relevant
 	analysis_slidenames = pd.concat([
 		analysis_slidenames, 
-		pd.DataFrame(dict(zip(analysis_file_cols, [[sample_prestore], [slide_inference]])))
+		pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]])))
 	])
 
 	print()

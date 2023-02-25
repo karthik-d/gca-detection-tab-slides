@@ -6,7 +6,7 @@ from data.driver import *
 # from train.driver import *
 from visualize.driver import *
 
-# generate_mappings_fsc()
+generate_mappings_fsc()
 # split_samples()
 # preprocess()
 # train()
