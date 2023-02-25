@@ -23,7 +23,7 @@ no_analysis_slidenames_path = os.path.join((config.get("METADATA_PATH")), 'not_a
 analysis_slidenames_path = os.path.join((config.get("METADATA_PATH")), 'analysis_relevant.csv')
 
 
-def merge_mappings_fsc(save_cleaned_sc=True):
+def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True):
 	""" 
 	merge mappings across three levels: file-sample-class
 	"""
@@ -34,6 +34,12 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	- reformat into relational design
 	- eliminate/merge irrelevant columns
 	- other minor steps
+	"""
+
+	"""
+	[ADDENDUM]: set save_slide_level_inference=True
+	save the diagnostic inference at the slide level into ``analysis_relevant.csv``
+	(only for the slides with at least one analysis-relevant ROI)
 	"""
 
 	fs_mapping = pd.read_csv(fs_mapping_path)
@@ -57,9 +63,11 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 		'sample'
 	])
 
-	analysis_slidenames = pd.DataFrame(columns=[
+	analysis_file_cols = [
 		'slidename'
-	])
+	]
+	analysis_file_cols.append('slide_inference') if save_slide_level_inference else None
+	analysis_slidenames = pd.DataFrame(columns=analysis_file_cols)
 
 	if save_cleaned_sc:
 		cleaned_sc_mapping = pd.DataFrame(columns=[
@@ -100,7 +108,9 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 
 				#print("Saving", str(fs_rows['Slide Name']), "...")
 				# Merge and Store collected rows    
-				if analysis_row:               
+				if analysis_row:             
+					# slide diagnostic inference
+					slide_inference = 'Y' if 'Y' in merged_rows['is_positive'] else 'N'  
 					# Create row in merged_df
 					num_rois = len(merged_rows['roi_number'])
 					merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
@@ -109,7 +119,10 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 					# write to merged-mappings
 					merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
 					# write to analysis-relevant
-					analysis_slidenames = pd.concat([analysis_slidenames, pd.DataFrame({'slidename': [sample_prestore]})])
+					analysis_slidenames = pd.concat([
+						analysis_slidenames, 
+						pd.DataFrame(dict(zip(analysis_file_cols, [[sample_prestore], [slide_inference]])))
+					])
 
 				else:
 					merged_rows['slidename'] = [ str(fs_rows['Slide Name']) ]
@@ -177,6 +190,8 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 		
 
 	# Store last row
+	# slide diagnostic inference
+	slide_inference = 'Y' if 'Y' in merged_rows['is_positive'] else 'N'  
 	fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 	num_rois = len(merged_rows['roi_number'])
 	merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
@@ -185,7 +200,10 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	# Append to merged dataframe
 	merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
 	# write to analysis-relevant
-	analysis_slidenames = pd.concat([analysis_slidenames, pd.DataFrame({'slidename': [sample_prestore]})])
+	analysis_slidenames = pd.concat([
+		analysis_slidenames, 
+		pd.DataFrame(dict(zip(analysis_file_cols, [[sample_prestore], [slide_inference]])))
+	])
 
 	print()
 	print(merged_mapping_path)
