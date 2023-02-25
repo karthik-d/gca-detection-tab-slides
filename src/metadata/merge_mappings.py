@@ -11,7 +11,7 @@ fs_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample
 sc_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_sample-class.csv')
 
 # FSample to Class cleaned mapping
-sc_mapping_cleaned_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class_cleaned.csv')
+sc_mapping_cleaned_path = os.path.join(config.get("METADATA_PATH"), 'mapping_sample-class_cleaned.csv')
 
 # File-Sample-Class mapping
 merged_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class.csv')
@@ -106,13 +106,10 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 						merged_rows['sample'] = [ str(fs_rows['Sample']) ]
 						# write to not-analysis-relevant
 						no_analysis = pd.concat([no_analysis, pd.DataFrame(merged_rows)])
-						# conditionally, write to cleaned-sc-mapping
-						if save_cleaned_sc:
-							cleaned_sc_mapping = pd.concat([cleaned_sc_mapping, pd.DataFrame(merged_rows)])
 
 				sample_prestore, is_analysis_relevant, _, notes = tuple(row) 
-				# Reset trackers for the new sample
 				
+				# Reset trackers for the new sample				
 				if is_analysis_relevant == 'N':
 					# Eg: ['2020-041-11', 'N', '', 'Immuno']
 					analysis_row = False
@@ -148,9 +145,21 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 				merged_rows['is_analysis_relevant'].append(is_analysis_relevant)
 				merged_rows['is_positive'].append(is_positive)
 				merged_rows['notes'].append(notes)
+
+				# conditionally, write to cleaned-sc-mapping
+				cleaned_sc_mapping = pd.concat([
+					cleaned_sc_mapping, 
+					pd.DataFrame({
+						'slidename': [sample_prestore],
+						'is_analysis_relevant': [is_analysis_relevant],
+						'is_positive': [is_positive],
+						'notes': [notes]
+					})
+				])
 			
 			first_read = False
 		
+
 	# Store last row
 	fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 	num_rois = len(merged_rows['roi_number'])
@@ -168,6 +177,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	no_analysis.to_csv(no_analysis_path)
 
 	if save_cleaned_sc:
+		print(cleaned_sc_mapping)
 		print(sc_mapping_cleaned_path)
 		cleaned_sc_mapping.to_csv(sc_mapping_cleaned_path)
 
