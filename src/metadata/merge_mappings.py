@@ -63,11 +63,14 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 
 	if save_cleaned_sc:
 		cleaned_sc_mapping = pd.DataFrame(columns=[
-			'slidename'
-			'is_analysis_relevant',
-			'is_positive',
-			'notes'
-		])
+		'slidename',
+		'order',
+		'sample',
+		'roi_number',
+		'is_analysis_relevant',
+		'is_positive',
+		'notes'
+	])
 
 	sample = None
 	notes = ''
@@ -95,7 +98,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 					# print("\n--------------------------------------------------")
 					fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].to_dict(orient='records')[0]
 
-				print("Saving", str(fs_rows['Slide Name']), "...")
+				#print("Saving", str(fs_rows['Slide Name']), "...")
 				# Merge and Store collected rows    
 				if analysis_row:               
 					# Create row in merged_df
@@ -117,15 +120,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 
 				# conditionally, write to cleaned-sc-mapping (both analysis relevant and otherwise)
 				if save_cleaned_sc:
-					cleaned_sc_mapping = pd.concat([
-						cleaned_sc_mapping, 
-						pd.DataFrame({
-							'slidename': [str(fs_rows['Slide Name'])],
-							'is_analysis_relevant': [is_analysis_relevant],
-							'is_positive': [is_positive],
-							'notes': [notes]
-						})
-					])
+					cleaned_sc_mapping = pd.concat([cleaned_sc_mapping, pd.DataFrame(merged_rows)])
 
 			sample_prestore, is_analysis_relevant, is_positive, notes = tuple(row) 
 			
