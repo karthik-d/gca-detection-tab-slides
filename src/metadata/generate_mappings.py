@@ -64,7 +64,8 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 	])
 
 	analysis_file_cols = [
-		'slidename'
+		'slidename',
+		'sample'
 	]
 	analysis_file_cols.append('slide_inference') if save_slide_level_inference else None
 	analysis_slidenames = pd.DataFrame(columns=analysis_file_cols)
@@ -121,7 +122,7 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 					# write to analysis-relevant
 					analysis_slidenames = pd.concat([
 						analysis_slidenames, 
-						pd.DataFrame(dict(zip(analysis_file_cols, [[sample_prestore], [slide_inference]])))
+						pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]])))
 					])
 
 				else:
