@@ -67,22 +67,20 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	notes = ''
 	first_read = True
 	duplicates = {}
+	duplicates_analysis_relevant = {}
 	for row in sc_mapping:
 
 			sample = row[0]
 
 			# discern sample-row and roi-row
 			cnt_instances = len(fs_mapping.loc[fs_mapping['Sample']==sample, :])	
-			is_valid_sample = ( cnt_instances>0 )
-			
-			if cnt_instances>1:
-				duplicates[sample] = duplicates.get(sample, 0) + 1				
+			is_valid_sample = ( cnt_instances>0 )			
 
 			if is_valid_sample:
 
 				if not first_read:  
 
-					# handle duplicated in file accumulation      
+					# handle duplicates in file accumulation      
 					if(cnt_instances>1):
 						# Take the first matching row
 						fs_rows = fs_mapping.loc[fs_mapping['Sample']==sample_prestore, ['Slide Name', 'Order', 'Sample']].iloc[:1].to_dict(orient='records')[0]
@@ -114,6 +112,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 
 				sample_prestore, is_analysis_relevant, _, notes = tuple(row) 
 				# Reset trackers for the new sample
+				
 				if is_analysis_relevant == 'N':
 					# Eg: ['2020-041-11', 'N', '', 'Immuno']
 					analysis_row = False
@@ -123,6 +122,10 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 						'sample': [],
 						'notes': [notes]
 					}
+
+					if cnt_instances>1:
+						duplicates[sample] = cnt_instances	
+				
 				else:
 					analysis_row = True
 					merged_rows = {
@@ -134,6 +137,10 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 						'is_positive': [],
 						'notes': []
 					}
+
+					if cnt_instances>1:
+						duplicates[sample] = cnt_instances
+						duplicates_analysis_relevant[sample] = cnt_instances	
 
 			else:
 				roi_num, is_analysis_relevant, is_positive, notes = tuple(row)
@@ -153,7 +160,8 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	# Append to merged dataframe
 	merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
 
-	print(merged_mapping)
+	print()
+	print(merged_mapping_path)
 	merged_mapping.to_csv(merged_mapping_path)
 
 	print(no_analysis_path)
@@ -163,8 +171,12 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 		print(sc_mapping_cleaned_path)
 		cleaned_sc_mapping.to_csv(sc_mapping_cleaned_path)
 
-	for sample in duplicates:
-		print("[DUPLICATE] Found {} instances of {}".format(duplicates[sample], sample))
+	print()
+	for sample in duplicates_analysis_relevant:
+		print("[DUPLICATE] Found {} instances of {}".format(duplicates_analysis_relevant[sample], sample))
+	print()
+	print("No. of samples with duplicates:", len(duplicates))
+	print("No. of samples with duplicates - Relevant for Analysis:", len(duplicates_analysis_relevant))
 
 
 
