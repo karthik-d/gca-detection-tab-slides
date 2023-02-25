@@ -17,7 +17,10 @@ sc_mapping_cleaned_path = os.path.join(config.get("METADATA_PATH"), 'mapping_sam
 merged_mapping_path = os.path.join(config.get("METADATA_PATH"), 'mapping_file-sample-class.csv')
 
 # NOT-Relevant-For-Analysis rows
-no_analysis_path = os.path.join((config.get("METADATA_PATH")), 'not_analysis_relevant.csv')
+no_analysis_slidenames_path = os.path.join((config.get("METADATA_PATH")), 'not_analysis_relevant.csv')
+
+# Relevant-For-Analysis rows
+analysis_slidenames_path = os.path.join((config.get("METADATA_PATH")), 'analysis_relevant.csv')
 
 
 def merge_mappings_fsc(save_cleaned_sc=True):
@@ -48,11 +51,14 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 		'notes'
 	])
 
-	no_analysis = pd.DataFrame(columns=[
+	no_analysis_slidenames = pd.DataFrame(columns=[
 		'slidename',
 		'order',
-		'sample',
-		'notes'
+		'sample'
+	])
+
+	analysis_slidenames = pd.DataFrame(columns=[
+		'slidename'
 	])
 
 	if save_cleaned_sc:
@@ -105,7 +111,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 						merged_rows['order'] = [ str(fs_rows['Order']) ]
 						merged_rows['sample'] = [ str(fs_rows['Sample']) ]
 						# write to not-analysis-relevant
-						no_analysis = pd.concat([no_analysis, pd.DataFrame(merged_rows)])
+						no_analysis_slidenames = pd.concat([no_analysis_slidenames, pd.DataFrame(merged_rows)])
 
 				sample_prestore, is_analysis_relevant, _, notes = tuple(row) 
 				
@@ -135,6 +141,9 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 						'notes': []
 					}
 
+					# write to analysis-relevant
+					analysis_slidenames = pd.concat([analysis_slidenames, pd.DataFrame({'slidename': [sample]})])
+
 					if cnt_instances>1:
 						duplicates[sample] = cnt_instances
 						duplicates_analysis_relevant[sample] = cnt_instances	
@@ -150,7 +159,7 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 				cleaned_sc_mapping = pd.concat([
 					cleaned_sc_mapping, 
 					pd.DataFrame({
-						'slidename': [sample_prestore],
+						'slidename': [slidename],
 						'is_analysis_relevant': [is_analysis_relevant],
 						'is_positive': [is_positive],
 						'notes': [notes]
@@ -173,8 +182,11 @@ def merge_mappings_fsc(save_cleaned_sc=True):
 	print(merged_mapping_path)
 	merged_mapping.to_csv(merged_mapping_path)
 
-	print(no_analysis_path)
-	no_analysis.to_csv(no_analysis_path)
+	print(analysis_slidenames_path)
+	analysis_slidenames.to_csv(analysis_slidenames_path, index=False)
+
+	print(no_analysis_slidenames_path)
+	no_analysis_slidenames.to_csv(no_analysis_slidenames_path)
 
 	if save_cleaned_sc:
 		print(cleaned_sc_mapping)
