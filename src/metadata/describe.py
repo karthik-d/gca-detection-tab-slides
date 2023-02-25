@@ -25,7 +25,7 @@ analysis_slidenames_path = os.path.join((config.get("METADATA_PATH")), 'analysis
 
 def _describe_analysis_slides(slides_df):
 	print(slides_df.describe())
-	print(slides_df.groupby(['slide_inference']).count())
+	print(slides_df.drop_duplicates(keep='first').groupby(['slide_inference']).count())
 
 
 def describe_all_analysis_slides():
@@ -38,6 +38,6 @@ def describe_any_slide_list(slides_list_path):
 	analysis_slides = pd.read_csv(analysis_slidenames_path)
 
 	# drop-duplicates is used to fix issues with slide duplicates
+	print("*** DROPPED DUPLICATES ***")
 	for_describe = analysis_slides.merge(reqd_slides, on='slidename', how='inner').drop_duplicates(keep='first')
-	# print(for_describe)
 	_describe_analysis_slides(for_describe)

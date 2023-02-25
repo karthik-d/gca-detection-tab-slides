@@ -124,7 +124,7 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 					# write to analysis-relevant
 					analysis_slidenames = pd.concat([
 						analysis_slidenames, 
-						pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]])))
+						pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]][:len(analysis_file_cols)])))
 					])
 
 				else:
@@ -200,12 +200,14 @@ def generate_mappings_fsc(save_cleaned_sc=True, save_slide_level_inference=True)
 	merged_rows['slidename'] = [ str(fs_rows['Slide Name']) for x in range(num_rois) ]
 	merged_rows['order'] = [ str(fs_rows['Order']) for x in range(num_rois) ]
 	merged_rows['sample'] = [ str(fs_rows['Sample']) for x in range(num_rois) ]
+	
+	fs_rows['Slide Name'] = fs_rows['Slide Name'].rstrip('.svs').strip()
 	# Append to merged dataframe
 	merged_mapping = pd.concat([merged_mapping, pd.DataFrame(merged_rows)])
 	# write to analysis-relevant
 	analysis_slidenames = pd.concat([
 		analysis_slidenames, 
-		pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]])))
+		pd.DataFrame(dict(zip(analysis_file_cols, [[str(fs_rows['Slide Name'])], [sample_prestore], [slide_inference]][:len(analysis_file_cols)])))
 	])
 
 	print()
