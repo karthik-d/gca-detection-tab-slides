@@ -103,6 +103,8 @@ def get_splitting_desciptors(data_df, to_file=False):
     year_slide_cumul.columns = year_slide_cumul.columns.droplevel(level=0)
     year_slide_cumul = year_slide_cumul.sort_values(by='year', ascending=True)
     year_slide_cumul = year_slide_cumul.join(year_slide_cumul[classes_to_split].cumsum(), rsuffix='_cumul')
+    year_slide_cumul = year_slide_cumul.reset_index(level=0)
+   
     if to_file:
         year_slide_cumul.to_csv("year-slide-cumulation.csv", index=False)
 
@@ -125,13 +127,13 @@ def split_year_weighted_best_subset(data_df):
     """
 
     _, _, year_slide_cumul = get_splitting_desciptors(data_df)
-    print(year_slide_cumul.columns)
-    print(year_slide_cumul.unstack())
     year_slide_cumul = year_slide_cumul[['year'] + classes_to_split]
     # incremental cumulation in descending variance of sample sizes
-    year_slide_cumul[classes_to_split] = year_slide_cumul[classes_to_split].reindex(year_slide_cumul[classes_to_split].var().sort_values().index, axis=1)
-
-    print(year_slide_cumul.columns)
+    year_cumul_ordered = year_slide_cumul.sort_values(
+        by=year_slide_cumul[classes_to_split].var().sort_values(ascending=False).keys().tolist(),
+        ascending=[False for _ in classes_to_split]
+    )
+    print(year_cumul_ordered)
 
 
 def split_for_experiment():
