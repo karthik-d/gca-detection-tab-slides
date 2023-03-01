@@ -11,7 +11,7 @@ from visualize.driver import *
 # split_samples()
 # preprocess()
 # train()
-fold_classnames()
+# fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
 # describe_all_analysis_slides()
@@ -21,7 +21,8 @@ fold_classnames()
 # print("========================== PENDING ==============")
 # describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
 
-# split_data()
+# describe_datafolder(to_file=False)
+split_data()
 # filter_data()
 # visualize()
 
