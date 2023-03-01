@@ -57,7 +57,7 @@ def extract_year(data_df):
     return data_df
 
 
-def split_weighted_chronological(data_df):
+def get_splitting_desciptors(data_df, to_file=False):
 
     def var_delta(row):
         return abs(row[0]-row[1])
@@ -66,27 +66,30 @@ def split_weighted_chronological(data_df):
         """returns 'Y' for a positive slide-level inference, 'N' otherwise"""
         return 'Y' if row[pos_name]!=0 else 'N'
         
+   
     data_df_samples = data_df.loc[:, ['slide_name', 'year']]
     
     # overall divisive weighting
-    sample_weights = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]
-    sample_weights.columns = sample_weights.columns.droplevel(level=0)
-    sample_weights['var_delta'] = sample_weights.apply(var_delta, axis=1)
-    sample_weights = sample_weights.reset_index()
+    primitive_counts = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]
+    primitive_counts.columns = primitive_counts.columns.droplevel(level=0)
+    primitive_counts['var_delta'] = primitive_counts.apply(var_delta, axis=1)
+    primitive_counts = primitive_counts.reset_index()
     
     # slide-level (ROI): cumulative sum of ROI class counts for each slide
-    slide_roi_cumul = data_df_samples.merge(sample_weights, on='slide_name').drop_duplicates(keep='first')
+    slide_roi_cumul = data_df_samples.merge(primitive_counts, on='slide_name').drop_duplicates(keep='first')
     slide_roi_cumul = slide_roi_cumul.sort_values(by=['year', 'var_delta'], ascending=[True, True])
-    slide_roi_cumul.join(slide_roi_cumul[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("slide-roi-cumulation.csv", index=False)
+    if to_file:
+        slide_roi_cumul.join(slide_roi_cumul[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("slide-roi-cumulation.csv", index=False)
     
     # year-level (ROI): cumulative sum of ROI class counts for each year
     year_roi_cumul = data_df.groupby(['year', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]
     year_roi_cumul.columns = year_roi_cumul.columns.droplevel(level=0)
     year_roi_cumul = year_roi_cumul.reset_index()
-    year_roi_cumul.join(year_roi_cumul[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("year-roi-cumulation.csv", index=False)
+    if to_file:
+        year_roi_cumul.join(year_roi_cumul[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("year-roi-cumulation.csv", index=False)
 
     # year-level (slide): cumulative sum of slide class counts for each year
-    year_slide_cumul = sample_weights.loc[:, ['slide_name'] + classes_to_split]
+    year_slide_cumul = primitive_counts.loc[:, ['slide_name'] + classes_to_split]
     year_slide_cumul['slide_inference'] = year_slide_cumul.apply(
         partial(slide_inference, ('P' if 'P' in classes_to_split else 'Y')), 
         axis=1
@@ -100,10 +103,35 @@ def split_weighted_chronological(data_df):
     year_slide_cumul.columns = year_slide_cumul.columns.droplevel(level=0)
     year_slide_cumul = year_slide_cumul.sort_values(by='year', ascending=True)
     year_slide_cumul = year_slide_cumul.join(year_slide_cumul[classes_to_split].cumsum(), rsuffix='_cumul')
-    print(year_slide_cumul)
-    year_slide_cumul.to_csv("year-slide-cumulation.csv", index=False)
+    if to_file:
+        year_slide_cumul.to_csv("year-slide-cumulation.csv", index=False)
 
-    return sample_weights
+    return (slide_roi_cumul, year_roi_cumul, year_slide_cumul)
+
+
+def split_year_weighted_chronological(data_df):
+    """ 
+    split year-weighted class-counts by choosing the last few chronological years
+    to warrant the closest match to split_fractions
+    """
+
+    return None
+
+
+def split_year_weighted_best_subset(data_df):
+    """ 
+    split year-weighted class-counts by choosing the best set of years
+    to warrant the closest match to split_fractions
+    """
+
+    _, _, year_slide_cumul = get_splitting_desciptors(data_df)
+    print(year_slide_cumul.columns)
+    print(year_slide_cumul.unstack())
+    year_slide_cumul = year_slide_cumul[['year'] + classes_to_split]
+    # incremental cumulation in descending variance of sample sizes
+    year_slide_cumul[classes_to_split] = year_slide_cumul[classes_to_split].reindex(year_slide_cumul[classes_to_split].var().sort_values().index, axis=1)
+
+    print(year_slide_cumul.columns)
 
 
 def split_for_experiment():
@@ -119,4 +147,4 @@ def split_for_experiment():
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
 
-    sample_weights = split_weighted_chronological(data_df)
+    primitive_counts = split_year_weighted_best_subset(data_df)
