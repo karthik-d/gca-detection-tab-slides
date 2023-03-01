@@ -29,6 +29,7 @@ ds_phase_N/
 import os
 import pandas as pd
 from functools import partial
+import numpy as np
 
 from .describe import describe_datafolder
 
@@ -40,8 +41,8 @@ DS_RAW_PATH = os.path.abspath(os.path.join(
     "phase-on-07Feb23"
 ))
 
-#--enter
-split_fractions = [0.8, 0.2]
+#--enter (higher fraction)
+split_fraction = 0.8
 # approximate fractions
 
 #--enter
@@ -59,7 +60,7 @@ def extract_year(data_df):
 
 def get_splitting_desciptors(data_df, to_file=False):
 
-    def var_delta(row):
+    def var(row):
         return abs(row[0]-row[1])
 
     def slide_inference(pos_name, row):
@@ -72,12 +73,12 @@ def get_splitting_desciptors(data_df, to_file=False):
     # overall divisive weighting
     primitive_counts = data_df.groupby(['slide_name', 'label']).count().unstack(fill_value=0).iloc[:, 0:len(classes_to_split)]
     primitive_counts.columns = primitive_counts.columns.droplevel(level=0)
-    primitive_counts['var_delta'] = primitive_counts.apply(var_delta, axis=1)
+    primitive_counts['var'] = primitive_counts.apply(var, axis=1)
     primitive_counts = primitive_counts.reset_index()
     
     # slide-level (ROI): cumulative sum of ROI class counts for each slide
     slide_roi_cumul = data_df_samples.merge(primitive_counts, on='slide_name').drop_duplicates(keep='first')
-    slide_roi_cumul = slide_roi_cumul.sort_values(by=['year', 'var_delta'], ascending=[True, True])
+    slide_roi_cumul = slide_roi_cumul.sort_values(by=['year', 'var'], ascending=[True, True])
     if to_file:
         slide_roi_cumul.join(slide_roi_cumul[classes_to_split].cumsum(), rsuffix='_cumul').to_csv("slide-roi-cumulation.csv", index=False)
     
@@ -128,11 +129,48 @@ def split_year_weighted_best_subset(data_df):
 
     _, _, year_slide_cumul = get_splitting_desciptors(data_df)
     year_slide_cumul = year_slide_cumul[['year'] + classes_to_split]
-    # incremental cumulation in descending variance of sample sizes
+    
+    ## Incremental cumulation in descending variance of sample sizes.
+
+    # order rows by variance
     year_cumul_ordered = year_slide_cumul.sort_values(
         by=year_slide_cumul[classes_to_split].var().sort_values(ascending=False).keys().tolist(),
         ascending=[False for _ in classes_to_split]
     )
+
+    # sum and select
+    total_cnt = 472
+    pos_name = ('P' if 'P' in classes_to_split else 'Y')
+    n_sum, y_sum = 0, 0
+    best_fraction = 0
+    best_ratio = np.inf
+    best_index = None
+    first_pass = True
+    for index, row in year_cumul_ordered.iterrows():
+        print(index)
+
+        n_sum = row['N']
+        y_sum = row[pos_name]
+
+        if first_pass:
+            best_ratio = n_sum/y_sum
+            best_fraction = (n_sum+y_sum)/total_cnt
+            first_pass = False
+        
+        else: 
+            curr_ratio = n_sum/y_sum
+            curr_ratio = np.inf if curr_ratio==0 else curr_ratio
+            if abs(1-curr_ratio) < best_ratio:
+                best_ratio = curr_ratio
+                print("A", index)
+            
+            curr_fraction = (n_sum+y_sum)/total_cnt
+            if abs(split_fraction-curr_fraction) < best_fraction:
+                best_fraction = curr_fraction
+                print(index)
+
+    print(best_ratio)
+    print(best_fraction)
     print(year_cumul_ordered)
 
 
