@@ -271,7 +271,7 @@ def train_driver(
         path_std=path_std)
     """
 
-    # TEMP: Load without transforms
+    # TEMP: Load without transforms (not used at run-time)
     image_datasets = {
         x: get_dataset_for(split=x)
         for x in ("train", "valid")

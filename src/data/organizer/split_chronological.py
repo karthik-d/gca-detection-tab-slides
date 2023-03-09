@@ -18,11 +18,10 @@ ds_phase_N/
 """
 
 """
-## TODO
-
-= Unzip files into `ds_phase_N_raw`
-= Generate `experiment_splits.json` into `ds_phase_N_raw` with 'training' and 'testing'
-= Parse json to prepare directories `training` and `testing`
+# TODO: process split years through cumulative weighting
+# TODO: Unzip files into `ds_phase_N_raw`
+# TODO: Generate `experiment_splits.json` into `ds_phase_N_raw` with 'training' and 'testing'
+# TODO: Parse json to prepare directories `training` and `testing`
 """
 
 
@@ -47,6 +46,10 @@ split_fraction = 0.8
 
 #--enter
 classes_to_split = ['Y', 'N']
+
+# (to change)
+#--enter
+test_years = []
 
 
 def extract_year(data_df):
@@ -112,18 +115,18 @@ def get_splitting_desciptors(data_df, to_file=False):
     return (slide_roi_cumul, year_roi_cumul, year_slide_cumul)
 
 
-def split_year_weighted_chronological(data_df):
+def get_test_years_weighted_chronological(data_df):
     """ 
-    split year-weighted class-counts by choosing the last few chronological years
+    get the years to split year-weighted class-counts by choosing the last few chronological years
     to warrant the closest match to split_fractions
     """
 
     return None
 
 
-def split_year_weighted_best_subset(data_df):
+def get_test_years_weighted_best_subset(data_df):
     """ 
-    split year-weighted class-counts by choosing the best set of years
+    get the years to split year-weighted class-counts by choosing the best set of years
     to warrant the closest match to split_fractions
     """
 
@@ -174,7 +177,7 @@ def split_year_weighted_best_subset(data_df):
     print(year_cumul_ordered)
 
 
-def split_for_experiment():
+def split_chronological():
 
     data_df_raw = describe_datafolder(
         DS_RAW_PATH,
@@ -187,4 +190,6 @@ def split_for_experiment():
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
 
+    # TODO: Insert cumulative-count based processing lines here
     primitive_counts = split_year_weighted_best_subset(data_df)
+    print(primitive_counts)
