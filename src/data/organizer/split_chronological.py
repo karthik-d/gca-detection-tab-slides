@@ -46,7 +46,7 @@ classes_to_split = ['Y', 'N']
 # (to change)
 #--enter
 test_years = [
-    str(year)
+    int(year)
     for year in [2020, 2018, 2017, 2016, 2015, 2013]
 ]
 
@@ -229,6 +229,7 @@ def split_chronological():
     data_df = extract_year(
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
+    print(data_df)
 
     """
     # DEBUG
@@ -240,7 +241,9 @@ def split_chronological():
 
     # TODO: Insert cumulative-count based processing lines here
 
-    # Perform split
+    # Perform test split
     data_df = data_df.assign(split_category=[None,]*len(data_df))
     for year in test_years:
-        data_df.loc[data_df[]]
+        data_df.loc[data_df['year']==year, ['split_category']] = 'test'
+    
+    # Randomize at ROI-level to assign `train`` and `valid` labels
