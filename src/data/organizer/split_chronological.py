@@ -200,23 +200,11 @@ def split_data(image_path, prefix=""):
     return {"train": train_names, "valid": valid_names}
 
 
-def unpaired_data(data_path):
-    # Load distorted and enhanced images and split
-    dt_splits = split_data(f"{data_path}/trainA", prefix="trainA/")
-    eh_splits = split_data(f"{data_path}/trainB", prefix="trainB/")
-
-    # Collect train/valid images from folders
-    splits = dict()
-    for key in ["train", "valid"]:
-        splits[key] = dt_splits[key] + eh_splits[key]
-    return splits
-
-
-def split_chronological():
+def split_chronological(pos_name='Y'):
     
     """
     perform the split based on inferred years for test
-    (temporarily) splits by supplied value of `split_year`
+    (temporarily) splits by supplied value of `test_years`
     """
 
     data_df_raw = describe_datafolder(
@@ -229,7 +217,6 @@ def split_chronological():
     data_df = extract_year(
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
-    print(data_df)
 
     """
     # DEBUG
@@ -246,4 +233,33 @@ def split_chronological():
     for year in test_years:
         data_df.loc[data_df['year']==year, ['split_category']] = 'test'
     
-    # Randomize at ROI-level to assign `train`` and `valid` labels
+    # Stratified random split at ROI-level to assign `train` and `valid` labels
+    non_test_neg_indices = data_df.loc[
+        (data_df['split_category']!='test') & (data_df['label']='N'), 
+        :
+    ].index
+    non_test_pos_indices = data_df.loc[
+        (data_df['split_category']!='test') & (data_df['label']=pos_name), 
+        :
+    ].index
+
+    neg_total_count = len(non_test_neg_indices)
+    neg_val_count = int(neg_total_count*valid_split_fraction)
+    neg_permuatation = np.random.permutation(neg_total_count)
+    train_neg_indices = non_test_neg_indices[neg_permuatation[neg_val_count:]]
+    val_neg_indices = non_test_neg_indices[neg_permuatation[:neg_val_count]]
+
+    pos_total_count = len(non_test_pos_indices)
+    pos_val_count = int(pos_total_count*valid_split_fraction)   
+    pos_permuatation = np.random.permutation(pos_total_count)
+    train_pos_indices = non_test_pos_indices[pos_permuatation[pos_val_count:]]
+    val_pos_indices = non_test_pos_indices[pos_permuatation[:pos_val_count]]
+
+    # apply train and valid splits
+    data_df.loc[train_neg_indices, ['split_category']] = 'train'
+    data_df.loc[train_pos_indices, ['split_category']] = 'train'
+
+    data_df.loc[val_neg_indices, ['split_category']] = 'val'
+    data_df.loc[val_pos_indices, ['split_category']] = 'val'
+
+    print(data_df)
