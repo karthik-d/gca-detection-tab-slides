@@ -11,8 +11,8 @@ from visualize.driver import *
 # generate_mappings_fsc()
 # split_samples()
 # preprocess()
-# train()
-heldout_test()
+train()
+# heldout_test()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")

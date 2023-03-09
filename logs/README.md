@@ -53,6 +53,15 @@
     - 693 Positive
     - 1253 Negative
 
+### Phase 3 (ds_phase_3)
+
+- 4912 ROIs
+    - 1178 Positive
+    - 3634 Negative
+- 70:30 (approx.) Train-Val Split - Chronological with 
+- Held-out Test Years: [2020, 2018, 2017, 2016, 2015, 2013]
+- Universal resize to (512, 512, 3)
+- No additional transformaions or augmentations
 
 
 ## Model Configurations
@@ -63,12 +72,20 @@
 - No runtime transformations or augmentations
 
 
+### Configuration 2 (model_config_2)
+
+- Architecture: ResNet34
+- No runtime transformations or augmentations
+
+
 ## Experiments
 
 | Experiment# | Dataset | Model | Runs | Logs |
 |:-----------:|:-------:|:-----:|:----:|:----:|
 | 01 | ds_phase_1 | model_config_1 | 2 | [Here](/logs/train/experiment_1) |
-| 02 | ds_phase_2 | model_config_2 | 2 | [Here](/logs/train/experiment_2) |
+| 02 | ds_phase_2 | model_config_1 | 2 | [Here](/logs/train/experiment_2) |
+| 03 | ds_phase_3 | model_config_1 | 1 | [Here](/logs/train/experiment_3) |
+| 04 | ds_phase_3 | model_config_2 | 1 | [Here](/logs/train/experiment_4) |
 
 
 

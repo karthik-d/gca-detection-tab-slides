@@ -12,7 +12,7 @@ def train():
 
     train_driver(
         classes=['Y', 'N'],
-        resnet_layers=18,
+        resnet_layers=34,
         checkpoint_resumepath=None
     )
 

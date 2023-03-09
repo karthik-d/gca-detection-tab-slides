@@ -35,7 +35,7 @@ config.update(dict(
         'train',
         'experiment_3',
         'run_1',
-        'epoch#8_val_acc#0-9873.ckpt'
+        'epoch#3_val_acc#0-9395.ckpt'
     )
 ))
 
