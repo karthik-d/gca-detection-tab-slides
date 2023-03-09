@@ -22,7 +22,8 @@ from visualize.driver import *
 # describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
 
 # describe_datafolder(to_file=False)
-split_data()
+# split_data()
+apply_split()
 # filter_data()
 # visualize()
 

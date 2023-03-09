@@ -97,6 +97,3 @@ def assort_classwise():
                     copy_ctr += 1
         
         print(f"\nCopied {copy_ctr} files for {wsi_name}")
-
-
-

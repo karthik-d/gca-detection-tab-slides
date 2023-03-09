@@ -13,6 +13,7 @@ from .organizer.fold_classnames import fold_classnames as _fold_classnames
 from .organizer.assort_classwise import assort_classwise as _assort_classwise
 from .organizer.split_pooled import split_pooled
 from .organizer.split_chronological import split_chronological
+from .organizer.assort_splitwise import assort_splitwise
 from .organizer.filters import filter_by_roiname
 
 def organize():
@@ -33,6 +34,9 @@ def assort_classwise():
 def split_data():
     # split_pooled()
     split_chronological()
+
+def apply_split():
+    assort_splitwise()
 
 def filter_data(roi_names_file=None):
     if roi_names_file is None:
