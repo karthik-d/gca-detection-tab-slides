@@ -34,8 +34,10 @@ at the specified `DESTN_PATH` of the form:
 import os
 import glob
 import shutil
-from pathlib import Path
 import itertools
+import json
+from pathlib import Path
+import pandas as pd
 
 
 # SET THESE PARAMETERS
@@ -72,6 +74,12 @@ def assort_splitwise():
 	Driver function for assorting split-wise
 	"""
 
+	try:
+		splits_df = pd.read_csv(os.path.join(SRC_PATH, 'experiment_splits.csv'))
+	except FileNotFoundError:
+		print("[ERROR] Could not find `experiment_splits.csv`. Don't forget to run `split_data()` first!")
+		return None
+
 	split_path_map = {
 		split_: os.path.join(DESTN_PATH, 'splits', split_)
 		for split_ in splits_to_extract
@@ -82,33 +90,30 @@ def assort_splitwise():
 		for split_, class_ in itertools.product(splits_to_extract, classes_to_extract)
 	}
 
-	print(split_class_path_map)
-
 	# Create destination template
 	for _, path_ in split_class_path_map.items():
 		Path(path_).mkdir(
 			parents=True,
 			exist_ok=False
 		)
-	print("\nDestination template created")
+	print("[INFO] Destination template created.")
 
-	# Assort data files
-	for wsi_name in os.listdir(SRC_PATH):
-		
-	    copy_ctr = 0
-	    wsi_path = os.path.join(SRC_PATH, wsi_name)
-	    for class_name in os.listdir(wsi_path):
-			
-	        # check if valid class name
-	        if class_name in classes_to_extract:
-	            class_path = os.path.join(wsi_path, class_name)
-	            # Move all .tiff files
-	            for filename in glob.glob(os.path.join(class_path, "*.tiff")):
-	                shutil.copy2(
-	                    src=os.path.join(class_path, filename),
-	                    dst=class_path_map.get(class_name)
-	                )
-	                copy_ctr += 1
-		
-	    print(f"\nCopied {copy_ctr} files for {wsi_name}")
+	# Assort data files by split
+	for path_key, base_path in split_class_path_map.items():
+		split_, class_ = tuple(path_key.split('_'))
+		target_roi_l = splits_df.loc[
+			(splits_df['split_category']==split_) & (splits_df['label']==class_),
+			:
+		]
 
+		# update files list
+		files_list[path_key] = list(target_roi_l['filepath'])
+
+		# copy files
+		print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
+		for _, roi_row in target_roi_l.iterrows():
+			shutil.copy2(
+				src = roi_row.filepath,
+				dst = split_class_path_map.get(path_key)
+			)
+		print(f"[INFO] Done copying {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
