@@ -1,6 +1,10 @@
 import os
 
+from config import config as root_config
+
+
 config = dict()
+config.update(root_config)
 
 config.update(dict(
     INPUT_XY = (512, 512),
@@ -12,11 +16,27 @@ config.update(dict(
 ))
 
 config.update(dict(
-    ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*3)))
+    ROOT_PATH = os.path.abspath(os.path.join(os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*2)))
 ))
 
 config.update(dict(
-    DATA_PATH = os.path.join(config.get('ROOT_PATH'), 'dataset', 'data', 'roi', 'ds_phase_2', 'splits')
+    SRC_PATH = os.path.join(
+        config.get('ROOT_PATH'), 
+        'dataset', 
+        'data', 
+        'roi',
+        'ds_phase_3',
+        'splits',
+        'test'
+    ),
+    # Set as `None` to use imagenet weights
+    CHECKPOINT_FILEPATH = os.path.join(
+        config.get('LOGS_PATH'),
+        'train',
+        'experiment_3',
+        'run_1',
+        'epoch#8_val_acc#0-9873.ckpt'
+    )
 ))
 
 config.update(dict(
