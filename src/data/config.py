@@ -17,7 +17,7 @@ config.update(dict(
 # Set pre-train augmentations here
 # For a list of available transforms, see `name_augmentation_map` in ./preprocessor/augment.py
 
-# All augmentations correspond to PyTorch's random augmentations - EXCEPT `rotate_90` which is defined in 
+# All augmentations correspond to PyTorch's random augmentations - EXCEPT `rotate_90` which is defined in this codebase
 config.update(dict(
     AUGMENTATIONS = [
         'vertical_flip',

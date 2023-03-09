@@ -34,6 +34,7 @@ import numpy as np
 #     "labeled"
 # ))
 
+#--enter (will be overriden by function args)
 SRC_PATH = os.path.abspath(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*4), 
     "dataset",

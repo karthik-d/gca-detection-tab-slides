@@ -1,7 +1,10 @@
 # Pipeline the data procesing steps here, for each phase
 
 """
-Data split sequence: assort -> split -> train
+Data split sequence: 
+    - (optional) assort: produces DESTN from SRC
+    - split: generates CSV with filepaths references to SRC
+    - apply_split: generates split directories in DESTN using CSV in SRC
 """
 
 from .preprocessor.augment import augment 

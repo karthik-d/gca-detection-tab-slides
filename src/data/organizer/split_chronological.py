@@ -1,31 +1,23 @@
 """
-Splits entire data into `training` and `testing` at the sample/slide level
+Splits entire data into `training` and `testing` at the sample/slide level to generate csv
+- `test_year` is placed into the `test` subset
+- the remainder is randomly shuffled between `train` and `valid`
 
-ds_phase_N_raw/
-|- labeled
-|- experiment_splits.json
-    |- training
-    |- testing
+BEFORE:
+    ds_phase_N/
+    |- assorted
 
-ds_phase_N/
-|- splits/       (copy of ds_phase_N_raw/training)
-    |- train/
-    |- valid/
-|- train_splits.json
-    |- train
-    |- valid
-
+AFTER:
+    ds_phase_N/
+    |- assorted/
+    |- experiment_split.csv (with `train`, `valid`, and `test` as members under split_category column)
 """
 
-"""
 # TODO: process split years through cumulative weighting
-# TODO: Unzip files into `ds_phase_N_raw`
-# TODO: Generate `experiment_splits.json` into `ds_phase_N_raw` with 'training' and 'testing'
-# TODO: Parse json to prepare directories `training` and `testing`
-"""
 
 
 import os
+import csv
 import pandas as pd
 from functools import partial
 import numpy as np
@@ -40,8 +32,12 @@ DS_RAW_PATH = os.path.abspath(os.path.join(
     "phase-on-07Feb23"
 ))
 
-#--enter (higher fraction)
-split_fraction = 0.8
+#--enter 
+test_split_fraction = 0.2
+# approximate fractions
+
+#--enter 
+valid_split_fraction = 0.2
 # approximate fractions
 
 #--enter
@@ -49,7 +45,10 @@ classes_to_split = ['Y', 'N']
 
 # (to change)
 #--enter
-test_years = []
+test_years = [
+    str(year)
+    for year in [2020, 2018, 2017, 2016, 2015, 2013]
+]
 
 
 def extract_year(data_df):
@@ -168,13 +167,49 @@ def get_test_years_weighted_best_subset(data_df):
                 print("A", index)
             
             curr_fraction = (n_sum+y_sum)/total_cnt
-            if abs(split_fraction-curr_fraction) < best_fraction:
+            if abs(test_split_fraction-curr_fraction) < best_fraction:
                 best_fraction = curr_fraction
                 print(index)
 
     print(best_ratio)
     print(best_fraction)
     print(year_cumul_ordered)
+
+
+def split_data(image_path, prefix=""):
+    paths = glob.glob(f"{image_path}/*.*")
+    base_names = list(map(os.path.basename, paths))
+    base_names = np.array(base_names)
+
+    # Set data length for valid splits
+    total_len = len(base_names)
+    print(f"Total {total_len} data")
+    valid_len = int(total_len * 0.1)
+
+    # Create data splits
+    indices = np.random.permutation(total_len)
+    train_indices = indices[valid_len:]
+    valid_indices = indices[:valid_len]
+
+    train_names = base_names[train_indices].tolist()
+    valid_names = base_names[valid_indices].tolist()
+    train_names = list(map(lambda x: f"{prefix}{x}", train_names))
+    valid_names = list(map(lambda x: f"{prefix}{x}", valid_names))
+    print(f"Train has {len(train_names)} data from {image_path}")
+    print(f"Valid has {len(valid_names)} data from {image_path}")
+    return {"train": train_names, "valid": valid_names}
+
+
+def unpaired_data(data_path):
+    # Load distorted and enhanced images and split
+    dt_splits = split_data(f"{data_path}/trainA", prefix="trainA/")
+    eh_splits = split_data(f"{data_path}/trainB", prefix="trainB/")
+
+    # Collect train/valid images from folders
+    splits = dict()
+    for key in ["train", "valid"]:
+        splits[key] = dt_splits[key] + eh_splits[key]
+    return splits
 
 
 def split_chronological():
@@ -195,6 +230,17 @@ def split_chronological():
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
 
+    """
+    # DEBUG
+    (slide_roi_cumul, year_roi_cumul, year_slide_cumul) = get_splitting_desciptors(data_df)
+    print(slide_roi_cumul)
+    print(year_roi_cumul)
+    print(year_slide_cumul)
+    """
+
     # TODO: Insert cumulative-count based processing lines here
-    primitive_counts = split_year_weighted_best_subset(data_df)
-    print(primitive_counts)
+
+    # Perform split
+    data_df = data_df.assign(split_category=[None,]*len(data_df))
+    for year in test_years:
+        data_df.loc[data_df[]]
