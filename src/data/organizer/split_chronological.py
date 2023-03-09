@@ -3,14 +3,15 @@ Splits entire data into `training` and `testing` at the sample/slide level to ge
 - `test_year` is placed into the `test` subset
 - the remainder is randomly shuffled between `train` and `valid`
 
-BEFORE:
+DS_RAW_PATH
+before:
     ds_phase_N/
     |- assorted
 
-AFTER:
+after:
     ds_phase_N/
     |- assorted/
-    |- experiment_split.csv (with `train`, `valid`, and `test` as members under split_category column)
+    |- experiment_splits.csv (with `train`, `valid`, and `test` as members under split_category column)
 """
 
 # TODO: process split years through cumulative weighting
@@ -26,13 +27,14 @@ from .describe import describe_datafolder
 
 #--enter
 DS_RAW_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*4), 
+    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*3), 
     "dataset",
-    "annotations",
-    "phase-on-07Feb23"
+    "data",
+    "roi",
+    "ds_phase_3_raw"
 ))
 
-#--enter 
+#--enter (currently, not in effect)
 test_split_fraction = 0.2
 # approximate fractions
 
@@ -265,3 +267,7 @@ def split_chronological(pos_name='Y'):
     print("[INFO] ROI Counts by Split.")
     for split in ['train', 'valid', 'test']:
         print(f"= {split}: {len(data_df.loc[data_df['split_category']==split, :])}")
+
+    save_path = os.path.join(DS_RAW_PATH, 'experiment_splits.csv')
+    data_df.to_csv(save_path)
+    print(f"[INFO] Splits CSV saved at: {save_path}")
