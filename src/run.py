@@ -4,13 +4,13 @@ from metadata.describe import *
 from metadata.utils import *
 # from metadata.split_samples import *
 from data.driver import *
-# from train.driver import *
+from train.driver import *
 from visualize.driver import *
 
 # generate_mappings_fsc()
 # split_samples()
 # preprocess()
-# train()
+train()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
@@ -23,7 +23,7 @@ from visualize.driver import *
 
 # describe_datafolder(to_file=False)
 # split_data()
-apply_split()
+# apply_split()
 # filter_data()
 # visualize()
 

@@ -59,7 +59,7 @@ config.update(dict(
         'dataset', 
         'data', 
         'roi', 
-        'ds_phase_1', 
+        'ds_phase_3', 
         'splits'
     )
 ))
@@ -96,7 +96,7 @@ config.update(dict(
 # Set manually to override the default experiment number
 config.update(dict(
     #EXPERIMENT_NUM = infer_last_experiment_num(config.get('TRAIN_LOGS_PATH')) + 1
-    EXPERIMENT_NUM = 2
+    EXPERIMENT_NUM = 3
 ))
 config.update(dict(
     EXPERIMENT_LOGS_PATH = os.path.join(
@@ -108,8 +108,8 @@ config.update(dict(
 
 # Set manually to override the default run number
 config.update(dict(
-    RUN_NUM = infer_last_run_num(config.get('EXPERIMENT_LOGS_PATH')) + 1
-    # RUN_NUM = 9
+    # RUN_NUM = infer_last_run_num(config.get('EXPERIMENT_LOGS_PATH')) + 1
+    RUN_NUM = 1
 ))
 config.update(dict(
     RUN_CHECKPOINT_PATH = os.path.join(
