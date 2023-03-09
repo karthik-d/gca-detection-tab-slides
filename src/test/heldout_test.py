@@ -51,7 +51,7 @@ def heldout_test():
 	
 	device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 	model = resnet.prepare_load_model(
-		num_layers=18,
+		num_layers=101,
 		num_classes=2,
 		pretrain=True
 	)
