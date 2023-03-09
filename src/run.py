@@ -5,12 +5,14 @@ from metadata.utils import *
 # from metadata.split_samples import *
 from data.driver import *
 from train.driver import *
+from test.heldout_test import heldout_test
 from visualize.driver import *
 
 # generate_mappings_fsc()
 # split_samples()
 # preprocess()
-train()
+# train()
+heldout_test()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")

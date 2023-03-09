@@ -19,8 +19,10 @@ based on the ResNet-18 model weights in the `CHECKPOINT_FILEPATH`
 ## SET THE 3 PARAMETERS in [ROOT]/src/test/config.py: 
 
 import torch
+import torch.nn as nn
 import numpy as np
 import os
+import time
 
 from train.architectures import resnet
 from train.utils import render_verbose_props, get_printable_confusion_matrix
@@ -28,70 +30,65 @@ from .dataloader import loader
 from .config import config
 
 
-def img_of_tensor(img_tensor):
-    """
-    Tensor contains: batchsize, channels, width, height 
-    Returns in CV2 format: width, height, channels
-    """
-
-    img = img_tensor.numpy()[0]
-    img = np.transpose(img, [1, 2, 0])
-    return img
-
-
 def prepare_inputs(num_workers=8):
 
-    image_dataset = loader.get_dataset()
-    dataloader = torch.utils.data.DataLoader(
-        dataset=image_dataset,
-        batch_size=1,
-        shuffle=False,
-        num_workers=num_workers
-    )
-    classes = image_dataset.find_classes(image_dataset.root)[0]
+	image_dataset = loader.get_dataset()
+	dataloader = torch.utils.data.DataLoader(
+		dataset=image_dataset,
+		batch_size=1,
+		shuffle=False,
+		num_workers=num_workers
+	)
+	classes = image_dataset.find_classes(image_dataset.root)[0]
 
-    return image_dataset, dataloader, classes
-
-
-def render_inputs(dataloader):
-    for (vis_x, vis_y), (img_path, _) in zip(iter(dataloader), dataloader.dataset.samples):
-        yield vis_x, vis_y, img_path
+	return image_dataset, dataloader, classes
 
 
-
-def save_visualization():
-    """
-    # Driver function to generate and save visualizations
-    """
-
+def heldout_test():
+	"""
+	# Driver function to generate and save visualizations
+	"""
+	
 	device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
-    model = resnet.prepare_load_model(
-        num_layers=18,
-        num_classes=2,
-        pretrain=True
-    )
+	model = resnet.prepare_load_model(
+		num_layers=18,
+		num_classes=2,
+		pretrain=True
+	)
 	model.to(device=device)
 	model.eval()
 
-    # Load checkpoint file
-    checkpoint_resumepath = config.get('CHECKPOINT_FILEPATH')
-    if checkpoint_resumepath is not None:
-        checkpoint = torch.load(f=checkpoint_resumepath)
-        model.load_state_dict(state_dict=checkpoint["model_state_dict"])
-        start_epoch = checkpoint["epoch"]
-        print(f"Using weights from {checkpoint_resumepath} - Epoch: {start_epoch}")
-    else:
-        print(f"Using IMAGENET weights")
+	# Load checkpoint file
+	checkpoint_resumepath = config.get('CHECKPOINT_FILEPATH')
+	if checkpoint_resumepath is not None:
+		checkpoint = torch.load(f=checkpoint_resumepath)
+		model.load_state_dict(state_dict=checkpoint["model_state_dict"])
+		start_epoch = checkpoint["epoch"]
+		print(f"Using weights from {checkpoint_resumepath} - Epoch: {start_epoch}")
+	else:
+		print(f"Using IMAGENET weights")
 
-    image_dataset, dataloader, classes = prepare_inputs()
+	image_dataset, dataloader, classes = prepare_inputs()
+	loss_function = nn.CrossEntropyLoss()
+	batch_size = 8
+
+	# initilize inference stores
+	all_labels = torch.empty(
+		size=(len(image_dataset), ),
+		dtype=torch.long
+	).cpu()
+	all_predicts = torch.empty(
+		size=(len(image_dataset), ),
+		dtype=torch.long
+	).cpu()
 
 	# Init accumulators
 	running_loss = 0.0
 	running_corrects = 0
 
 	# Store start time
-	inference_start_time = time.time()
-
+	eval_start_time = time.time()
+	num_eval_steps = len()
 	# Feed forward over all the data.
 	for idx, (inputs, labels) in enumerate(dataloader):
 		inputs = inputs.to(device=device)
@@ -119,6 +116,9 @@ def save_visualization():
 		all_labels[start_idx:end_idx] = labels.detach().cpu()
 		all_predicts[start_idx:end_idx] = preds.detach().cpu()
 
+		print(f"Evaluation Step: {idx} of {num_eval_steps}", end='\r')
+
+
 	render_verbose_props(
 		"Confusion Matrix - Validation Data",
 		get_printable_confusion_matrix(
@@ -133,12 +133,12 @@ def save_visualization():
 	acc_stat = running_corrects / len(image_dataset)
 
 	# CUDA cleanup
-	torch.cuda.empty_cache() if torch.cuda.is_available() else pass	
+	torch.cuda.empty_cache() if torch.cuda.is_available() else None	
 
 	# Display Epoch Summary
 	render_verbose_props(
 		title="Held-out Testing Summary",
 		loss=loss_stat,
 		acc=acc_stat,
-		inference_time=f"{(time.time()-inference_start_time)} seconds"
+		inference_time=f"{(time.time()-eval_start_time)} seconds"
 	)
