@@ -1,9 +1,15 @@
 # Pipeline the data procesing steps here, for each phase
 
+"""
+Data split sequence: assort -> split -> train
+"""
+
 from .preprocessor.augment import augment 
 from .organizer.describe import describe_datafolder as _describe_datafolder
 from .organizer.fold_classnames import fold_classnames as _fold_classnames
-from .organizer.split_for_experiment import split_for_experiment
+from .organizer.assort_classwise import assort_classwise as _assort_classwise
+from .organizer.split_pooled import split_pooled
+from .organizer.split_chronological import split_chronological
 from .organizer.filters import filter_by_roiname
 
 def organize():
@@ -18,9 +24,12 @@ def describe_datafolder(data_path=None, to_file=True, display=True):
 def fold_classnames():
     _fold_classnames()
 
+def assort_classwise():
+    assort_classwise()
+
 def split_data():
-    split_for_experiment()
-    # split_for_training()
+    # split_pooled()
+    split_chronological()
 
 def filter_data(roi_names_file=None):
     if roi_names_file is None:

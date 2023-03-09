@@ -178,6 +178,11 @@ def get_test_years_weighted_best_subset(data_df):
 
 
 def split_chronological():
+    
+    """
+    perform the split based on inferred years for test
+    (temporarily) splits by supplied value of `split_year`
+    """
 
     data_df_raw = describe_datafolder(
         DS_RAW_PATH,
