@@ -235,11 +235,11 @@ def split_chronological(pos_name='Y'):
     
     # Stratified random split at ROI-level to assign `train` and `valid` labels
     non_test_neg_indices = data_df.loc[
-        (data_df['split_category']!='test') & (data_df['label']='N'), 
+        (data_df['split_category']!='test') & (data_df['label']=='N'), 
         :
     ].index
     non_test_pos_indices = data_df.loc[
-        (data_df['split_category']!='test') & (data_df['label']=pos_name), 
+        (data_df['split_category']!='test') & (data_df['label']==pos_name), 
         :
     ].index
 
@@ -259,7 +259,9 @@ def split_chronological(pos_name='Y'):
     data_df.loc[train_neg_indices, ['split_category']] = 'train'
     data_df.loc[train_pos_indices, ['split_category']] = 'train'
 
-    data_df.loc[val_neg_indices, ['split_category']] = 'val'
-    data_df.loc[val_pos_indices, ['split_category']] = 'val'
+    data_df.loc[val_neg_indices, ['split_category']] = 'valid'
+    data_df.loc[val_pos_indices, ['split_category']] = 'valid'
 
-    print(data_df)
+    print("[INFO] ROI Counts by Split.")
+    for split in ['train', 'valid', 'test']:
+        print(f"= {split}: {len(data_df.loc[data_df['split_category']==split, :])}")
