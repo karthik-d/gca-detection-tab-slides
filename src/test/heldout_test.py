@@ -30,12 +30,12 @@ from .dataloader import loader
 from .config import config
 
 
-def prepare_inputs(num_workers=8):
+def prepare_inputs(batch_size=16, num_workers=8):
 
 	image_dataset = loader.get_dataset()
 	dataloader = torch.utils.data.DataLoader(
 		dataset=image_dataset,
-		batch_size=1,
+		batch_size=batch_size,
 		shuffle=False,
 		num_workers=num_workers
 	)
@@ -68,9 +68,9 @@ def heldout_test():
 	else:
 		print(f"Using IMAGENET weights")
 
-	image_dataset, dataloader, classes = prepare_inputs()
 	loss_function = nn.CrossEntropyLoss()
-	batch_size = 8
+	batch_size = 16
+	image_dataset, dataloader, classes = prepare_inputs(batch_size=batch_size)
 
 	# initilize inference stores
 	all_labels = torch.empty(
@@ -88,9 +88,11 @@ def heldout_test():
 
 	# Store start time
 	eval_start_time = time.time()
-	num_eval_steps = len()
+	num_eval_steps = len(dataloader)
 	# Feed forward over all the data.
 	for idx, (inputs, labels) in enumerate(dataloader):
+		print(f"Evaluation Step: {idx} of {num_eval_steps}", end='\r')
+
 		inputs = inputs.to(device=device)
 		labels = labels.to(device=device)
 
@@ -116,7 +118,8 @@ def heldout_test():
 		all_labels[start_idx:end_idx] = labels.detach().cpu()
 		all_predicts[start_idx:end_idx] = preds.detach().cpu()
 
-		print(f"Evaluation Step: {idx} of {num_eval_steps}", end='\r')
+		# print(all_labels[start_idx:end_idx])
+		# print(all_labels[start_idx:end_idx])
 
 
 	render_verbose_props(
