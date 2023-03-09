@@ -106,9 +106,6 @@ def assort_splitwise():
 			:
 		]
 
-		# update files list
-		files_list[path_key] = list(target_roi_l['filepath'])
-
 		# copy files
 		print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
 		for _, roi_row in target_roi_l.iterrows():
