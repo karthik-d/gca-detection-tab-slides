@@ -11,7 +11,7 @@ from visualize.driver import *
 # generate_mappings_fsc()
 # split_samples()
 # preprocess()
-train()
+# train()
 # heldout_test()
 # fold_classnames()
 
@@ -24,7 +24,7 @@ train()
 # describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
 
 # describe_datafolder(to_file=False)
-# split_data()
+split_data()
 # apply_split()
 # filter_data()
 # visualize()

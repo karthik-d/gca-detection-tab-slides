@@ -96,7 +96,7 @@ config.update(dict(
 # Set manually to override the default experiment number
 config.update(dict(
     #EXPERIMENT_NUM = infer_last_experiment_num(config.get('TRAIN_LOGS_PATH')) + 1
-    EXPERIMENT_NUM = 6
+    EXPERIMENT_NUM = 7
 ))
 config.update(dict(
     EXPERIMENT_LOGS_PATH = os.path.join(

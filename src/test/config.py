@@ -33,9 +33,9 @@ config.update(dict(
     CHECKPOINT_FILEPATH = os.path.join(
         config.get('LOGS_PATH'),
         'train',
-        'experiment_6',
+        'experiment_7',
         'run_1',
-        'epoch#7_val_acc#0-9845.ckpt'
+        'epoch#9_val_acc#0-8411.ckpt'
     )
 ))
 

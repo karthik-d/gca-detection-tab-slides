@@ -207,6 +207,8 @@ def split_chronological(pos_name='Y'):
     """
     perform the split based on inferred years for test
     (temporarily) splits by supplied value of `test_years`
+        1. Test split by specified year.
+        2. Stratified random split at ROI-level to assign `train` and `valid` labels. 
     """
 
     data_df_raw = describe_datafolder(
@@ -220,14 +222,14 @@ def split_chronological(pos_name='Y'):
         data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
     )
 
-    """
+    # """
     # DEBUG
     (slide_roi_cumul, year_roi_cumul, year_slide_cumul) = get_splitting_desciptors(data_df)
     print(slide_roi_cumul)
     print(year_roi_cumul)
     print(year_slide_cumul)
-    """
-
+    # """
+    
     # TODO: Insert cumulative-count based processing lines here
 
     # Perform test split
