@@ -33,9 +33,9 @@ config.update(dict(
     CHECKPOINT_FILEPATH = os.path.join(
         config.get('LOGS_PATH'),
         'train',
-        'experiment_4',
+        'experiment_3',
         'run_1',
-        'epoch#9_val_acc#0-9775.ckpt'
+        'epoch#3_val_acc#0-9395.ckpt'
     )
 ))
 
@@ -48,5 +48,5 @@ config.update(dict(
 
 # allowed values: (18, 34, 50, 101, 152)
 config.update(dict(
-    RESNET_NLAYERS = 34
+    RESNET_NLAYERS = 18
 ))

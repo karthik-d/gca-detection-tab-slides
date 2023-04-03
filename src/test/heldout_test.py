@@ -46,7 +46,7 @@ def prepare_inputs(batch_size=16, num_workers=8):
 	return image_dataset, dataloader, classes
 
 
-def render_roc_curve(predictions, truths):
+def render_roc_curve(predictions, truths, save_path=None):
 
 	fpr, tpr, threshold = metrics.roc_curve(truths, predictions)
 	auc_score = metrics.auc(fpr, tpr)
@@ -60,6 +60,9 @@ def render_roc_curve(predictions, truths):
 	plot.ylabel('True Positive Rate')
 	plot.xlabel('False Positive Rate')
 	plot.show()
+
+	if save_path is not None:
+		plot.gcf().savefig(save_path, dpi=1000)
 
 	return auc_score
 
@@ -159,7 +162,7 @@ def heldout_test():
 	torch.cuda.empty_cache() if torch.cuda.is_available() else None	
 
 	# Display ROC-AUC
-	auc_score = render_roc_curve(all_predictions, all_labels)
+	auc_score = render_roc_curve(all_predicts, all_labels, save_path="roc-curve.png")
 
 	# Display Epoch Summary
 	render_verbose_props(
