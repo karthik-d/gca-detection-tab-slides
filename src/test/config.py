@@ -45,3 +45,8 @@ config.update(dict(
         'resize_to_input_shape'
     ]
 ))
+
+# allowed values: (18, 34, 50, 101, 152)
+config.update(dict(
+    RESNET_NLAYERS = 34
+))

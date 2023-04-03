@@ -16,7 +16,7 @@ and displays evaluation metrics,
 based on the ResNet-18 model weights in the `CHECKPOINT_FILEPATH`
 """
 
-## SET THE 3 PARAMETERS in [ROOT]/src/test/config.py.
+## SET THE 4 PARAMETERS in [ROOT]/src/test/config.py.
 
 from sklearn import metrics
 from matplotlib import pyplot as plot
@@ -71,7 +71,7 @@ def heldout_test():
 	
 	device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
 	model = resnet.prepare_load_model(
-		num_layers=152,
+		num_layers=config.get('RESNET_NLAYERS'),
 		num_classes=2,
 		pretrain=True
 	)
