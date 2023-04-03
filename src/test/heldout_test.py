@@ -16,8 +16,10 @@ and displays evaluation metrics,
 based on the ResNet-18 model weights in the `CHECKPOINT_FILEPATH`
 """
 
-## SET THE 3 PARAMETERS in [ROOT]/src/test/config.py: 
+## SET THE 3 PARAMETERS in [ROOT]/src/test/config.py.
 
+from sklearn import metrics
+from matplotlib import pyplot as plot
 import torch
 import torch.nn as nn
 import numpy as np
@@ -42,6 +44,24 @@ def prepare_inputs(batch_size=16, num_workers=8):
 	classes = image_dataset.find_classes(image_dataset.root)[0]
 
 	return image_dataset, dataloader, classes
+
+
+def render_roc_curve(predictions, truths):
+
+	fpr, tpr, threshold = metrics.roc_curve(truths, predictions)
+	auc_score = metrics.auc(fpr, tpr)
+
+	plot.title('ROC Curve')
+	plot.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % auc_score)
+	plot.legend(loc = 'lower right')
+	plot.plot([0, 1], [0, 1],'r--')
+	plot.xlim([0, 1])
+	plot.ylim([0, 1])
+	plot.ylabel('True Positive Rate')
+	plot.xlabel('False Positive Rate')
+	plot.show()
+
+	return auc_score
 
 
 def heldout_test():
@@ -72,7 +92,7 @@ def heldout_test():
 	batch_size = 16
 	image_dataset, dataloader, classes = prepare_inputs(batch_size=batch_size)
 
-	# initilize inference stores
+	# initialize inference stores
 	all_labels = torch.empty(
 		size=(len(image_dataset), ),
 		dtype=torch.long
@@ -138,10 +158,14 @@ def heldout_test():
 	# CUDA cleanup
 	torch.cuda.empty_cache() if torch.cuda.is_available() else None	
 
+	# Display ROC-AUC
+	auc_score = render_roc_curve(all_predictions, all_labels)
+
 	# Display Epoch Summary
 	render_verbose_props(
 		title="Held-out Testing Summary",
 		loss=loss_stat,
 		acc=acc_stat,
+		auc_score=auc_score,
 		inference_time=f"{(time.time()-eval_start_time)} seconds"
 	)
