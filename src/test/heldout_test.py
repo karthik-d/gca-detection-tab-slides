@@ -59,11 +59,12 @@ def render_roc_curve(predictions, truths, save_path=None):
 	plot.ylim([0, 1])
 	plot.ylabel('True Positive Rate')
 	plot.xlabel('False Positive Rate')
-	plot.show()
 
 	if save_path is not None:
 		plot.gcf().savefig(save_path, dpi=1000)
-
+	else:
+		plot.show()
+	
 	return auc_score
 
 

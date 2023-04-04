@@ -27,7 +27,7 @@ config.update(dict(
         'roi',
         'ds_phase_3',
         'splits',
-        'test'
+        'valid'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(

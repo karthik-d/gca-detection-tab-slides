@@ -58,7 +58,7 @@ def plot_img(img, grayscale=False):
 
     plot.clf()
     if grayscale:
-        plot.imshow(img, cmap='gray')
+        plot.imshow(img, cmap='blue')
     else:
         plot.imshow(img)
     plot.show()
