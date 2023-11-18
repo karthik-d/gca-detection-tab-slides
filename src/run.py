@@ -12,7 +12,7 @@ from visualize.driver import *
 # split_samples()
 # preprocess()
 # train()
-# heldout_test()
+heldout_test()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
@@ -27,6 +27,6 @@ from visualize.driver import *
 # split_data()
 # apply_split()
 # filter_data()
-visualize()
+# visualize()
 
 print("ran!")

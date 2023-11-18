@@ -48,7 +48,7 @@ def prepare_inputs(batch_size=16, num_workers=8):
 
 def render_roc_curve(predictions, truths, save_path=None):
 
-	fpr, tpr, threshold = metrics.roc_curve(truths, predictions)
+	conf_matrix = metrics.roc_curve(truths, predictions)
 	auc_score = metrics.auc(fpr, tpr)
 
 	plot.title('ROC Curve')
@@ -66,6 +66,22 @@ def render_roc_curve(predictions, truths, save_path=None):
 		plot.show()
 	
 	return auc_score
+
+
+def render_confusion_matrix(predictions, truths, save_path=None):
+
+	conf_matrix = metrics.confusion_matrix(truths, predictions)
+	display = metrics.ConfusionMatrixDisplay.from_predictions(truths, predictions)
+
+	plot.title('Held Out Test - Confusion Matrix')
+	if save_path is not None:
+		plot.gcf().savefig(save_path, dpi=1000)
+	else:
+		plot.show()
+	
+	return conf_matrix
+
+	
 
 
 def heldout_test():
@@ -162,8 +178,12 @@ def heldout_test():
 	# CUDA cleanup
 	torch.cuda.empty_cache() if torch.cuda.is_available() else None	
 
-	# Display ROC-AUC
-	auc_score = render_roc_curve(all_predicts, all_labels, save_path="roc-curve.png")
+	# Save ROC-AUC
+	auc_score = render_roc_curve(
+		all_predicts, 
+		all_labels, 
+		save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_roc-curve.png'))
+	)
 
 	# Display Epoch Summary
 	render_verbose_props(
@@ -173,3 +193,11 @@ def heldout_test():
 		auc_score=auc_score,
 		inference_time=f"{(time.time()-eval_start_time)} seconds"
 	)
+
+	# plot and save confusion matrix.
+	conf_matrix = render_confusion_matrix(
+		all_predicts, 
+		all_labels, 
+		save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_confusion-matrix.png'))
+	)
+	
