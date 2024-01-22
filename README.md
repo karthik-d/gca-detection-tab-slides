@@ -65,3 +65,6 @@ A Deep Learning -based approach to automate the detection of Giant Cell Arteriti
    - [X] Balancing dataset
    - [X] ResNet18 Model
    - [X] GradCAM
+6. CLI Tool
+7. Journal Paper
+8. Patent
