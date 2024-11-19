@@ -1,0 +1,4 @@
+.token
+dataset/data/*
+!dataset/data/test.file
+*.ckpt
