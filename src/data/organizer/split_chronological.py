@@ -31,7 +31,7 @@ DS_RAW_PATH = os.path.abspath(os.path.join(
     "dataset",
     "data",
     "roi",
-    "ds_phase_3_raw"
+    "ds_phase_4_raw"
 ))
 
 #--enter (currently, not in effect)

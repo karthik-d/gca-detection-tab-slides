@@ -48,7 +48,7 @@ SRC_PATH = os.path.abspath(os.path.join(
     "dataset",
     "data",
     "roi",
-    "ds_phase_3_raw"
+    "ds_phase_4_raw"
 ))
 
 #--enter
@@ -57,7 +57,7 @@ DESTN_PATH = os.path.abspath(os.path.join(
     "dataset",
     "data",
     "roi",
-    "ds_phase_3"
+    "ds_phase_4"
 ))
 
 #--enter
@@ -106,7 +106,10 @@ def assort_splitwise():
 			:
 		]
 
-		# copy files
+		# exclude system files.
+		if wsi_name.startswith('.'):
+			continue
+		# copy files.
 		print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
 		for _, roi_row in target_roi_l.iterrows():
 			shutil.copy2(

@@ -36,10 +36,11 @@ import numpy as np
 
 #--enter (will be overriden by function args)
 SRC_PATH = os.path.abspath(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*4), 
+    os.path.dirname(os.path.realpath(__file__)), *((os.path.pardir,)*3), 
     "dataset",
-    "annotations",
-    "phase-on-07Feb23"
+    "data",
+    "roi",
+    "ds_phase_4"
 ))
 
 #--enter
@@ -47,31 +48,37 @@ label_names = ['Y', 'N', 'E', 'NAR']
 
 
 def _describe_datafolder(data_path, to_file, display):
-    print(f"[INFO] Describing data folder: {SRC_PATH} ...")
-    
-    stats_file = csv.writer(open("data_description.csv", "w"))
-    stats_file.writerow(["slide_name", "roi_name", "filepath", "label"])
+	print(f"[INFO] Describing data folder: {data_path} ...")
 
-    for slide_name in sorted(os.listdir(SRC_PATH)):
-        slide_path = os.path.join(SRC_PATH, slide_name)
+	stats_file = csv.writer(open("data_description.csv", "w"))
+	stats_file.writerow(["slide_name", "roi_name", "filepath", "label"])
 
-        for label in label_names:
-            label_path = os.path.join(slide_path, label)
+	for slide_name in sorted(os.listdir(data_path)):
+		slide_path = os.path.join(data_path, slide_name)
+		# exclude system files.
+		if slide_name.startswith('.'):
+			continue
 
-            for roi_name in sorted(os.listdir(label_path)):
-                roi_path = os.path.join(label_path, roi_name)
+		for label in label_names:
 
-                stats_file.writerow([slide_name, roi_name, roi_path, label])
+			label_path = os.path.join(slide_path, label)
+			for roi_name in sorted(os.listdir(label_path)):
+				# exclude system files.
+				if roi_name.startswith('.'):
+					continue
 
-    if display or not to_file:
-        data_df = pd.read_csv("data_description.csv")
-    
-        if display:
-            print(data_df.groupby(['label']).size())
+				roi_path = os.path.join(label_path, roi_name)
+				stats_file.writerow([slide_name, roi_name, roi_path, label])
 
-        if not to_file:
-            os.remove("data_description.csv")
-            return data_df
+	if display or not to_file:
+		data_df = pd.read_csv("data_description.csv")
+
+		if display:
+			print(data_df.groupby(['label']).size())
+
+		if not to_file:
+			os.remove("data_description.csv")
+			return data_df
 
 
 def describe_datafolder(data_path=None, to_file=True, display=True):
