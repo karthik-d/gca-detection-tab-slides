@@ -1,8 +1,18 @@
 # Procedure to Extract ROI
 
-**Skip 2:40 to 3:20** Check out the video demo [here!](https://drive.google.com/file/d/1Hb6pySfqGVqKtTUiBUeS54muv80gTESg/view?usp=sharing)
+Check out the video demo [here](https://drive.google.com/file/d/1dOIPB8BWaovi4Cj0zAWIxnHStyxyEoBY/view?usp=sharing)!
 
-Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1C9q9iBO6B72okd34DB3xHJp5LrY76eSb/view?usp=sharing).
+Feel free to watch the it at 2x speed since most of the video is just waiting for downloads to complete or the scripts to finish processing.
+
+**NOTE:** The video only demonstrates how to run the ROI extraction scripts from the svs files already downloaded into the local system. The labelling process is **NOT AUTOMATED by this script**. Furthermore, the svs files used for the demo video are named *Mixed*, *Neg* and *Pos*; as a result, the ROI will be prefixed by the same name.
+
+- Please find the ROI annotation (manual labeling) instructions [here](https://drive.google.com/file/d/1RoVPF7XqGhrn3G3inWakuTTyRwctItbU/view?usp=sharing).
+
+- Please download and extract the zipped archive with the scripts from [here](https://drive.google.com/file/d/1EfgvTixClbUjjJlKVkpirEwigiaUeHc_/view?usp=sharing).
+
+## Sample Data
+
+- Download a test `.svs` slide [from here](https://drive.google.com/file/d/17mrL-B1x6mjx9bwE0I7KRn02Eaw5p3l5/view?usp=sharing) to test out your environment and the extraction pipeline by following the instructions below. If everything falls in place, the run should produce and save 5 ROIs for this test slide.
 
 ## Install dependencies
 
@@ -10,20 +20,20 @@ Please ensure that you are using a **macOS** or **Linux** development environmen
 Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommended)**.
 
 ### **(Recommended)** Using an Anaconda environment
-- Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-conda.txt) or from the zip-folder `GCA-Detection/`
+Use the dependency files [from here](https://drive.google.com/drive/folders/1n3U8-h0YRr855r6C5r6fw_dkaMqvhZsC?usp=sharing) or from the extracted zip-folder `GCA-Detection/`
 - **Either** create a new environment with all dependencies by running   
 `conda create --name myenv --file dep-file-conda.txt`
 - **Or** install to an existing environment by running   
 `conda install --name myenv --file dep-file-conda.txt`
-- **Or** use a .yml file to create an environment with all dependencies by running   
-`conda env create -f gca.yml`
+- **Or** use the `dep-file-conda.yml` file to create an environment with all dependencies by running   
+`conda env create -f dep-file-conda.yml`
 
     **Finally**, switch to the created/modified environment by running   
     `conda activate myenv`
 
 
 ### **(Not preferred)** Using pip
-- Use the dependency file `dep-file-conda.txt` [from here](https://raw.githubusercontent.com/karthik-d/TAB-Slides/main/dep-file-pip.txt) or from the zip-folder `GCA-Detection/`
+- Use the dependency files [from here](https://drive.google.com/drive/folders/1n3U8-h0YRr855r6C5r6fw_dkaMqvhZsC?usp=sharing) or from the zip-folder `GCA-Detection/`
 - Install all dependencies by running   
 `pip install -r dep-file-pip.txt`
 
@@ -54,15 +64,14 @@ Use Anaconda to manage your packages and **Python 3 (version >= 3.6.0 recommende
 1. Navigate to `GCA-Detection/src/features`
 2. Set the downsampling level:    
     - Edit the file `extract_roi.py`
-    - Set the `downscale_level` argument in the function `roi.multiprocess_extract_roi_from_filtered()` to a suitable value.    
-    Please refer to the instructions in the file.   
-    The same instructions are reproduced here for convenience:   
+    - Set the `downscale_level` argument in the function `roi.multiprocess_extract_roi_from_filtered()` to a suitable value (**Use 1 here**).    
+    Please refer to the instructions in the file. The same instructions are reproduced here for convenience:   
 
         ```
         Set downscale_level to:
         
         0, if ROIs must be from - TOP SLIDE (Highest Resolution) 
-        1, if ROIs must be from - x4 DOWNSCALED SLIDE
+        1, if ROIs must be from - x4 DOWNSCALED SLIDE - USE THIS
         2, if ROIs must be from - x16 DOWNSCALED SLIDE
         3, if ROIs must be from - x64 DOWNSCALED SLIDE
         

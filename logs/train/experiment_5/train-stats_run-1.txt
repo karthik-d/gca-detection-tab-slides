@@ -1,0 +1,400 @@
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+train composition: {0: 2105, 1: 742}
+---> (['N', 'Y'], {'N': 0, 'Y': 1})
+valid composition: {0: 526, 1: 185}
+
+--------------------------
+Dataset Configuration
+--------------------------
+--------------------------
+classes_count: 2
+class_names: ['Y', 'N']
+train_set_size: 2848
+valid_set_size: 720
+
+--------------------------
+Training Configuration
+--------------------------
+--------------------------
+model: ResNet
+num_layers: 50
+batch_size: 16
+learning_rate: 0.001
+learning_rate_decay: 0.85
+weight_decay: 0.0001
+n_epochs: 10
+pretrain: True
+resume_checkpoint: False
+checkpointing_frequency: 1
+using_CUDA: True
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9473 0.0527
+N          0.3652 0.6348
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.5779 0.4221
+N          0.0162 0.9838
+
+--------------------------
+Checkpoint saved as: epoch#0_val_acc#0-6835.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 0
+learning_rate: [0.00085]
+train_loss: 0.35979949370351094
+train_acc: 0.8658236740428521
+valid_loss: 0.5618423102358054
+valid_acc: 0.6835443037974683
+epoch_duration: 274.19603061676025 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9596 0.0404
+N          0.1792 0.8208
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9905 0.0095
+N          0.3405 0.6595
+
+--------------------------
+Checkpoint saved as: epoch#1_val_acc#0-9044.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 1
+learning_rate: [0.0007224999999999999]
+train_loss: 0.20498024202519483
+train_acc: 0.9234281700035124
+valid_loss: 0.26929733411249485
+valid_acc: 0.9043600562587905
+epoch_duration: 266.8533396720886 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9648 0.0352
+N          0.1429 0.8571
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9962 0.0038
+N          0.7838 0.2162
+
+--------------------------
+Checkpoint saved as: epoch#2_val_acc#0-7932.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 2
+learning_rate: [0.000614125]
+train_loss: 0.17956969530583683
+train_acc: 0.9367755532139094
+valid_loss: 0.4653785706361993
+valid_acc: 0.7932489451476793
+epoch_duration: 262.0369277000427 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9658 0.0342
+N          0.1280 0.8720
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.8650 0.1350
+N          0.0541 0.9459
+
+--------------------------
+Checkpoint saved as: epoch#3_val_acc#0-8861.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 3
+learning_rate: [0.00052200625]
+train_loss: 0.16517108498506894
+train_acc: 0.9413417632595714
+valid_loss: 0.27710489579867076
+valid_acc: 0.8860759493670887
+epoch_duration: 267.1289117336273 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9715 0.0285
+N          0.1038 0.8962
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9810 0.0190
+N          0.0324 0.9676
+
+--------------------------
+Checkpoint saved as: epoch#4_val_acc#0-9775.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 4
+learning_rate: [0.00044370531249999997]
+train_loss: 0.13020582839684358
+train_acc: 0.9518791710572533
+valid_loss: 0.09101609462045615
+valid_acc: 0.9774964838255977
+epoch_duration: 262.47410702705383 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9729 0.0271
+N          0.0849 0.9151
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9981 0.0019
+N          0.4108 0.5892
+
+--------------------------
+Checkpoint saved as: epoch#5_val_acc#0-8917.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 5
+learning_rate: [0.00037714951562499996]
+train_loss: 0.11438638964242001
+train_acc: 0.9578503688092729
+valid_loss: 0.2481005036764295
+valid_acc: 0.8917018284106892
+epoch_duration: 259.4868218898773 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9767 0.0233
+N          0.0755 0.9245
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9430 0.0570
+N          0.0000 1.0000
+
+--------------------------
+Checkpoint saved as: epoch#6_val_acc#0-9578.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 6
+learning_rate: [0.00032057708828124994]
+train_loss: 0.10869777847335271
+train_acc: 0.9631190727081138
+valid_loss: 0.12529378465695096
+valid_acc: 0.9578059071729959
+epoch_duration: 267.36896991729736 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9777 0.0223
+N          0.0606 0.9394
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.5513 0.4487
+N          0.0000 1.0000
+
+--------------------------
+Checkpoint saved as: epoch#7_val_acc#0-6681.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 7
+learning_rate: [0.0002724905250390624]
+train_loss: 0.08577114710087709
+train_acc: 0.9676852827537759
+valid_loss: 0.8364069640487282
+valid_acc: 0.6680731364275668
+epoch_duration: 271.05292105674744 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9819 0.0181
+N          0.0499 0.9501
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9715 0.0285
+N          0.0324 0.9676
+
+--------------------------
+Checkpoint saved as: epoch#8_val_acc#0-9705.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 8
+learning_rate: [0.00023161694628320305]
+train_loss: 0.07537866110576845
+train_acc: 0.9736564805057956
+valid_loss: 0.09594331553086158
+valid_acc: 0.9704641350210971
+epoch_duration: 273.47539591789246 seconds
+
+Training Step: 177 of 178
+
+--------------------------
+Confusion Matrix - Train Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.9829 0.0171
+N          0.0391 0.9609
+
+--------------------------
+
+--------------------------
+Confusion Matrix - Validation Data
+--------------------------
+
+Prediction      Y      N
+Truth                   
+Y          0.5760 0.4240
+N          0.0000 1.0000
+
+--------------------------
+Checkpoint saved as: epoch#9_val_acc#0-6864.ckpt
+
+--------------------------
+Training Epoch Summary
+--------------------------
+--------------------------
+epoch: 9
+learning_rate: [0.0001968744043407226]
+train_loss: 0.06576852893625612
+train_acc: 0.9771689497716894
+valid_loss: 0.8786001504962457
+valid_acc: 0.6863572433192686
+epoch_duration: 266.14680552482605 seconds
+ran!
