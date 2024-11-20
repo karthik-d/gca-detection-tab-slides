@@ -22,7 +22,9 @@ from sklearn import metrics
 from matplotlib import pyplot as plot
 import torch
 import torch.nn as nn
+import torch.nn.functional as F
 import numpy as np
+import pandas as pd
 import os
 import time
 
@@ -107,7 +109,7 @@ def heldout_test_driver(model_filepath=None):
 		print(f"Using IMAGENET weights")
 
 	loss_function = nn.CrossEntropyLoss()
-	batch_size = 16
+	batch_size = 8
 	image_dataset, dataloader, classes = prepare_inputs(batch_size=batch_size)
 
 	# initialize inference stores
@@ -124,6 +126,11 @@ def heldout_test_driver(model_filepath=None):
 	running_loss = 0.0
 	running_corrects = 0
 
+	fnames, labels_l = tuple(zip(*dataloader.dataset.samples))
+	fnames = [os.path.basename(x).rstrip('.tiff') for x in fnames]
+	pos_probs = []
+	neg_probs = []
+
 	# Store start time
 	eval_start_time = time.time()
 	num_eval_steps = len(dataloader)
@@ -137,18 +144,18 @@ def heldout_test_driver(model_filepath=None):
 		# Feed-Forward ONLY!
 		with torch.set_grad_enabled(mode=False):
 			outputs = model(inputs)
+
+			# save probabilities.
+			out_probs = F.softmax(outputs).T.detach().cpu()
+			neg_probs.extend([float(x) for x in out_probs[0]])
+			pos_probs.extend([float(x) for x in out_probs[1]])
+			
+			# save predictions.
 			__dispose, preds = torch.max(outputs, dim=1)
 			loss = loss_function(
 				input=outputs, 
 				target=labels
 			)
-
-		# Update validation stats
-		running_loss += loss.item() * inputs.size(0)
-		running_corrects += torch.sum(
-			preds == labels.data,
-			dtype=torch.float32
-		)
 
 		start_idx = idx * batch_size
 		end_idx = start_idx + batch_size
@@ -156,10 +163,12 @@ def heldout_test_driver(model_filepath=None):
 		all_labels[start_idx:end_idx] = labels.detach().cpu()
 		all_predicts[start_idx:end_idx] = preds.detach().cpu()
 
-		# print(all_labels[start_idx:end_idx])
-		# print(all_labels[start_idx:end_idx])
-
-
+	
+	# create dataframe to store probabilities.
+	predictions_df = pd.DataFrame(dict(fname=fnames[:8], label=labels_l[:8], pos_prob=pos_probs, neg_prob=neg_probs)).set_index('fname')
+	print(predictions_df)
+	predictions_df.to_csv(f"{os.path.basename(model_filepath).rstrip('.ckpt')}_test.csv")
+	
 	print(model_filepath)
 	render_verbose_props(
 		"Confusion Matrix - Validation Data",
@@ -169,66 +178,14 @@ def heldout_test_driver(model_filepath=None):
 			classes=classes
 		)
 	)
-
-	# # Store validation stats
-	# loss_stat = running_loss / len(image_dataset)
-	# acc_stat = running_corrects / len(image_dataset)
-
-	# # CUDA cleanup
-	# torch.cuda.empty_cache() if torch.cuda.is_available() else None	
-
-	# # Save ROC-AUC
-	# auc_score = render_roc_curve(
-	# 	all_predicts, 
-	# 	all_labels, 
-	# 	save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_roc-curve.png'))
-	# )
-
-	# # Display Epoch Summary
-	# render_verbose_props(
-	# 	title="Held-out Testing Summary",
-	# 	loss=loss_stat,
-	# 	acc=acc_stat,
-	# 	auc_score=auc_score,
-	# 	inference_time=f"{(time.time()-eval_start_time)} seconds"
-	# )
-
-	# # plot and save confusion matrix.
-	# conf_matrix = render_confusion_matrix(
-	# 	all_predicts, 
-	# 	all_labels, 
-	# 	save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_confusion-matrix.png'))
-	# )
 	
 
-def heldout_test():
+def heldout_test_classwise():
 
 	models_to_test = [
-		"experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt",
-		'experiment_2/run_3/epoch#4_val_acc#0-9706.ckpt',
-		'experiment_2/run_3/epoch#2_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#3_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#5_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#7_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#9_val_acc#1-0.ckpt',
-
-		# 'experiment_3/run_1/epoch#3_val_acc#0-9395.ckpt',
-		# 'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
-		# 'experiment_3/run_1/epoch#2_val_acc#0-8889.ckpt',
-		# 'experiment_3/run_1/epoch#4_val_acc#0-9297.ckpt',
-		# 'experiment_3/run_1/epoch#7_val_acc#0-9409.ckpt',
-		# 'experiment_3/run_1/epoch#8_val_acc#0-9873.ckpt',
-
 		# 'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
-		# 'experiment_4/run_1/epoch#7_val_acc#0-8819.ckpt',
-		# 'experiment_4/run_1/epoch#8_val_acc#0-9775.ckpt',
-		# 'experiment_4/run_1/epoch#2_val_acc#0-903.ckpt',
-		# 'experiment_4/run_1/epoch#9_val_acc#0-9775.ckpt',
-		# 'experiment_4/run_1/epoch#4_val_acc#0-8298.ckpt',
-
-		# 'experiment_5/run_1/epoch#4_val_acc#0-9775.ckpt',
-		# 'experiment_6/run_1/epoch#4_val_acc#0-9789.ckpt',
-		# 'experiment_7/run_1/epoch#1_val_acc#0-9564.ckpt',
+		'experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt',
+		'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
 	]
 	model_path_base = os.path.join(
         config.get('LOGS_PATH'),

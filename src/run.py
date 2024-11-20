@@ -6,13 +6,15 @@ from metadata.utils import *
 from data.driver import *
 from train.driver import *
 from test.heldout_test import heldout_test
+from test.heldout_test_classwise import heldout_test_classwise
 # from visualize.driver import *
 
 # generate_mappings_fsc()
 # split_samples()
 # preprocess()
 # train()
-heldout_test()
+# heldout_test()
+heldout_test_classwise()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
