@@ -32,14 +32,13 @@ from .dataloader import loader
 from .config import config
 
 
-def prepare_inputs(batch_size=16, num_workers=8):
+def prepare_inputs(batch_size=16, num_workers=1):
 
 	image_dataset = loader.get_dataset()
 	dataloader = torch.utils.data.DataLoader(
 		dataset=image_dataset,
 		batch_size=batch_size,
-		shuffle=False,
-		num_workers=num_workers
+		shuffle=False
 	)
 	classes = image_dataset.find_classes(image_dataset.root)[0]
 
@@ -61,7 +60,7 @@ def render_roc_curve(predictions, truths, save_path=None):
 	plot.xlabel('False Positive Rate')
 
 	if save_path is not None:
-		plot.gcf().savefig(save_path, dpi=1000)
+		plot.gcf().savefig(save_path, dpi=50)
 	else:
 		plot.show()
 	
@@ -84,12 +83,12 @@ def render_confusion_matrix(predictions, truths, save_path=None):
 	
 
 
-def heldout_test():
+def heldout_test_driver(model_filepath=None):
 	"""
 	# Driver function to generate and save visualizations
 	"""
 	
-	device = 'cuda:0' if torch.cuda.is_available() else 'cpu'
+	device = 'cuda:0' if torch.cuda.is_available() else 'mps'
 	model = resnet.prepare_load_model(
 		num_layers=config.get('RESNET_NLAYERS'),
 		num_classes=2,
@@ -99,12 +98,11 @@ def heldout_test():
 	model.eval()
 
 	# Load checkpoint file
-	checkpoint_resumepath = config.get('CHECKPOINT_FILEPATH')
-	if checkpoint_resumepath is not None:
-		checkpoint = torch.load(f=checkpoint_resumepath)
+	if model_filepath is not None:
+		checkpoint = torch.load(f=model_filepath, map_location=device)
 		model.load_state_dict(state_dict=checkpoint["model_state_dict"])
 		start_epoch = checkpoint["epoch"]
-		print(f"Using weights from {checkpoint_resumepath} - Epoch: {start_epoch}")
+		print(f"Using weights from {model_filepath} - Epoch: {start_epoch}")
 	else:
 		print(f"Using IMAGENET weights")
 
@@ -149,7 +147,7 @@ def heldout_test():
 		running_loss += loss.item() * inputs.size(0)
 		running_corrects += torch.sum(
 			preds == labels.data,
-			dtype=torch.double
+			dtype=torch.float32
 		)
 
 		start_idx = idx * batch_size
@@ -162,6 +160,7 @@ def heldout_test():
 		# print(all_labels[start_idx:end_idx])
 
 
+	print(model_filepath)
 	render_verbose_props(
 		"Confusion Matrix - Validation Data",
 		get_printable_confusion_matrix(
@@ -171,33 +170,50 @@ def heldout_test():
 		)
 	)
 
-	# Store validation stats
-	loss_stat = running_loss / len(image_dataset)
-	acc_stat = running_corrects / len(image_dataset)
+	# # Store validation stats
+	# loss_stat = running_loss / len(image_dataset)
+	# acc_stat = running_corrects / len(image_dataset)
 
-	# CUDA cleanup
-	torch.cuda.empty_cache() if torch.cuda.is_available() else None	
+	# # CUDA cleanup
+	# torch.cuda.empty_cache() if torch.cuda.is_available() else None	
 
-	# Save ROC-AUC
-	auc_score = render_roc_curve(
-		all_predicts, 
-		all_labels, 
-		save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_roc-curve.png'))
-	)
+	# # Save ROC-AUC
+	# auc_score = render_roc_curve(
+	# 	all_predicts, 
+	# 	all_labels, 
+	# 	save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_roc-curve.png'))
+	# )
 
-	# Display Epoch Summary
-	render_verbose_props(
-		title="Held-out Testing Summary",
-		loss=loss_stat,
-		acc=acc_stat,
-		auc_score=auc_score,
-		inference_time=f"{(time.time()-eval_start_time)} seconds"
-	)
+	# # Display Epoch Summary
+	# render_verbose_props(
+	# 	title="Held-out Testing Summary",
+	# 	loss=loss_stat,
+	# 	acc=acc_stat,
+	# 	auc_score=auc_score,
+	# 	inference_time=f"{(time.time()-eval_start_time)} seconds"
+	# )
 
-	# plot and save confusion matrix.
-	conf_matrix = render_confusion_matrix(
-		all_predicts, 
-		all_labels, 
-		save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_confusion-matrix.png'))
-	)
+	# # plot and save confusion matrix.
+	# conf_matrix = render_confusion_matrix(
+	# 	all_predicts, 
+	# 	all_labels, 
+	# 	save_path=os.path.join(config.get('ARBIT_STORE_PATH', 'held-out_confusion-matrix.png'))
+	# )
 	
+
+def heldout_test():
+
+	models_to_test = [
+		# 'experiment_2/run_3/epoch#4_val_acc#0-9706.ckpt',
+		# 'experiment_3/run_1/epoch#3_val_acc#0-9395.ckpt',
+		'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
+		# 'experiment_5/run_1/epoch#4_val_acc#0-9775.ckpt',
+		# 'experiment_6/run_1/epoch#4_val_acc#0-9789.ckpt',
+		# 'experiment_7/run_1/epoch#1_val_acc#0-9564.ckpt',
+	]
+	model_path_base = os.path.join(
+        config.get('LOGS_PATH'),
+        'train'
+    )
+	for model_name in models_to_test:
+		heldout_test_driver(os.path.join(model_path_base, model_name))

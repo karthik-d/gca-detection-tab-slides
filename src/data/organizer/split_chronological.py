@@ -204,72 +204,73 @@ def split_data(image_path, prefix=""):
 
 def split_chronological(pos_name='Y'):
     
-    """
-    perform the split based on inferred years for test
-    (temporarily) splits by supplied value of `test_years`
-        1. Test split by specified year.
-        2. Stratified random split at ROI-level to assign `train` and `valid` labels. 
-    """
+	"""
+	perform the split based on inferred years for test
+	(temporarily) splits by supplied value of `test_years`
+		1. Test split by specified year.
+		2. Stratified random split at ROI-level to assign `train` and `valid` labels. 
+	"""
 
-    data_df_raw = describe_datafolder(
-        DS_RAW_PATH,
-        to_file=False,
-        display=False
-    )
+	data_df_raw = describe_datafolder(
+		DS_RAW_PATH,
+		to_file=False,
+		display=False
+	)
 
-    # add `year` as an attribute to the data
-    data_df = extract_year(
-        data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
-    )
+	# add `year` as an attribute to the data
+	data_df = extract_year(
+		data_df_raw.loc[data_df_raw['label'].isin(classes_to_split)]
+	)
 
-    # """
-    # DEBUG
-    (slide_roi_cumul, year_roi_cumul, year_slide_cumul) = get_splitting_desciptors(data_df)
-    print(slide_roi_cumul)
-    print(year_roi_cumul)
-    print(year_slide_cumul)
-    # """
-    
-    # TODO: Insert cumulative-count based processing lines here
+	# """
+	# DEBUG
+	(slide_roi_cumul, year_roi_cumul, year_slide_cumul) = get_splitting_desciptors(data_df)
+	print(slide_roi_cumul)
+	print(year_roi_cumul)
+	print(year_slide_cumul)
+	# """
 
-    # Perform test split
-    data_df = data_df.assign(split_category=[None,]*len(data_df))
-    for year in test_years:
-        data_df.loc[data_df['year']==year, ['split_category']] = 'test'
-    
-    # Stratified random split at ROI-level to assign `train` and `valid` labels
-    non_test_neg_indices = data_df.loc[
-        (data_df['split_category']!='test') & (data_df['label']=='N'), 
-        :
-    ].index
-    non_test_pos_indices = data_df.loc[
-        (data_df['split_category']!='test') & (data_df['label']==pos_name), 
-        :
-    ].index
+	# TODO: Insert cumulative-count based processing lines here
 
-    neg_total_count = len(non_test_neg_indices)
-    neg_val_count = int(neg_total_count*valid_split_fraction)
-    neg_permuatation = np.random.permutation(neg_total_count)
-    train_neg_indices = non_test_neg_indices[neg_permuatation[neg_val_count:]]
-    val_neg_indices = non_test_neg_indices[neg_permuatation[:neg_val_count]]
+	# Perform test split
+	data_df = data_df.assign(split_category=[None,]*len(data_df))
+	for year in test_years:
+		data_df.loc[data_df['year']==year, ['split_category']] = 'test'
 
-    pos_total_count = len(non_test_pos_indices)
-    pos_val_count = int(pos_total_count*valid_split_fraction)   
-    pos_permuatation = np.random.permutation(pos_total_count)
-    train_pos_indices = non_test_pos_indices[pos_permuatation[pos_val_count:]]
-    val_pos_indices = non_test_pos_indices[pos_permuatation[:pos_val_count]]
+	# Stratified random split at ROI-level to assign `train` and `valid` labels within the non-test.
+	non_test_neg_indices = data_df.loc[
+		(data_df['split_category']!='test') & (data_df['label']=='N'), 
+		:
+	].index
+	non_test_pos_indices = data_df.loc[
+		(data_df['split_category']!='test') & (data_df['label']==pos_name), 
+		:
+	].index
 
-    # apply train and valid splits
-    data_df.loc[train_neg_indices, ['split_category']] = 'train'
-    data_df.loc[train_pos_indices, ['split_category']] = 'train'
+	neg_total_count = len(non_test_neg_indices)
+	neg_val_count = int(neg_total_count*valid_split_fraction)
+	neg_permuatation = np.random.permutation(neg_total_count)
+	train_neg_indices = non_test_neg_indices[neg_permuatation[neg_val_count:]]
+	val_neg_indices = non_test_neg_indices[neg_permuatation[:neg_val_count]]
 
-    data_df.loc[val_neg_indices, ['split_category']] = 'valid'
-    data_df.loc[val_pos_indices, ['split_category']] = 'valid'
+	pos_total_count = len(non_test_pos_indices)
+	pos_val_count = int(pos_total_count*valid_split_fraction)   
+	pos_permuatation = np.random.permutation(pos_total_count)
+	train_pos_indices = non_test_pos_indices[pos_permuatation[pos_val_count:]]
+	val_pos_indices = non_test_pos_indices[pos_permuatation[:pos_val_count]]
 
-    print("[INFO] ROI Counts by Split.")
-    for split in ['train', 'valid', 'test']:
-        print(f"= {split}: {len(data_df.loc[data_df['split_category']==split, :])}")
+	# apply train and valid splits
+	data_df.loc[train_neg_indices, ['split_category']] = 'train'
+	data_df.loc[train_pos_indices, ['split_category']] = 'train'
 
-    save_path = os.path.join(DS_RAW_PATH, 'experiment_splits.csv')
-    data_df.to_csv(save_path)
-    print(f"[INFO] Splits CSV saved at: {save_path}")
+	data_df.loc[val_neg_indices, ['split_category']] = 'valid'
+	data_df.loc[val_pos_indices, ['split_category']] = 'valid'
+
+	# print(data_df.groupby(['slide_name', 'split_category']).count().to_string())
+	print("[INFO] ROI Counts by Split.")
+	for split in ['train', 'valid', 'test']:
+		print(f"= {split}: {len(data_df.loc[data_df['split_category']==split, :])}")
+
+	save_path = os.path.join(DS_RAW_PATH, 'experiment_splits.csv')
+	data_df.to_csv(save_path)
+	print(f"[INFO] Splits CSV saved at: {save_path}")

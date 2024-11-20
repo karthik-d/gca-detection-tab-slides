@@ -105,10 +105,7 @@ def assort_splitwise():
 			(splits_df['split_category']==split_) & (splits_df['label']==class_),
 			:
 		]
-
-		# exclude system files.
-		if wsi_name.startswith('.'):
-			continue
+		
 		# copy files.
 		print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
 		for _, roi_row in target_roi_l.iterrows():

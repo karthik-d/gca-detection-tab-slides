@@ -12,7 +12,7 @@ from test.heldout_test import heldout_test
 # split_samples()
 # preprocess()
 # train()
-# heldout_test()
+heldout_test()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
@@ -25,7 +25,7 @@ from test.heldout_test import heldout_test
 
 # assort_classwise()
 # describe_datafolder(to_file=False)
-split_data()
+# split_data()
 # apply_split()
 # filter_data()
 # visualize()

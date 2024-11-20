@@ -25,7 +25,7 @@ config.update(dict(
         'dataset', 
         'data', 
         'roi',
-        'ds_phase_3',
+        'ds_phase_4',
         'splits',
         'valid'
     ),
@@ -48,5 +48,5 @@ config.update(dict(
 
 # allowed values: (18, 34, 50, 101, 152)
 config.update(dict(
-    RESNET_NLAYERS = 18
+    RESNET_NLAYERS = 34
 ))
