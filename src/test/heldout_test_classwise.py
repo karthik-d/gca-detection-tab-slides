@@ -165,9 +165,9 @@ def heldout_test_driver(model_filepath=None):
 
 	
 	# create dataframe to store probabilities.
-	predictions_df = pd.DataFrame(dict(fname=fnames[:8], label=labels_l[:8], pos_prob=pos_probs, neg_prob=neg_probs)).set_index('fname')
+	predictions_df = pd.DataFrame(dict(fname=fnames, label=labels_l, pos_prob=pos_probs, neg_prob=neg_probs)).set_index('fname')
 	print(predictions_df)
-	predictions_df.to_csv(f"{os.path.basename(model_filepath).rstrip('.ckpt')}_test.csv")
+	predictions_df.to_csv(f"{os.path.basename(model_filepath).rstrip('.ckpt')}_valid.csv")
 	
 	print(model_filepath)
 	render_verbose_props(
@@ -183,9 +183,9 @@ def heldout_test_driver(model_filepath=None):
 def heldout_test_classwise():
 
 	models_to_test = [
-		# 'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
-		'experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt',
-		'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
+		'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
+		# 'experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt',
+		# 'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
 	]
 	model_path_base = os.path.join(
         config.get('LOGS_PATH'),

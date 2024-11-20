@@ -7,6 +7,7 @@ from data.driver import *
 from train.driver import *
 from test.heldout_test import heldout_test
 from test.heldout_test_classwise import heldout_test_classwise
+from test.make_eval_figures import eval_metrics
 # from visualize.driver import *
 
 # generate_mappings_fsc()
@@ -14,7 +15,8 @@ from test.heldout_test_classwise import heldout_test_classwise
 # preprocess()
 # train()
 # heldout_test()
-heldout_test_classwise()
+# heldout_test_classwise()
+eval_metrics()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
