@@ -32,6 +32,9 @@ from visualize.driver import *
 # split_data()
 # apply_split()
 # filter_data()
-visualize()
+
+# viz: (1) select rois to analyze; (2) run gradcam.
+select_rois()
+# visualize()
 
 print("ran!")

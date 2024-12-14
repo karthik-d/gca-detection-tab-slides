@@ -15,6 +15,7 @@ from .organizer.split_pooled import split_pooled
 from .organizer.split_chronological import split_chronological
 from .organizer.assort_splitwise import assort_splitwise
 from .organizer.filters import filter_by_roiname
+from .organizer.select_rois import select_rois as select_rois_
 
 def organize():
     pass
@@ -42,3 +43,7 @@ def filter_data(roi_names_file=None):
     if roi_names_file is None:
         roi_names_file = "/home/miruna/.dumps/BAT-ACG/repo/src/data/organizer/filenames.txt"
     filter_by_roiname(roi_names_file, False)
+
+
+def select_rois():
+	select_rois_()
