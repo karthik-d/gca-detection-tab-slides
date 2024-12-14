@@ -27,7 +27,7 @@ config.update(dict(
         'roi',
         'ds_phase_4',
         'viz',
-		'gradcam_samples'
+		'gradcam_inputs'
     ),
     DESTN_PATH = os.path.join(
         config.get('ROOT_PATH'), 

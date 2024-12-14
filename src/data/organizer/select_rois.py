@@ -54,8 +54,7 @@ def select_rois():
 
 	# create destination if it doesn't exist.abs
 	Path(DESTN_PATH).mkdir(
-		parents=True,
-		exist_ok=True
+		parents=True, exist_ok=True
 	)
 
 	# parse rois and pick them from hierarchy.
@@ -70,11 +69,17 @@ def select_rois():
 		elif len(roi_filepath)>1:
 			print(f"[ERROR] ambiguous matches for {roi_name}.")
 			continue 
+		else:
+			roi_filepath = roi_filepath[0]
 			
+		# reproduce the classification hierarchy.
+		Path(os.path.join(DESTN_PATH, Path(roi_filepath).parts[-2])).mkdir(
+			parents=True, exist_ok=True
+		)
 		# copy the roi.
-		shutil.copy2(
-			src = roi_filepath[0],
-			dst = os.path.join(DESTN_PATH, roi_name)
+		shutil.copyfile(
+			src = roi_filepath,
+			dst = os.path.join(DESTN_PATH, *Path(roi_filepath).parts[-2:])
 		)
 		ctr += 1
 		
