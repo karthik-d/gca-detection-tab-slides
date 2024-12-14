@@ -34,7 +34,7 @@ config.update(dict(
         'dataset', 
         'data', 
         'roi', 
-        'ds_phase_2', 
+        'ds_phase_4', 
         'viz', 
         'gradcam_cmaps'
     ),
@@ -42,9 +42,8 @@ config.update(dict(
     CHECKPOINT_FILEPATH = os.path.join(
         config.get('LOGS_PATH'),
         'train',
-        'experiment_3',
-        'run_1',
-        'epoch#3_val_acc#0-9395.ckpt'
+        # 'experiment_3', 'run_1', 'epoch#6_val_acc#0-6076.ckpt',
+		'experiment_4', 'run_1', 'epoch#6_val_acc#0-9564.ckpt'
     )
 ))
 

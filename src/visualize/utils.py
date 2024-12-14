@@ -28,7 +28,7 @@ def make_detailed_overlay_img(img, mask_0, mask_1, label, classes, use_rgb=True,
     heatmap_overlayed_0 = overlay_heatmap_on_image(img, mask_0, use_rgb)
     heatmap_overlayed_1 = overlay_heatmap_on_image(img, mask_1, use_rgb)    
     
-    fig, axes = plot.subplots(nrows=3, ncols=1, figsize=(5, 5), dpi=100)
+    fig, axes = plot.subplots(nrows=1, ncols=3, dpi=100)
     fig.suptitle(label)
 
     axes[0].imshow(heatmap_overlayed_0)

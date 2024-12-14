@@ -10,31 +10,34 @@ from test.heldout_test_classwise import heldout_test_classwise
 from test.make_eval_figures import eval_metrics
 from visualize.driver import *
 
-# generate_mappings_fsc()
-# split_samples()
-# preprocess()
-# train()
-# heldout_test()
-# heldout_test_classwise()
-# eval_metrics()
-# fold_classnames()
 
-# print("========================== ALL ANALYSIS RELEVANT ==============")
-# describe_all_analysis_slides()
-# get_slides_list_minus('/home/miruna/.dumps/BAT-ACG/repo/dataset/slides-list-on-feb-7-2023.csv', '/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
-# print("========================== ANNOTATED ==============")
-# describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/slides-list-on-feb-7-2023.csv')
-# print("========================== PENDING ==============")
-# describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
 
-# assort_classwise()
-# describe_datafolder(to_file=False)
-# split_data()
-# apply_split()
-# filter_data()
+if __name__=='__main__':
+	# generate_mappings_fsc()
+	# split_samples()
+	# preprocess()
+	# train()
+	# heldout_test()
+	# heldout_test_classwise()
+	# eval_metrics()
+	# fold_classnames()
 
-# viz: (1) select rois to analyze; (2) run gradcam.
-select_rois()
-# visualize()
+	# print("========================== ALL ANALYSIS RELEVANT ==============")
+	# describe_all_analysis_slides()
+	# get_slides_list_minus('/home/miruna/.dumps/BAT-ACG/repo/dataset/slides-list-on-feb-7-2023.csv', '/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
+	# print("========================== ANNOTATED ==============")
+	# describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/slides-list-on-feb-7-2023.csv')
+	# print("========================== PENDING ==============")
+	# describe_any_slide_list('/home/miruna/.dumps/BAT-ACG/repo/dataset/required-slides-on-feb-7-2023.csv')
 
-print("ran!")
+	# assort_classwise()
+	# describe_datafolder(to_file=False)
+	# split_data()
+	# apply_split()
+	# filter_data()
+
+	# viz: (1) select rois to analyze; (2) run gradcam.
+	select_rois()
+	visualize()
+
+	print("ran!")

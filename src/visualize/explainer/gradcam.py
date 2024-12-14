@@ -73,7 +73,7 @@ def save_visualization():
 
 	device = 'cuda:0' if torch.cuda.is_available() else 'mps'
 	model = resnet.prepare_load_model(
-		num_layers=18,
+		num_layers=34,
 		num_classes=2,
 		pretrain=True
 	)
