@@ -3,3 +3,4 @@ dataset/data/*
 !dataset/data/test.file
 *.ckpt
 *.pyc
+*/.DS_Store
