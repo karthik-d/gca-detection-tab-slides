@@ -25,10 +25,9 @@ config.update(dict(
         'dataset', 
         'data', 
         'roi',
-        'ds_phase_2',
-        'visualizations',
-        'gradcam',
-        'samples'
+        'ds_phase_4',
+        'viz',
+		'gradcam_samples'
     ),
     DESTN_PATH = os.path.join(
         config.get('ROOT_PATH'), 
@@ -36,17 +35,16 @@ config.update(dict(
         'data', 
         'roi', 
         'ds_phase_2', 
-        'visualizations', 
-        'gradcam',
-        'gray-cmap-quant'
+        'viz', 
+        'gradcam_cmaps'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(
         config.get('LOGS_PATH'),
         'train',
-        'experiment_2',
-        'run_3',
-        'epoch#9_val_acc#1-0.ckpt'
+        'experiment_3',
+        'run_1',
+        'epoch#3_val_acc#0-9395.ckpt'
     )
 ))
 

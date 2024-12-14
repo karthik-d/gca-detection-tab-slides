@@ -8,7 +8,7 @@ from train.driver import *
 from test.heldout_test import heldout_test
 from test.heldout_test_classwise import heldout_test_classwise
 from test.make_eval_figures import eval_metrics
-# from visualize.driver import *
+from visualize.driver import *
 
 # generate_mappings_fsc()
 # split_samples()
@@ -16,7 +16,7 @@ from test.make_eval_figures import eval_metrics
 # train()
 # heldout_test()
 # heldout_test_classwise()
-eval_metrics()
+# eval_metrics()
 # fold_classnames()
 
 # print("========================== ALL ANALYSIS RELEVANT ==============")
@@ -32,6 +32,6 @@ eval_metrics()
 # split_data()
 # apply_split()
 # filter_data()
-# visualize()
+visualize()
 
 print("ran!")
