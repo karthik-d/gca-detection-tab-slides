@@ -103,10 +103,13 @@ def assort_splitwise(dry_run=False):
 		print("[INFO] Destination template created.")
 
 	# display slide-level stats.
-	for split_ in splits_to_extract:
-		print(f"[INFO] {split_} slides.")
-		describe_any_slide_list(splits_df.loc[
-			(splits_df['split_category']==split_), 'slide_name'])
+	print(f"[INFO] train+valid slides.")
+	# train + valid (since these are split at random, slides will overlap.)
+	describe_any_slide_list(splits_df.loc[
+		(splits_df['split_category']=='train') | (splits_df['split_category']=='valid'), 'slide_name'].unique())
+	# test only.
+	describe_any_slide_list(splits_df.loc[
+		(splits_df['split_category']=='test'), 'slide_name'].unique())
 
 	# Assort data files by split
 	for path_key, base_path in split_class_path_map.items():
