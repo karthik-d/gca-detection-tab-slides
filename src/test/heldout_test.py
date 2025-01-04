@@ -97,7 +97,7 @@ def heldout_test_driver(model_filepath=None):
 	model.to(device=device)
 	model.eval()
 
-	# Load checkpoint file
+	# load checkpoint file
 	if model_filepath is not None:
 		checkpoint = torch.load(f=model_filepath, map_location=device)
 		model.load_state_dict(state_dict=checkpoint["model_state_dict"])
@@ -107,7 +107,7 @@ def heldout_test_driver(model_filepath=None):
 		print(f"Using IMAGENET weights")
 
 	loss_function = nn.CrossEntropyLoss()
-	batch_size = 16
+	batch_size = 1
 	image_dataset, dataloader, classes = prepare_inputs(batch_size=batch_size)
 
 	# initialize inference stores
@@ -120,21 +120,21 @@ def heldout_test_driver(model_filepath=None):
 		dtype=torch.long
 	).cpu()
 
-	# Init accumulators
+	# init accumulators
 	running_loss = 0.0
 	running_corrects = 0
 
-	# Store start time
-	eval_start_time = time.time()
 	num_eval_steps = len(dataloader)
-	# Feed forward over all the data.
+	# feed forward over all the data.
 	for idx, (inputs, labels) in enumerate(dataloader):
 		print(f"Evaluation Step: {idx} of {num_eval_steps}", end='\r')
+
+		check_start_time = time.time()
 
 		inputs = inputs.to(device=device)
 		labels = labels.to(device=device)
 
-		# Feed-Forward ONLY!
+		# feed-Forward ONLY!
 		with torch.set_grad_enabled(mode=False):
 			outputs = model(inputs)
 			__dispose, preds = torch.max(outputs, dim=1)
@@ -143,7 +143,7 @@ def heldout_test_driver(model_filepath=None):
 				target=labels
 			)
 
-		# Update validation stats
+		# update validation stats
 		running_loss += loss.item() * inputs.size(0)
 		running_corrects += torch.sum(
 			preds == labels.data,
@@ -152,15 +152,13 @@ def heldout_test_driver(model_filepath=None):
 
 		start_idx = idx * batch_size
 		end_idx = start_idx + batch_size
-		# Detach from graph and store result tensor values
+		# detach from graph and store result tensor values
 		all_labels[start_idx:end_idx] = labels.detach().cpu()
 		all_predicts[start_idx:end_idx] = preds.detach().cpu()
 
 		# print(all_labels[start_idx:end_idx])
 		# print(all_labels[start_idx:end_idx])
 
-
-	print(model_filepath)
 	render_verbose_props(
 		"Confusion Matrix - Validation Data",
 		get_printable_confusion_matrix(
@@ -204,13 +202,13 @@ def heldout_test_driver(model_filepath=None):
 def heldout_test():
 
 	models_to_test = [
-		"experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt",
-		'experiment_2/run_3/epoch#4_val_acc#0-9706.ckpt',
-		'experiment_2/run_3/epoch#2_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#3_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#5_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#7_val_acc#1-0.ckpt',
-		'experiment_2/run_3/epoch#9_val_acc#1-0.ckpt',
+		# "experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt",
+		# 'experiment_2/run_3/epoch#4_val_acc#0-9706.ckpt',
+		# 'experiment_2/run_3/epoch#2_val_acc#1-0.ckpt',
+		# 'experiment_2/run_3/epoch#3_val_acc#1-0.ckpt',
+		# 'experiment_2/run_3/epoch#5_val_acc#1-0.ckpt',
+		# 'experiment_2/run_3/epoch#7_val_acc#1-0.ckpt',
+		# 'experiment_2/run_3/epoch#9_val_acc#1-0.ckpt',
 
 		# 'experiment_3/run_1/epoch#3_val_acc#0-9395.ckpt',
 		# 'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
@@ -219,7 +217,7 @@ def heldout_test():
 		# 'experiment_3/run_1/epoch#7_val_acc#0-9409.ckpt',
 		# 'experiment_3/run_1/epoch#8_val_acc#0-9873.ckpt',
 
-		# 'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
+		'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
 		# 'experiment_4/run_1/epoch#7_val_acc#0-8819.ckpt',
 		# 'experiment_4/run_1/epoch#8_val_acc#0-9775.ckpt',
 		# 'experiment_4/run_1/epoch#2_val_acc#0-903.ckpt',
