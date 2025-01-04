@@ -36,8 +36,8 @@ def split_data():
     # split_pooled()
     split_chronological()
 
-def apply_split():
-    assort_splitwise()
+def apply_split(dry_run=False):
+    assort_splitwise(dry_run)
 
 def filter_data(roi_names_file=None):
     if roi_names_file is None:

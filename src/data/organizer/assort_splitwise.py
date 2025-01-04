@@ -39,6 +39,8 @@ import json
 from pathlib import Path
 import pandas as pd
 
+from metadata.describe import describe_any_slide_list
+
 
 # SET THESE PARAMETERS
 
@@ -69,9 +71,10 @@ classes_to_extract = [ 'Y', 'N' ]
 # ---------------------------------
 
 
-def assort_splitwise():
+def assort_splitwise(dry_run=False):
 	"""
 	Driver function for assorting split-wise
+	dry_run: when True, it only displays data description; does not move ROIs.
 	"""
 
 	try:
@@ -90,27 +93,36 @@ def assort_splitwise():
 		for split_, class_ in itertools.product(splits_to_extract, classes_to_extract)
 	}
 
-	# Create destination template
-	for _, path_ in split_class_path_map.items():
-		Path(path_).mkdir(
-			parents=True,
-			exist_ok=False
-		)
-	print("[INFO] Destination template created.")
+	if not dry_run:
+		# Create destination template
+		for _, path_ in split_class_path_map.items():
+			Path(path_).mkdir(
+				parents=True,
+				exist_ok=False
+			)
+		print("[INFO] Destination template created.")
+
+	# display slide-level stats.
+	for split_ in splits_to_extract:
+		print(f"[INFO] {split_} slides.")
+		describe_any_slide_list(splits_df.loc[
+			(splits_df['split_category']==split_), 'slide_name'])
 
 	# Assort data files by split
 	for path_key, base_path in split_class_path_map.items():
 		split_, class_ = tuple(path_key.split('_'))
 		target_roi_l = splits_df.loc[
-			(splits_df['split_category']==split_) & (splits_df['label']==class_),
-			:
-		]
+			(splits_df['split_category']==split_) & (splits_df['label']==class_), :]
+
+		# for verbosity.
+		print(f"[INFO] {target_roi_l.shape[0]} ROIs in {split_}:{class_}")
 		
-		# copy files.
-		print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
-		for _, roi_row in target_roi_l.iterrows():
-			shutil.copy2(
-				src = roi_row.filepath,
-				dst = split_class_path_map.get(path_key)
-			)
-		print(f"[INFO] Done copying {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
+		if not dry_run:
+			# copy files.
+			print(f"[INFO] Starting to copy {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")
+			for _, roi_row in target_roi_l.iterrows():
+				shutil.copy2(
+					src = roi_row.filepath,
+					dst = split_class_path_map.get(path_key)
+				)
+			print(f"[INFO] Done copying {len(target_roi_l)} ROIs for class `{class_}` in `{split_}` set.")

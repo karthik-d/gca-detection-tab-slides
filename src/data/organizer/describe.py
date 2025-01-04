@@ -40,7 +40,7 @@ SRC_PATH = os.path.abspath(os.path.join(
     "dataset",
     "data",
     "roi",
-    "ds_phase_4"
+    "ds_phase_4_raw"
 ))
 
 #--enter

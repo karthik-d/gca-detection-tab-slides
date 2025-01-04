@@ -32,9 +32,14 @@ def describe_all_analysis_slides():
 	_describe_analysis_slides(pd.read_csv(analysis_slidenames_path))
 
 
-def describe_any_slide_list(slides_list_path):
+def describe_any_slide_list(slides_list):
 
-	reqd_slides = pd.read_csv(slides_list_path)
+	if isinstance(slides_list, str):
+		reqd_slides = pd.read_csv(slides_list)
+	else:
+		# treat input as a list or series. 
+		reqd_slides = pd.DataFrame(dict(slidename=slides_list))
+	
 	analysis_slides = pd.read_csv(analysis_slidenames_path)
 
 	# drop-duplicates is used to fix issues with slide duplicates
