@@ -113,7 +113,7 @@ def eval_metrics(prefix=""):
 	save_confusion_matrix(slidewise_df, f"../outputs/{prefix}_conf-matrix_test_slidewise.png", dataset="Slide-level Held-out Test")
 
 	# validation test.
-	result_df = qualify_df(pd.read_csv("epoch#0_val_acc#0-9297_valid.csv", index_col=0))
+	result_df = qualify_df(pd.read_csv("epoch#6_val_acc#0-9564_test.csv", index_col=0))
 	result_df.to_csv(f"../outputs/{prefix}_prediction-probs_valid.csv")
 	slidewise_df = slidewise_inference(result_df)
 	save_roc_curve(result_df, f"../outputs/{prefix}_roc-auc_valid.png", dataset="ROI-level Validation")

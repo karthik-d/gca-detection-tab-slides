@@ -47,28 +47,6 @@ def prepare_inputs(batch_size=16, num_workers=1):
 	return image_dataset, dataloader, classes
 
 
-def render_roc_curve(predictions, truths, save_path=None):
-
-	conf_matrix = metrics.roc_curve(truths, predictions)
-	auc_score = metrics.auc(fpr, tpr)
-
-	plot.title('ROC Curve')
-	plot.plot(fpr, tpr, 'b', label = 'AUC = %0.2f' % auc_score)
-	plot.legend(loc = 'lower right')
-	plot.plot([0, 1], [0, 1],'r--')
-	plot.xlim([0, 1])
-	plot.ylim([0, 1])
-	plot.ylabel('True Positive Rate')
-	plot.xlabel('False Positive Rate')
-
-	if save_path is not None:
-		plot.gcf().savefig(save_path, dpi=50)
-	else:
-		plot.show()
-	
-	return auc_score
-
-
 def render_confusion_matrix(predictions, truths, save_path=None):
 
 	conf_matrix = metrics.confusion_matrix(truths, predictions)
