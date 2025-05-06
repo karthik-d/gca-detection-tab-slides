@@ -13,7 +13,7 @@ in the given `SRC_PATH` directory formatted as,
             .
 
 and displays evaluation metrics,
-based on the ResNet-18 model weights in the `CHECKPOINT_FILEPATH`
+based on the ResNet-X model weights in the `CHECKPOINT_FILEPATH`
 """
 
 ## SET THE 4 PARAMETERS in [ROOT]/src/test/config.py.

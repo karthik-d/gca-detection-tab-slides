@@ -183,9 +183,9 @@ def heldout_test_driver(model_filepath=None):
 def heldout_test_classwise():
 
 	models_to_test = [
-		'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
+		# 'experiment_4/run_1/epoch#6_val_acc#0-9564.ckpt',
 		# 'experiment_3/run_1/epoch#6_val_acc#0-6076.ckpt',
-		# 'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
+		'experiment_3/run_1/epoch#0_val_acc#0-9297.ckpt',
 	]
 	model_path_base = os.path.join(
         config.get('LOGS_PATH'),

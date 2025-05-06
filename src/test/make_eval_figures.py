@@ -98,25 +98,25 @@ def slidewise_inference(df):
 
 
 
-def eval_metrics():
+def eval_metrics(prefix=""):
 
 	# held-out test.
 	result_df = qualify_df(merge_results(
-		pos_df = pd.read_csv("epoch#6_val_acc#0-6076_test.csv", index_col=0),
-		neg_df = pd.read_csv("epoch#0_val_acc#0-9297_test.csv", index_col=0)
+		pos_df = pd.read_csv("epoch#6_val_acc#0-9564_test.csv", index_col=0),
+		neg_df = pd.read_csv("epoch#6_val_acc#0-9564_test.csv", index_col=0)
 	))
-	result_df.to_csv("prediction-probs_test.csv")
+	result_df.to_csv(f"../outputs/{prefix}_prediction-probs_test.csv")
 	slidewise_df = slidewise_inference(result_df)
-	save_roc_curve(result_df, "roc-auc_test.png", dataset="ROI-level Held-out Test")
-	save_confusion_matrix(result_df, "conf-matrix_test.png", dataset="ROI-level Held-out Test")
-	save_roc_curve(slidewise_df, "roc-auc_test_slidewise.png", dataset="Slide-level Held-out Test")
-	save_confusion_matrix(slidewise_df, "conf-matrix_test_slidewise.png", dataset="Slide-level Held-out Test")
+	save_roc_curve(result_df, f"../outputs/{prefix}_roc-auc_test.png", dataset="ROI-level Held-out Test")
+	save_confusion_matrix(result_df, f"../outputs/{prefix}_conf-matrix_test.png", dataset="ROI-level Held-out Test")
+	save_roc_curve(slidewise_df, f"../outputs/{prefix}_roc-auc_test_slidewise.png", dataset="Slide-level Held-out Test")
+	save_confusion_matrix(slidewise_df, f"../outputs/{prefix}_conf-matrix_test_slidewise.png", dataset="Slide-level Held-out Test")
 
 	# validation test.
-	result_df = qualify_df(pd.read_csv("epoch#6_val_acc#0-9564_valid.csv", index_col=0))
-	result_df.to_csv("prediction-probs_valid.csv")
+	result_df = qualify_df(pd.read_csv("epoch#0_val_acc#0-9297_valid.csv", index_col=0))
+	result_df.to_csv(f"../outputs/{prefix}_prediction-probs_valid.csv")
 	slidewise_df = slidewise_inference(result_df)
-	save_roc_curve(result_df, "roc-auc_valid.png", dataset="ROI-level Validation")
-	save_confusion_matrix(result_df, "conf-matrix_valid.png", dataset="ROI-level Validation")
-	save_roc_curve(slidewise_df, "roc-auc_valid_slidewise.png", dataset="Slide-level Validation")
-	save_confusion_matrix(slidewise_df, "conf-matrix_valid_slidewise.png", dataset="Slide-level Validation")
+	save_roc_curve(result_df, f"../outputs/{prefix}_roc-auc_valid.png", dataset="ROI-level Validation")
+	save_confusion_matrix(result_df, f"../outputs/{prefix}_conf-matrix_valid.png", dataset="ROI-level Validation")
+	save_roc_curve(slidewise_df, f"../outputs/{prefix}_roc-auc_valid_slidewise.png", dataset="Slide-level Validation")
+	save_confusion_matrix(slidewise_df, f"../outputs/{prefix}_conf-matrix_valid_slidewise.png", dataset="Slide-level Validation")

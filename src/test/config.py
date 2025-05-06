@@ -28,6 +28,7 @@ config.update(dict(
         'ds_phase_4',
         'splits',
         'valid'
+		# 'test'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(
@@ -48,5 +49,5 @@ config.update(dict(
 
 # allowed values: (18, 34, 50, 101, 152)
 config.update(dict(
-    RESNET_NLAYERS = 34
+    RESNET_NLAYERS = 18
 ))
