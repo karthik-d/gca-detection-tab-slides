@@ -48,7 +48,8 @@ ROI_NAMES = [
 	"13829$2000-050-04$US$SCAN$OR$001 -region_2.tiff",
 	"13829$2000-050-08$US$SCAN$OR$001 -region_3.tiff",
 	"13829$2002-022-1$US$SCAN$OR$001 -region_11.tiff",
-	"13829$2017-044-6$US$SCAN$OR$001 -region_1.tiff"   # neg sample.
+	"13829$2017-044-6$US$SCAN$OR$001 -region_1.tiff",   # neg sample.
+	"13829$2000-050-11$US$SCAN$OR$001 -region_4.tiff"   # neg sample.
 ]
 
 

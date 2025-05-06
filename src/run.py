@@ -41,7 +41,7 @@ if __name__=='__main__':
 	# viz: (1) select rois to analyze; (2) run gradcam.
 	# (1) specify required ROIs in `organizer/select_rois.py` -- they'll be copied to the required input directory.
 	# (2) compute gradcam gradients and overlay on original ROI.
-	# select_rois()
+	select_rois()
 	visualize()
 
 	print("ran!")
