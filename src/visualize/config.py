@@ -36,7 +36,7 @@ config.update(dict(
         'roi', 
         'ds_phase_4', 
         'viz', 
-        'gradcam_cmaps'
+        'gradcam_cmaps_green'
     ),
     # Set as `None` to use imagenet weights
     CHECKPOINT_FILEPATH = os.path.join(

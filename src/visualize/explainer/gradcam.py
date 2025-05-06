@@ -22,6 +22,7 @@ based on the ResNet-18 model weights in the `CHECKPOINT_FILEPATH`
 from pytorch_grad_cam import GradCAM, ScoreCAM, GradCAMPlusPlus, AblationCAM, XGradCAM, EigenCAM, FullGrad
 from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 from pytorch_grad_cam.utils.image import show_cam_on_image
+from pathlib import Path
 
 import torch
 from PIL import Image
@@ -70,6 +71,11 @@ def save_visualization():
 	"""
 	# Driver function to generate and save visualizations
 	"""
+
+	# make destination directory.
+	Path(config.get('DESTN_PATH')).mkdir(
+		exist_ok=True, parents=True
+	)
 
 	device = 'cuda:0' if torch.cuda.is_available() else 'mps'
 	model = resnet.prepare_load_model(

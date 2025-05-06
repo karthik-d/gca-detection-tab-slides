@@ -5,22 +5,24 @@ import cv2
 
 def overlay_heatmap_on_image(img, mask, use_rgb=False):
 
-    # heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
-    heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_OCEAN)
-    # extend dimensions, if not 3-channel
-    if use_rgb:
-        heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+	# invert the mask to align white with 0, and dark green with 1.
+	mask = 1 - mask
 
-    heatmap = np.float32(heatmap) / 255
+	# heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
+	# heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_OCEAN)
+	heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_DEEPGREEN)
+	
+	if use_rgb:
+		heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
+	heatmap = np.float32(heatmap) / 255
 
-    if np.max(img) > 1:
-        raise Exception(
-            "The input image should np.float in the range [0, 1]"
-        )
+	if np.max(img) > 1:
+		raise Exception(
+			"The input image should np.float in the range [0, 1]"
+		)
 
-    overlay = 1-heatmap + img
-    overlay = overlay / np.max(overlay)
-    return np.uint8(255 * overlay)
+	overlay = cv2.addWeighted(img, 0.4, heatmap, 0.6, 0)
+	return np.uint8(255 * overlay)
 
 
 def make_detailed_overlay_img(img, mask_0, mask_1, label, classes, use_rgb=True, save_path=None, show_preview=False):
@@ -58,7 +60,7 @@ def plot_img(img, grayscale=False):
 
     plot.clf()
     if grayscale:
-        plot.imshow(img, cmap='blue')
+        plot.imshow(img, cmap='green')
     else:
         plot.imshow(img)
     plot.show()
