@@ -5,4 +5,7 @@ dataset/data/*
 *.pyc
 */.DS_Store
 .DS_Store
+analysis_code/*
+analysis_output/*
+
 
