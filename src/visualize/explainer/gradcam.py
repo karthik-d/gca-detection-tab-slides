@@ -119,7 +119,7 @@ def save_visualization():
 			grayscale_cam_1,
 			label=f"Actual Class: {classes[op_tensor.item()]}",
 			classes=classes, 
-			use_rgb=False,
+			use_rgb=True,
 			save_path=os.path.join(
 				config.get('DESTN_PATH'),
 				f"{img_name}_actualclass-{classes[op_tensor.item()]}_gradcam.png"

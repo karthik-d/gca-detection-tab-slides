@@ -6,12 +6,13 @@ import cv2
 def overlay_heatmap_on_image(img, mask, use_rgb=False):
 
 	# invert the mask to align white with 0, and dark green with 1.
-	mask = 1 - mask
+	# mask = 1 - mask
 
 	# heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
 	# heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_OCEAN)
-	heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_DEEPGREEN)
-	
+	# heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_DEEPGREEN)
+	heatmap = cv2.applyColorMap(np.uint8(255 * mask), cv2.COLORMAP_JET)
+
 	if use_rgb:
 		heatmap = cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB)
 	heatmap = np.float32(heatmap) / 255
@@ -21,7 +22,7 @@ def overlay_heatmap_on_image(img, mask, use_rgb=False):
 			"The input image should np.float in the range [0, 1]"
 		)
 
-	overlay = cv2.addWeighted(img, 0.4, heatmap, 0.6, 0)
+	overlay = cv2.addWeighted(img, 0.7, heatmap, 0.3, 0)
 	return np.uint8(255 * overlay)
 
 
